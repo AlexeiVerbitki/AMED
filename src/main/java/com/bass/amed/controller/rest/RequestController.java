@@ -2546,7 +2546,7 @@ public class RequestController
 
 
     @GetMapping(value = "/load-requests-by-import-id")
-    public ResponseEntity<Integer >getRequestByImportId(@RequestParam(value = "id") Integer id) throws CustomException
+    public ResponseEntity<RegistrationRequestsEntity>getRequestByImportId(@RequestParam(value = "id") Integer id) throws CustomException
     {
         List<RegistrationRequestsEntity> list = requestRepository.findRequestsByImportId(id);
         if (list.isEmpty())
@@ -2554,7 +2554,7 @@ public class RequestController
             return null;
         }
 
-        return new ResponseEntity<>(list.get(0).getId(), HttpStatus.OK);
+        return new ResponseEntity<>(list.get(0), HttpStatus.OK);
     }
 
     @GetMapping(value = "/load-active-licenses")

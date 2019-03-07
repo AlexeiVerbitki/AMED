@@ -68,7 +68,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
     formModel: any;
     valutaList: any[];
     contractValutaList: any[];
-    importData: any;
+    importData: any = {};
     medicamentData: any;
     atcCodes: Observable<any[]>;
     loadingAtcCodes = false;
@@ -98,6 +98,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
     showClickAuthorizationError = false;
     atLeastOneApproved: boolean;
     private subscriptions: Subscription[] = [];
+    requestData: any;
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -189,16 +190,44 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
         this.authorizationSumm = 0;
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
-            this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
-                    console.log('this.requestService.getImportRequest(params[\'id\'])', data);
-                    this.importData = data;
-                    this.docs = data.documents;
+            this.requestService.getAuthorizationByAuth(params['id']).subscribe(importData => {
+                console.log('importData', importData);
+
+                this.requestService.getRequestByImportId(importData.id).subscribe(requestData => {
+                    console.log("this.requestService.getImportRequest(importData.id)", requestData)
+                    this.requestData = requestData;
+
+
+        //         }, error => {
+        //             console.log("this.requestService.getImportRequest(rowDetails.id) errro");
+        //         });
+        //
+        //     })
+        // }));
+
+
+        // this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+        //     this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(requestData => {
+        //             console.log('this.requestService.getImportRequest(params[\'id\'])', requestData);
+                    if (requestData) {
+                        this.importData = requestData;
+                    }
+                    this.importData.importAuthorizationEntity = importData;
+                    console.log('this.importData',this.importData);
+
+        //         }, error => {
+        //             console.log("this.requestService.getImportRequest(rowDetails.id) errro");
+        //         });
+        //
+        //     })
+        // }));
+                    this.docs = this.importData.documents;
 
                     this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
 
-                    if (data.importAuthorizationEntity.importer && data.importAuthorizationEntity.importer.idno) {
-                        this.requestService.getActiveLicenses(data.importAuthorizationEntity.importer.idno).subscribe(data1 => {
-                            // console.log('this.requestService.getActiveLicenses(data.applicant.idno).subscribe', data1);
+                    if (this.importData.importAuthorizationEntity.importer && this.importData.importAuthorizationEntity.importer.idno) {
+                        this.requestService.getActiveLicenses(this.importData.importAuthorizationEntity.importer.idno).subscribe(data1 => {
+                            // console.log('this.requestService.getActiveLicenses(this.importData.applicant.idno).subscribe', data1);
                             this.activeLicenses = data1;
                             // console.log('this.activeLicenses', this.activeLicenses);
                         });
@@ -212,40 +241,45 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                         }
                     });
 
-                    this.evaluateImportForm.get('id').setValue(data.id);
-                    this.evaluateImportForm.get('requestNumber').setValue(data.requestNumber);
-                    this.evaluateImportForm.get('startDate').setValue(new Date(data.startDate));
-                    this.evaluateImportForm.get('initiator').setValue(data.initiator);
-                    this.evaluateImportForm.get('assignedUser').setValue(data.assignedUser);
-                    this.evaluateImportForm.get('company').setValue(data.company);
-                    this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(data.importAuthorizationEntity.medType);
-                    this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(data.company);
-                    this.evaluateImportForm.get('type.id').setValue(data.type.id);
-                    this.evaluateImportForm.get('requestHistories').setValue(data.requestHistories);
+                    if (this.importData)
+                        {
+                        if (this.importData.id)                                                    {this.evaluateImportForm.get('id').setValue(this.importData.id);}
+                        if (this.importData.requestNumber)                                         {this.evaluateImportForm.get('requestNumber').setValue(this.importData.requestNumber);}
+                        if (this.importData.startDate)                                             {this.evaluateImportForm.get('startDate').setValue(new Date(this.importData.startDate));}
+                        if (this.importData.initiator)                                             {this.evaluateImportForm.get('initiator').setValue(this.importData.initiator);}
+                        if (this.importData.assignedUser)                                          {this.evaluateImportForm.get('assignedUser').setValue(this.importData.assignedUser);}
+                        if (this.importData.company)                                               {this.evaluateImportForm.get('company').setValue(this.importData.company);}
+                        if (this.importData.type && this.importData.type.id)                       {this.evaluateImportForm.get('type.id').setValue(this.importData.type.id);}
+                        if (this.importData.requestHistories)                                      {this.evaluateImportForm.get('requestHistories').setValue(this.importData.requestHistories);}
+                        if (this.importData.company)                                               {this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.importData.company);}
 
-                    this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(data.importAuthorizationEntity.seller);
-                    this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(data.importAuthorizationEntity.importer);
-                    this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(data.importAuthorizationEntity.basisForImport);
-                    this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(data.importAuthorizationEntity.conditionsAndSpecification);
-                    this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(data.id + '/' + new Date().getFullYear() + '-AM');
-                    this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
-                    this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(data.importAuthorizationEntity.contract);
-                    this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(data.importAuthorizationEntity.currency);
-                    this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(data.importAuthorizationEntity.contractDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(data.importAuthorizationEntity.anexa);
-                    this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(data.importAuthorizationEntity.anexaDate));
-                    this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(data.importAuthorizationEntity.specification);
-                    this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
+                        if(this.importData.importAuthorizationEntity)
+                        {
+                            if (this.importData.importAuthorizationEntity.medType)                     {this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(this.importData.importAuthorizationEntity.medType);}
+                            if (this.importData.importAuthorizationEntity.seller)                      {this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(this.importData.importAuthorizationEntity.seller);}
+                            if (this.importData.importAuthorizationEntity.importer)                    {this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(this.importData.importAuthorizationEntity.importer);}
+                            if (this.importData.importAuthorizationEntity.basisForImport)              {this.evaluateImportForm.get('importAuthorizationEntity.basisForImport').setValue(this.importData.importAuthorizationEntity.basisForImport);}
+                            if (this.importData.importAuthorizationEntity.conditionsAndSpecification)  {this.evaluateImportForm.get('importAuthorizationEntity.conditionsAndSpecification').setValue(this.importData.importAuthorizationEntity.conditionsAndSpecification);}
+                            if (this.importData.importAuthorizationEntity.authorizationsNumber)        {this.evaluateImportForm.get('importAuthorizationEntity.authorizationsNumber').setValue(this.importData.importAuthorizationEntity.authorizationsNumber);}
+                            if (this.importData.importAuthorizationEntity.customsNumber)               {this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(this.importData.importAuthorizationEntity.customsNumber);}
+                            if (this.importData.importAuthorizationEntity.customsDeclarationDate)      {this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(this.importData.importAuthorizationEntity.customsDeclarationDate));}
+                            if (this.importData.importAuthorizationEntity.contract)                    {this.evaluateImportForm.get('importAuthorizationEntity.contract').setValue(this.importData.importAuthorizationEntity.contract);}
+                            if (this.importData.importAuthorizationEntity.currency)                    {this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(this.importData.importAuthorizationEntity.currency);}
+                            if (this.importData.importAuthorizationEntity.contractDate)                {this.evaluateImportForm.get('importAuthorizationEntity.contractDate').setValue(new Date(this.importData.importAuthorizationEntity.contractDate));}
+                            if (this.importData.importAuthorizationEntity.anexa)                       {this.evaluateImportForm.get('importAuthorizationEntity.anexa').setValue(this.importData.importAuthorizationEntity.anexa);}
+                            if (this.importData.importAuthorizationEntity.anexaDate)                   {this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(this.importData.importAuthorizationEntity.anexaDate));}
+                            if (this.importData.importAuthorizationEntity.specification)               {this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(this.importData.importAuthorizationEntity.specification);}
+                            if (this.importData.importAuthorizationEntity.specificationDate)           {this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(this.importData.importAuthorizationEntity.specificationDate));}
 
-                    // this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(this.customsPointsPreviouslySelected());
-                    let arr = [];
-                    for (const c of this.importData.importAuthorizationEntity.nmCustomsPointsList) {
-                        c.descrCode = c.description + ' - ' + c.code;
-                        arr = [...arr, c];
+                        let arr = [];
+                        for (const c of this.importData.importAuthorizationEntity.nmCustomsPointsList) {
+                            c.descrCode = c.description + ' - ' + c.code;
+                            arr = [...arr, c];
+                        }
+                        this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(arr);
+                        }
                     }
-                    this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(arr);
-                    // console.log('this.importData.importAuthorizationEntity.nmCustomsPointsList', arr);
+
 
                     this.evaluateImportForm.get('startDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
@@ -263,17 +297,20 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                     this.evaluateImportForm.get('importAuthorizationEntity.currency').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').disable();
 
-                    if (data.importAuthorizationEntity.medType === 2) {
+                    if (this.importData.importAuthorizationEntity.medType === 2) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
                     }
 
-                    this.authorizationNumber = data.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
-                },
-                error => console.log(error)
-            ));
+                    this.authorizationNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
+                }, error => {
+                    console.log("this.requestService.getImportRequest(rowDetails.id) errro");
+                });
+
+            })
         }));
+
 
         this.checked = false;
         this.currentDate = new Date();
@@ -295,7 +332,6 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
         this.loadInternationalMedicamentName();
         this.loadCustomsPoints();
 
-        // console.log('importTypeForms.value', this.importTypeForms.value);
     }
 
     customsPointsPreviouslySelected() {
@@ -313,11 +349,9 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
             if (item.approved === true && item.expirationDate) {
                 this.expirationDate.push(item.expirationDate);
                 authorizationModel.importAuthorizationEntity.summ = authorizationModel.importAuthorizationEntity.summ + item.summ;
-                // console.log('modelToSubmit.importAuthorizationEntity.summ', authorizationModel.importAuthorizationEntity.summ);
             }
         });
 
-        // console.log('this.expirationDate', this.expirationDate);
         if (this.expirationDate != null && this.expirationDate.length > 0) {
 
             const closestExpirationDate = this.expirationDate.reduce(function (a, b) {
@@ -355,7 +389,6 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
         observable = this.requestService.viewImportAuthorization(authorizationModel);
         if (document == 'specification') {
             observable = this.requestService.viewImportAuthorizationSpecification(authorizationModel);
-            // console.log('inner if', observable);
         }
 
         this.subscriptions.push(observable.subscribe(data => {

@@ -10,6 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ImportAuthRepository extends JpaRepository<ImportAuthorizationEntity, Integer> {
-	@Query("SELECT i FROM  ImportAuthorizationEntity i WHERE i.authorizationsNumber = (:authId)")
+	@Query("SELECT i FROM  ImportAuthorizationEntity i WHERE (i.authorizationsNumber = (:authId) OR i.id = (:authId))")
 	Optional<List<ImportAuthorizationEntity>> getAuthorizationByAuth(@Param("authId") String authId);
 }

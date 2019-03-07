@@ -231,9 +231,9 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(this.requestService.getRequestByImportId(rowDetails.id).subscribe(requestId => {
             console.log("this.requestService.getImportRequest(rowDetails.id)", requestId)
 
-            const urlToNavigate = 'dashboard/module/import-authorization/view-authorization/' + requestId;
+            const urlToNavigate = 'dashboard/module/import-authorization/view-authorization/';
             console.log('urlToNavigate', urlToNavigate)
-            this.route.navigate([urlToNavigate]);
+            this.route.navigate([urlToNavigate, rowDetails.id]);
 
         }, error => {
             console.log("this.requestService.getImportRequest(rowDetails.id) errro");

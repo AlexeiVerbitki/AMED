@@ -26,7 +26,7 @@
                 <div class="col-md-3">
                     <div class="md-form">
                         <input id="company" mdbInputDirective type="text" class="form-control"
-                               value={{evaluateImportForm.value.company.name}} [attr.disabled]="true">
+                               value={{evaluateImportForm?.value?.company?.name}} [attr.disabled]="true">
                         <label for="company">Compania solicitant
                         </label>
                     </div>
@@ -261,7 +261,7 @@
 
 					
                     <div class="col-md-4"
-                         *ngIf="importData?.importAuthorizationEntity.medType==1  && importData?.importAuthorizationEntity.customsNumber">
+                         *ngIf="importData?.importAuthorizationEntity?.medType==1  && importData?.importAuthorizationEntity?.customsNumber">
                         <div class="md-form">
 							
                             <input id="customsNumber" mdbInputDirective type="text" class="form-control"
@@ -274,7 +274,7 @@
 
 					
                     <div class="col-4"
-                         *ngIf="importData?.importAuthorizationEntity.medType==1 && importData?.importAuthorizationEntity.customsDeclarationDate">
+                         *ngIf="importData?.importAuthorizationEntity?.medType==1 && importData?.importAuthorizationEntity?.customsDeclarationDate">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
                                 <input matInput [matDatepicker]="picker22" placeholder="Data declaraţiei  vamale"
@@ -285,7 +285,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity.conditionsAndSpecification">
+                    <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity?.conditionsAndSpecification">
                         <div class="md-form">
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
                                    formControlName="conditionsAndSpecification">
@@ -331,13 +331,13 @@
                         <tr>
                             
                             <th scope="col">Denumirea comercială</th>
-                            <th scope="col" *ngIf="importData?.importAuthorizationEntity.medType!==4">Codul ATC</th>
+                            <th scope="col" *ngIf="importData?.importAuthorizationEntity?.medType!==4">Codul ATC</th>
                             <th scope="col"
-                                *ngIf="importData?.importAuthorizationEntity.medType==1 || importData?.importAuthorizationEntity.medType==2">
+                                *ngIf="importData?.importAuthorizationEntity?.medType==1 || importData?.importAuthorizationEntity?.medType==2">
                                 Doza
                             </th>
                             <th scope="col"
-                                *ngIf="importData?.importAuthorizationEntity.medType==1 || importData?.importAuthorizationEntity.medType==2">
+                                *ngIf="importData?.importAuthorizationEntity?.medType==1 || importData?.importAuthorizationEntity?.medType==2">
                                 Divizare
                             </th>
                             <th scope="col">Producatorul</th>
@@ -355,7 +355,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let unitOfImport of importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList;let i = index">
+                        <tr *ngFor="let unitOfImport of importData?.importAuthorizationEntity?.importAuthorizationDetailsEntityList;let i = index">
                             <th scope="row">{{ unitOfImport.name }}</th>
                             <td *ngIf="importData?.importAuthorizationEntity?.medType!==4">{{
                                 unitOfImport.atcCode?.code}}
@@ -377,7 +377,7 @@
                             <td>
                                 
                                 <mat-checkbox [disabled]="true"
-                                              [checked]="importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved"
+                                              [checked]="importData?.importAuthorizationEntity?.importAuthorizationDetailsEntityList[i].approved"
                                               (change)="setApproved(i)"></mat-checkbox>
                             </td>
                             <td>

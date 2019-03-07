@@ -763,6 +763,7 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
         this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item => {
             item.approved = true;
             item.approvedQuantity = item.quantity;
+            item.summ = item.approvedQuantity * item.price;
             this.atLeastOneApproved = true;
         });
     }

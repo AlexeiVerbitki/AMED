@@ -216,7 +216,14 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     void setOutputDocumentId(@Param("ids") List<Integer> ids, @Param("outputDocumentId") Integer outputDocumentId);
 
 //    @Query("SELECT i FROM  RegistrationRequestsEntity i WHERE i.importAuthorizationEntity.id = :authId")
-    @Query(value = "SELECT * FROM registration_requests i WHERE i.import_id = ?1", nativeQuery = true)
+//    @Query(value = "SELECT * FROM registration_requests i WHERE i.import_id = ?1", nativeQuery = true)
+    @Query("SELECT p FROM RegistrationRequestsEntity p " +
+            "LEFT JOIN FETCH p.importAuthorizationEntity " +
+            "LEFT JOIN FETCH p.requestHistories " +
+            "LEFT JOIN FETCH p.outputDocuments " +
+            "LEFT JOIN FETCH p.documents " +
+            "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
+            "WHERE p.importAuthorizationEntity.id = (:authId)")
     List<RegistrationRequestsEntity> findRequestsByImportId(@Param("authId") Integer authId);
 
     @Query("SELECT p FROM RegistrationRequestsEntity p " +
