@@ -344,7 +344,7 @@
                             <th scope="col">Cantitatea solicitată</th>
                             <th scope="col">Cantitate aprobată</th>
                             <th scope="col">Pretul</th>
-                            <th scope="col">Valuta</th>
+                            <!--<th scope="col">Valuta</th>-->
                             <th scope="col">Suma</th>
                             <!--<th scope="col">Ţara şi adresa producătorului materiei prime</th>-->
                             <th scope="col">Data expirarii</th>
@@ -370,7 +370,7 @@
                             <td>{{ unitOfImport.quantity }}</td>
                             <td>{{ unitOfImport.approvedQuantity }}</td>
                             <td>{{ unitOfImport.price}}</td>
-                            <td>{{ unitOfImport.currency?.shortDescription}}</td>
+                            <!--<td>{{ unitOfImport.currency?.shortDescription}}</td>-->
                             <td>{{ unitOfImport.summ | number : '1.2-2'}}</td>
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode?.code }}</td>

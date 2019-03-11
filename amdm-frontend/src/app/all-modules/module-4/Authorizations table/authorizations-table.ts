@@ -32,7 +32,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     loadingCompany = false;
     companyInputs = new Subject<string>();
 
-    displayedColumns: any[] = ['authorizationsNumber', 'importer', 'expirationDate', 'summ', 'currency', 'medicament'  ];
+    displayedColumns: any[] = ['authorizationsNumber', 'importer', 'expirationDate', 'summ', 'currency',/* 'medicament'*/  ];
     dataSource = new MatTableDataSource<any>();
     row: any;
     visibility = false;
