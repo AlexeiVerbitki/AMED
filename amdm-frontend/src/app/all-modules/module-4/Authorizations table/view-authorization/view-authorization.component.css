@@ -26,3 +26,20 @@ label.required:not(:empty):after,
 table th, .table td {
     vertical-align: middle;
 }
+
+.table-example {
+    max-height: 650px;
+    overflow: auto;
+}
+
+
+
+@media only screen and (max-width: 1376px) {
+    .table-example {
+        width: 100%;
+    }
+
+    table {
+        width: 1650px;
+    }
+}
