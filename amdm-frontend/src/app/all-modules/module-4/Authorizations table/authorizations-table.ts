@@ -186,7 +186,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                 this.dataSource.data = data.body;
                 console.log('data.body', data.body);
             if (data.body.length == 0) {
-                this.successOrErrorHandlerService.showError('Nu exista autorizatia cu date introduse');
+                this.successOrErrorHandlerService.showError('Nu exista nici o autorizatie cu datele introduse');
             }
             }, error => {
                 this.loadingService.hide();
