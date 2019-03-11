@@ -236,16 +236,6 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    allowOnlyNumbers(event: any) {
-        //console.log(key);
-        const pattern = /[0-9]/;
-        const inputChar = String.fromCharCode(event.charCode);
-
-        if (!pattern.test(inputChar)) {
-            // invalid character, prevent input
-            event.preventDefault();
-        }
-    }
 
     changeVisibility() {
         this.visibility = !this.visibility;
@@ -296,8 +286,8 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             row.authorizationsNumber = fd.authorizationsNumber == 'Numarul ipseste' ? '-------------------': fd.authorizationsNumber;
             row.importer = fd.importer  ? fd.importer : '---------------';
             row.expirationDate = fd.expirationDate ? dtPipe.transform(new Date(fd.expirationDate), 'dd/MM/yyyy'): '---------------';
-            row.summ = fd.summ ? fd.summ : '---------------';
-            row.currency = fd.currency ? fd.currency : '---------------';
+            row.summ = fd.summ ? fd.summ : '------';
+            row.currency = fd.currency ? fd.currency : '------';
             displayData.push(row);
         });
         return displayData;
