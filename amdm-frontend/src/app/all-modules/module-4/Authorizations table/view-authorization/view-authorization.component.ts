@@ -130,6 +130,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
             'assignedUser': [{value: null, disabled: true}],
             'data': {disabled: true, value: null},
             'importType': [{value: null, disabled: true}],
+            'authExpirationDate': [{value: null, disabled: true}],
             'type':
                 this.fb.group({
                     'id': ['']
@@ -289,8 +290,10 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                         if (this.importData.requestHistories)                                      {this.evaluateImportForm.get('requestHistories').setValue(this.importData.requestHistories);}
                         if (this.importData.company)                                               {this.evaluateImportForm.get('importAuthorizationEntity.applicant').setValue(this.importData.company);}
 
+
                         if(this.importData.importAuthorizationEntity)
                         {
+                            if (this.importData.importAuthorizationEntity.expirationDate)              {this.evaluateImportForm.get('authExpirationDate').setValue(new Date (this.importData.importAuthorizationEntity.expirationDate));}
                             if (this.importData.importAuthorizationEntity.medType)                     {this.evaluateImportForm.get('importAuthorizationEntity.medType').setValue(this.importData.importAuthorizationEntity.medType);}
                             if (this.importData.importAuthorizationEntity.seller)                      {this.evaluateImportForm.get('importAuthorizationEntity.seller').setValue(this.importData.importAuthorizationEntity.seller);}
                             if (this.importData.importAuthorizationEntity.importer)                    {this.evaluateImportForm.get('importAuthorizationEntity.importer').setValue(this.importData.importAuthorizationEntity.importer);}

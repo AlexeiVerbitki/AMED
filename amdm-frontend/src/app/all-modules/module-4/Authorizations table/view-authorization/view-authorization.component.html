@@ -4,7 +4,7 @@
 
         <form [formGroup]="evaluateImportForm">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-md-3">
                     <div class="md-form">
                         <input id="requestNumber" mdbInputDirective type="text" class="form-control"
                                formControlName="requestNumber"
@@ -13,10 +13,10 @@
                     </div>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-md-2">
                     <div class="md-form-modified">
                         <mat-form-field class="w-100">
-                            <input matInput [matDatepicker]="picker" placeholder="Data"
+                            <input matInput [matDatepicker]="picker" placeholder="Data cererii"
                                    formControlName="startDate" [attr.disabled]="true">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker></mat-datepicker>
@@ -31,14 +31,36 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="md-form">
-                        <input mdbInputDirective type="text" class="form-control"
-                               value={{authorizationNumber}} [attr.disabled]="true">
-                        <label for="company">Numărul Autorizașiei
-                        </label>
-                    </div>
-                </div>
+
+
+	            <div class="col-md-2">
+		            <div class="md-form">
+			            <input mdbInputDirective type="text" class="form-control"
+			                   value={{authorizationNumber}} [attr.disabled]="true">
+			            <label for="company">Numărul Autorizației
+			            </label>
+		            </div>
+	            </div>
+
+	            <div class="col-md-2">
+		            <div class="md-form-modified">
+			            <mat-form-field class="w-100">
+				            <input matInput [matDatepicker]="authExpirationDate" placeholder="Data expirării autorizației"
+				                   formControlName="authExpirationDate" [attr.disabled]="true">
+				            <mat-datepicker-toggle matSuffix [for]="authExpirationDate"></mat-datepicker-toggle>
+				            <mat-datepicker touchUi #authExpirationDate></mat-datepicker>
+			            </mat-form-field>
+		            </div>
+	            </div>
+
+	            <!--<div class="col-md-3">-->
+		            <!--<div class="md-form">-->
+			            <!--<input mdbInputDirective type="text" class="form-control"-->
+			                   <!--value={{importData?.importAuthorizationEntity?.expirationDate}} [attr.disabled]="true">-->
+			            <!--<label for="company">Data Expirarii-->
+			            <!--</label>-->
+		            <!--</div>-->
+	            <!--</div>-->
 
             </div>
 
