@@ -293,11 +293,11 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         this.dataSource.filteredData.forEach(fd => {
             const row: any = {};
             // console.log('fd', fd);
-            row.authorizationsNumber = fd.authorizationsNumber;
-            row.importer = fd.importer;
-            row.expirationDate =  dtPipe.transform(new Date(fd.expirationDate), 'dd/MM/yyyy');
-            row.summ = fd.summ;
-            row.currency = fd.currency;
+            row.authorizationsNumber = fd.authorizationsNumber == 'Numarul ipseste' ? '-------------------': fd.authorizationsNumber;
+            row.importer = fd.importer  ? fd.importer : '---------------';
+            row.expirationDate = fd.expirationDate ? dtPipe.transform(new Date(fd.expirationDate), 'dd/MM/yyyy'): '---------------';
+            row.summ = fd.summ ? fd.summ : '---------------';
+            row.currency = fd.currency ? fd.currency : '---------------';
             displayData.push(row);
         });
         return displayData;
