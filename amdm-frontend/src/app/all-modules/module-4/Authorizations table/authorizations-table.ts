@@ -198,32 +198,6 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    // findTasks() {
-    //     this.loadingService.show();
-    //     const taskFormValue = this.taskForm.value;
-    //     console.log('taskFormValue', taskFormValue);
-    //     const searchCriteria = {
-    //         requestCode: taskFormValue.requestCode ? taskFormValue.requestCode.registerCode : '',
-    //         requestNumber: taskFormValue.requestNumber,
-    //         startDateFrom: taskFormValue.startDateFrom,
-    //         startDateTo: taskFormValue.startDateTo,
-    //         comanyId: taskFormValue.company ? taskFormValue.company.id : '',
-    //         processId: taskFormValue.request ? taskFormValue.request.id : '',
-    //         processTypeId: taskFormValue.requestType ? taskFormValue.requestType.id : '',
-    //         stepCode: taskFormValue.step ? taskFormValue.step.code : '',
-    //         subject: taskFormValue.subject,
-    //     };
-    //     console.log('searchCriteria', searchCriteria);
-    //     this.subscriptions.push(this.taskService.getTasksByFilter(searchCriteria).subscribe(data => {
-    //             this.loadingService.hide();
-    //             this.dataSource.data = data.body;
-    //             console.log('data.body', data.body);
-    //         }, error => {
-    //             this.loadingService.hide();
-    //         })
-    //     );
-    //     // console.log('searchCriteria', searchCriteria);
-    // }
 
     navigateToUrl(rowDetails: any) {
 
@@ -286,14 +260,14 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         arr = this.populateDataForXLSXDocument(arr);
         const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(arr);
         /* generate workbook and add the worksheet */
-        XLSX.utils.book_append_sheet(wb, ws, 'Lista de cereri');
+        XLSX.utils.book_append_sheet(wb, ws, 'Lista de autorizatii');
 
         /* save to file */
-        XLSX.writeFile(wb, 'Cereri.xlsx');
+        XLSX.writeFile(wb, 'Autorizatii.xlsx');
     }
 
     createHeaderColumns(): any[] {
-        return ['Numar cerere', 'Data inceperii', 'Compania solicitant', 'Depunator', 'Subiect', 'Data finisare', 'Pas'];
+        return ['Numarul autorizatiei', 'Compania', 'Data expirarii', 'Suma', 'Valuta'];
     }
 
     populateDataForXLSXDocument(arr: any[][]): any[] {
@@ -302,13 +276,11 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         if (displayData) {
             for (let i = 0; i < displayData.length; i++) {
                 const arrIntern: any[] = new Array<any>();
-                arrIntern[0] = displayData[i].requestNumber;
-                arrIntern[1] = displayData[i].startDate;
-                arrIntern[2] = displayData[i].company;
-                arrIntern[3] = displayData[i].mandatedContact;
-                arrIntern[4] = 'Achtung';
-                arrIntern[5] = displayData[i].endDate;
-                arrIntern[6] = displayData[i].step;
+                arrIntern[0] = displayData[i].authorizationsNumber;
+                arrIntern[1] = displayData[i].importer;
+                arrIntern[2] = displayData[i].expirationDate;
+                arrIntern[3] = displayData[i].summ;
+                arrIntern[4] = displayData[i].currency;
                 arr.push(arrIntern);
             }
         }
@@ -321,12 +293,11 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         this.dataSource.filteredData.forEach(fd => {
             const row: any = {};
             // console.log('fd', fd);
-            row.requestNumber = fd.requestNumber;
-            row.startDate = dtPipe.transform(new Date(fd.startDate), 'dd/MM/yyyy');
-            row.company = fd.company;
-            row.mandatedContact = fd.mandatedContact;
-            row.endDate = dtPipe.transform(new Date(fd.endDate), 'dd/MM/yyyy');
-            row.step = fd.step;
+            row.authorizationsNumber = fd.authorizationsNumber;
+            row.importer = fd.importer;
+            row.expirationDate =  dtPipe.transform(new Date(fd.expirationDate), 'dd/MM/yyyy');
+            row.summ = fd.summ;
+            row.currency = fd.currency;
             displayData.push(row);
         });
         return displayData;
@@ -342,7 +313,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             showLabels: true,
             headers: this.createHeaderColumns()
         };
-        const csv = new Angular5Csv(displayData, 'Cereri', options);
+        const csv = new Angular5Csv(displayData, 'Autorizatii', options);
     }
 
 }
