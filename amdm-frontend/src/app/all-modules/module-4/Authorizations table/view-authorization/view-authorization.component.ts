@@ -225,6 +225,19 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                             item.dose = item.medicament.dose;
                             item.unitsOfMeasurement = item.medicament.division;
                             item.producer = item.medicament.manufactures[0].manufacture;
+                            item.expirationDate = item.medicament.expirationDate;
+
+                            if (item.medicament.customsCode) {
+                                item.customsCode = {};
+                                item.customsCode = item.medicament.customsCode;
+                            }
+
+                            if (item.medicament.currency) {
+                                item.currency = {};
+                                item.currency = item.medicament.currency;
+                            }
+
+
                         }
                     }
                     // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item -> {
