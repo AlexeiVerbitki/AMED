@@ -33,7 +33,7 @@ public interface ImportAuthorizationDTORepository extends JpaRepository<ImportAu
             "  (?3 IS NULL OR ia.expiration_date = ?3) AND\n" +
             "  (?4 IS NULL OR ia.summ = ?4) AND\n" +
             "  (?5 IS NULL OR ia.currency = ?5) AND\n" +
-            "  (?6 IS NULL OR iad.name = ?6 OR iad.code_amed = ?6) AND\n" +
+            "  (?6 IS NULL OR iad.name = ?6 OR iad.code_amed = ?6 OR iad.medicament_id = ?6) AND\n" +
             "  (?7 IS NULL OR ia.med_type= ?7) AND\n" +
             "  (?8 IS NULL OR ia.authorized = ?8)"
             , nativeQuery = true)

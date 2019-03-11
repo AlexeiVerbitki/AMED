@@ -213,6 +213,29 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                         this.importData = requestData;
                     }
                     this.importData.importAuthorizationEntity = importData;
+                    for (let item of this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList ){
+                        if (item.medicament){
+                            item.name = item.medicament.name;
+
+                            if (item.medicament.atcCode) {
+                                item.atcCode = {};
+                                item.atcCode.code = item.medicament.atcCode;
+                            }
+
+                            item.dose = item.medicament.dose;
+                            item.unitsOfMeasurement = item.medicament.division;
+                            item.producer = item.medicament.manufactures[0].manufacture;
+                        }
+                    }
+                    // this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList.forEach(item -> {
+                    //     // if (item.medicament){
+                    //     //     item.name = item.medicament.name;
+                    //     //     item.atcCode = item.medicament.atcCode;
+                    //     //     item.dose = item.medicament.dose;
+                    //     //     item.producer = item.medicament.manufactures[0];
+                    //     // }
+                    //     console.log('', item)
+                    // });
                     console.log('this.importData',this.importData);
 
         //         }, error => {
