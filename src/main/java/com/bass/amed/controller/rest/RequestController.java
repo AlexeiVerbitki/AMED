@@ -2438,6 +2438,12 @@ public class RequestController
                         specificationMedicament.setPriceCurrency(specificationMedicament.getPriceCurrency() + " " + entity.getCurrency().getShortDescription());
                         specificationMedicament.setValueCurrency(specificationMedicament.getValueCurrency() + " " + entity.getCurrency().getShortDescription());
                     }
+                    else if (request != null && request.getImportAuthorizationEntity() != null && request.getImportAuthorizationEntity().getCurrency() != null && request
+                            .getImportAuthorizationEntity().getCurrency().getShortDescription() != null)
+                    {
+                        specificationMedicament.setPriceCurrency(specificationMedicament.getPriceCurrency() + " " + request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+                        specificationMedicament.setValueCurrency(specificationMedicament.getValueCurrency() + " " + request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+                    }
                     if (entity.getProducer() != null && entity.getProducer().getCountry() != null)
                     {
                         specificationMedicament.setCountryOfOrigin(entity.getProducer().getCountry().getCode());
