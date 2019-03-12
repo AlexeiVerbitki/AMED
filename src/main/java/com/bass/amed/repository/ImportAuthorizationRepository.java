@@ -22,8 +22,8 @@ public interface ImportAuthorizationRepository extends JpaRepository<ImportAutho
     @Query(value = "SELECT * FROM import_authorization_details m WHERE ((m.code_amed like upper(CONCAT(?1, '%')) or m.name like upper(CONCAT(?1, '%')))and m.approved = ?2 and m.Import_authorization_id like upper(CONCAT(?3, '%')))", nativeQuery = true)
     List<ImportAuthorizationDetailsEntity> getAuthorizationDetailsByNameOrCode(String name, Boolean approved, String authId);
 
+//  @Query(value = "SELECT * FROM amed.registration_requests m WHERE ((m.code_amed like upper(CONCAT(?1, '%')) or m.name like upper(CONCAT(?1, '%')))and m.approved = ?2 and m" +
     @Query(value = "SELECT * FROM amed.registration_requests m WHERE (m.import_id IS NOT NULL )", nativeQuery = true)
-        //    @Query(value = "SELECT * FROM amed.registration_requests m WHERE ((m.code_amed like upper(CONCAT(?1, '%')) or m.name like upper(CONCAT(?1, '%')))and m.approved = ?2 and m" +
     List<RegistrationRequestsEntity> getAuthorizationRegistrationRequest(String name, Boolean approved, String authId);
 
 
