@@ -2117,7 +2117,7 @@ public class RequestController
     }
 
     @PostMapping(value = "/load-import-authorization-by-filter")
-    public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestBody ImportAuthorizationDTO filter) throws CustomException
+    public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestBody ImportAuthorizationSearchCriteria filter) throws CustomException
     {
         List<ImportAuthorizationDTO> requestList = importAuthorizationDTORepository.getAuthorizationByFilter(filter.getAuthorizationsNumber(),
                                                                                                           filter.getImporter(),
@@ -2134,7 +2134,7 @@ public class RequestController
 //        RegistrationRequestsEntity rrE = regOptional.get();
 
         requestList.forEach(autorizatie -> {
-            if (autorizatie.getAuthorizationsNumber() == null)
+            if (autorizatie.getAuthorizationsNumber() == null || autorizatie.getAuthorizationsNumber().equals(""))
             {
                 autorizatie.setAuthorizationsNumber("Numarul ipseste");
             }
@@ -2183,7 +2183,7 @@ public class RequestController
                  *
                  * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
 
-                if (entity != null && entity.getApproved() == true)
+                if (entity != null /*&& entity.getApproved() == true*/)
                 {
                     if ((entity.getCustomsCode() != null) && autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode())))
                     {
@@ -2392,7 +2392,7 @@ public class RequestController
                 /*Create a map Key is the code value is the amount
                  *
                  * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
-                if (entity != null && entity.getApproved() == true)
+                if (entity != null /*&& entity.getApproved() == true*/)
                 {
 
                     ImportSpecificationDataSet specificationMedicament = new ImportSpecificationDataSet();
@@ -2425,13 +2425,18 @@ public class RequestController
                     {
                         specificationMedicament.setQuantity(entity.getApprovedQuantity().toString());
                     }
-                    if (entity.getPrice() != null && entity.getCurrency() != null)
+                    if (entity.getPrice() != null)
                     {
-                        specificationMedicament.setPriceCurrency(String.valueOf(AmountUtils.round(entity.getPrice(), 2)) + " " + entity.getCurrency().getShortDescription());
+                        specificationMedicament.setPriceCurrency(String.valueOf(AmountUtils.round(entity.getPrice(), 2)));
                     }
-                    if (entity.getSumm() != null && entity.getCurrency() != null)
+                    if (entity.getSumm() != null)
                     {
-                        specificationMedicament.setValueCurrency(String.valueOf(AmountUtils.round(entity.getSumm(), 2) + " " + entity.getCurrency().getShortDescription()));
+                        specificationMedicament.setValueCurrency(String.valueOf(AmountUtils.round(entity.getSumm(), 2)));
+                    }
+                    if (entity.getCurrency() != null && entity.getCurrency().getShortDescription() != null)
+                    {
+                        specificationMedicament.setPriceCurrency(specificationMedicament.getPriceCurrency() + " " + entity.getCurrency().getShortDescription());
+                        specificationMedicament.setValueCurrency(specificationMedicament.getValueCurrency() + " " + entity.getCurrency().getShortDescription());
                     }
                     if (entity.getProducer() != null && entity.getProducer().getCountry() != null)
                     {
@@ -2473,11 +2478,11 @@ public class RequestController
             {
                 parameters.put("annexNr", request.getImportAuthorizationEntity().getSpecification());
             }
-            if (request.getImportAuthorizationEntity().getImporter().getDirector() != null)
+            if (request.getImportAuthorizationEntity().getImporter() != null && request.getImportAuthorizationEntity().getImporter().getDirector() != null)
             {
                 parameters.put("buyerDirector", request.getImportAuthorizationEntity().getImporter().getDirector());
             }
-            if (request.getImportAuthorizationEntity().getImporter().getDirector() != null)
+            if (request.getImportAuthorizationEntity().getImporter() != null && request.getImportAuthorizationEntity().getImporter().getLegalAddress() != null)
             {
                 parameters.put("buyerAddress", request.getImportAuthorizationEntity().getImporter().getLegalAddress());
             }
@@ -2493,15 +2498,16 @@ public class RequestController
             {
                 parameters.put("contractNrDate", formatter.format(request.getImportAuthorizationEntity().getContractDate()));
             }
-            if (request.getImportAuthorizationEntity().getImporter().getName() != null)
+            if (request.getImportAuthorizationEntity().getImporter() != null && request.getImportAuthorizationEntity().getImporter().getName() != null)
             {
                 parameters.put("buyerName", request.getImportAuthorizationEntity().getImporter().getName());
             }
-            if (request.getImportAuthorizationEntity().getSeller().getDescription() != null)
+            if (request.getImportAuthorizationEntity().getSeller() != null && request.getImportAuthorizationEntity().getSeller().getDescription() != null)
             {
                 parameters.put("sellerName", request.getImportAuthorizationEntity().getSeller().getDescription());
             }
-            if (request.getImportAuthorizationEntity().getSeller() != null)
+            if (request.getImportAuthorizationEntity().getSeller() != null && request.getImportAuthorizationEntity().getSeller().getAddress() != null && request
+                    .getImportAuthorizationEntity().getSeller().getCountry() != null && request.getImportAuthorizationEntity().getSeller().getCountry().getCode() != null)
             {
                 parameters.put("sellerAddress", request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
             }

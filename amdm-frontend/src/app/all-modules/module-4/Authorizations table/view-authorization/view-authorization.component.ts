@@ -192,7 +192,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.requestService.getAuthorizationByAuth(params['id']).subscribe(importData => {
-                console.log('importData', importData);
+                console.log('importAuthData', importData);
 
                 this.requestService.getRequestByImportId(importData.id).subscribe(requestData => {
                     console.log("this.requestService.getImportRequest(importData.id)", requestData)
@@ -383,7 +383,9 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
     calculateExpirationDate() {
         const authorizationModel = this.importData;
         let expirationDate: any;
-        this.expirationDate.push(this.activeLicenses.expirationDate);
+        if (this.activeLicenses && this.activeLicenses.expirationDate) {
+            this.expirationDate.push(this.activeLicenses.expirationDate);
+        }
         this.importDetailsList.forEach(item => {
             if (item.approved === true && item.expirationDate) {
                 this.expirationDate.push(item.expirationDate);

@@ -19,7 +19,7 @@ public interface ImportAuthorizationDTORepository extends JpaRepository<ImportAu
             "  ia.expiration_date      expirationDate,\n" +
             "  ia.summ                 summ,\n" +
             "  c.short_description     currency,\n" +
-            "  iad.name                medicament,\n" +
+//            "  iad.name                medicament,\n" +
             "  ia.med_type             medType,\n" +
             "  ia.authorized           status\n" +
             "#             rr.id                     requestId\n" +

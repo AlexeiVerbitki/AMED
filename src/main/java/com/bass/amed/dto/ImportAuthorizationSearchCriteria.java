@@ -1,7 +1,5 @@
 package com.bass.amed.dto;
 
-import com.bass.amed.entity.NmCurrenciesEntity;
-import com.bass.amed.entity.NmEconomicAgentsEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,16 +7,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Currency;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @Entity
-public class ImportAuthorizationDTO implements Serializable
+public class ImportAuthorizationSearchCriteria implements Serializable
 {
-    public ImportAuthorizationDTO()
+    public ImportAuthorizationSearchCriteria()
     {
 
     }
@@ -31,7 +27,7 @@ public class ImportAuthorizationDTO implements Serializable
     private Date expirationDate;
     private String summ;
     private String currency;
-//    private String medicament;
+    private String medicament;
     private String medType;
     private String status;
 

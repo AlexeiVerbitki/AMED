@@ -170,31 +170,33 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         const taskFormValue = this.taskForm.value;
         console.log('taskFormValue', taskFormValue);
         const searchCriteria = {
-            authorizationsNumber: taskFormValue.subject? taskFormValue.subject: null,
-            importer: taskFormValue.company ? taskFormValue.company.id: null,
-            expirationDate: taskFormValue.expirationDate ? taskFormValue.expirationDate: null,
-            summ:  taskFormValue.summ ?  taskFormValue.summ: null,
-            currency: (taskFormValue.currency && taskFormValue.currency.id)? taskFormValue.currency.id: null,
-            medicament: taskFormValue.medicament ?  taskFormValue.medicament: null,
-            medType: (taskFormValue.medType && taskFormValue.medType.medType) ?  taskFormValue.medType.medType: null,
-            status: (taskFormValue.status && taskFormValue.status.authorized) ?  taskFormValue.status.authorized: null}
+            authorizationsNumber: taskFormValue.subject ? taskFormValue.subject : null,
+            importer: taskFormValue.company ? taskFormValue.company.id : null,
+            expirationDate: taskFormValue.expirationDate ? taskFormValue.expirationDate : null,
+            summ: taskFormValue.summ ? taskFormValue.summ : null,
+            currency: (taskFormValue.currency && taskFormValue.currency.id) ? taskFormValue.currency.id : null,
+            medicament: taskFormValue.medicament ? taskFormValue.medicament : null,
+            medType: (taskFormValue.medType && taskFormValue.medType.medType) ? taskFormValue.medType.medType : null,
+            status: (taskFormValue.status && taskFormValue.status.authorized) ? taskFormValue.status.authorized : null
+        }
 
 
         console.log('searchCriteria', searchCriteria);
         this.subscriptions.push(this.requestService.getAuthorizationByFilter(searchCriteria).subscribe(data => {
-                this.loadingService.hide();
                 this.dataSource.data = data.body;
                 console.log('data.body', data.body);
-            if (data.body.length == 0) {
-                this.successOrErrorHandlerService.showError('Nu exista nici o autorizatie cu datele introduse');
-            }
+
+                if (data.body.length == 0) {
+                    this.successOrErrorHandlerService.showError('Nu exista nici o autorizatie cu datele introduse');
+                }
+                this.loadingService.hide();
             }, error => {
                 this.loadingService.hide();
             })
         );
         console.log('searchCriteria', searchCriteria);
 
-        this.loadingService.hide();
+
 
     }
 
