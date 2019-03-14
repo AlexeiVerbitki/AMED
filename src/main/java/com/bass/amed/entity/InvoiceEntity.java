@@ -50,7 +50,7 @@ public class InvoiceEntity {
 //	@JoinColumn(name = "medicament_id")
 //	private MedicamentEntity medicament;
 
-	@OneToMany( fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+	@OneToMany( fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
 	@JoinColumn(name = "invoices_id")
 	private Set<InvoiceDetailsEntity> invoiceDetailsEntitySet;
 

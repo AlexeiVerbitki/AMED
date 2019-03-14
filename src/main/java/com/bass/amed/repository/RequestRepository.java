@@ -70,6 +70,7 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
             "LEFT JOIN FETCH p.outputDocuments " +
             "LEFT JOIN FETCH p.documents " +
             "LEFT JOIN FETCH p.registrationRequestMandatedContacts " +
+            "LEFT JOIN FETCH p.invoiceEntity " +
             "WHERE p.id = (:id)")
     Optional<RegistrationRequestsEntity> findImportAuthRequestById(@Param("id") Integer id);
 

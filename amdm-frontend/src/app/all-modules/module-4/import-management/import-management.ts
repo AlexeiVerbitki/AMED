@@ -195,7 +195,8 @@ export class ImportManagement implements OnInit, OnDestroy {
             this.subscriptions.push(this.requestService.getImportRequest(params2.id).subscribe(requestData => {
                 console.log('this.requestService.getImportRequest(params[\'id\'])', requestData);
                 this.requestData = requestData;
-                    this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.importAuthorizationEntity.authorizationsNumber, "false").subscribe(data => {
+                    // this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.importAuthorizationEntity.authorizationsNumber, "false").subscribe(data => {
+                    this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.invoiceEntity.id, "false").subscribe(data => {
                         this.invoiceDetails = data;
                         console.log('this.invoiceDetails', this.invoiceDetails);
                     }));
