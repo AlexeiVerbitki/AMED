@@ -2183,7 +2183,7 @@ public class RequestController
                  *
                  * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
 
-                if (entity != null /*&& entity.getApproved() == true*/)
+                if (entity != null && entity.getApproved() == true)
                 {
                     if ((entity.getCustomsCode() != null) && autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode())))
                     {
@@ -2392,7 +2392,7 @@ public class RequestController
                 /*Create a map Key is the code value is the amount
                  *
                  * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
-                if (entity != null /*&& entity.getApproved() == true*/)
+                if (entity != null && entity.getApproved() == true)
                 {
 
                     ImportSpecificationDataSet specificationMedicament = new ImportSpecificationDataSet();
