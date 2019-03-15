@@ -73,6 +73,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {
         this.navbarTitleService.showTitleMsg('Gestionare import');
         // this.retrieveRequestTypeSteps();
+        this.onChanges();
 
         this.subscriptions.push(this.taskService.getRequestNames().subscribe(data => {
             this.requests = data;
@@ -87,8 +88,8 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         ]
 
         this.status = [
-            {description: 'Aprobată', authorized: '1'},
-            {description: 'Respinsa', authorized: '0'}
+            {description: 'Valabilă', authorized: '1'},
+            {description: 'Expirată', authorized: '0'}
         ]
 
         this.taskForm.get('requestCode').valueChanges.subscribe(val1 => {
@@ -124,6 +125,37 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                     )
                 )
             );
+    }
+
+    onChanges(): void {
+        if (this.taskForm.get('expirationDate')) {
+
+            this.subscriptions.push(this.taskForm.get('expirationDate').valueChanges.subscribe(val => {
+                if (val !== null && this.taskForm.get('status').enabled) {
+                    // this.taskForm.get('status').reset();
+                    this.taskForm.get('status').disable();
+                }
+                if (val == null && this.taskForm.get('status').disabled) {
+                    this.taskForm.get('status').enable();
+                }
+                console.log('this.taskForm.get(\'status\')', this.taskForm.get('status').value)
+            }));
+        }
+
+        if (this.taskForm.get('status')) {
+
+            this.subscriptions.push(this.taskForm.get('status').valueChanges.subscribe(val => {
+                if (val !== null  && this.taskForm.get('expirationDate').enabled) {
+                    // this.taskForm.get('expirationDate').reset();
+                    this.taskForm.get('expirationDate').disable();
+                }
+                if (val == null && this.taskForm.get('expirationDate').disabled) {
+                    this.taskForm.get('expirationDate').enable();
+                }
+                console.log('this.taskForm.get(\'expirationDate\')', this.taskForm.get('expirationDate').value)
+            }));
+        }
+
     }
 
     ngOnDestroy(): void {
@@ -172,12 +204,13 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         const searchCriteria = {
             authorizationsNumber: taskFormValue.subject ? taskFormValue.subject : null,
             importer: taskFormValue.company ? taskFormValue.company.id : null,
-            expirationDate: taskFormValue.expirationDate ? taskFormValue.expirationDate : null,
             summ: taskFormValue.summ ? taskFormValue.summ : null,
             currency: (taskFormValue.currency && taskFormValue.currency.id) ? taskFormValue.currency.id : null,
             medicament: taskFormValue.medicament ? taskFormValue.medicament : null,
             medType: (taskFormValue.medType && taskFormValue.medType.medType) ? taskFormValue.medType.medType : null,
-            status: (taskFormValue.status && taskFormValue.status.authorized) ? taskFormValue.status.authorized : null
+            expirationDate: taskFormValue.expirationDate ? taskFormValue.expirationDate : null,
+            lessThanToday: (taskFormValue.status && taskFormValue.status.authorized == '0' ) ?  new Date() : null,
+            moreThanToday: (taskFormValue.status && taskFormValue.status.authorized == '1' ) ?  new Date() : null,
         }
 
 

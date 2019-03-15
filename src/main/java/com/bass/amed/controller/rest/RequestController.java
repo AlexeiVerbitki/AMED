@@ -2119,14 +2119,30 @@ public class RequestController
     @PostMapping(value = "/load-import-authorization-by-filter")
     public ResponseEntity<List<ImportAuthorizationDTO>> getAuthorizationByFilter(@RequestBody ImportAuthorizationSearchCriteria filter) throws CustomException
     {
-        List<ImportAuthorizationDTO> requestList = importAuthorizationDTORepository.getAuthorizationByFilter(filter.getAuthorizationsNumber(),
-                                                                                                          filter.getImporter(),
-                                                                                                          filter.getExpirationDate(),
-                                                                                                          filter.getSumm(),
-                                                                                                          filter.getCurrency(),
-                                                                                                          filter.getMedicament(),
-                                                                                                          filter.getMedType(),
-                                                                                                          filter.getStatus());
+        List<ImportAuthorizationDTO> requestList = new ArrayList<>();
+
+        if (filter.getLessThanToday() == null && filter.getMoreThanToday() == null)
+        {
+
+            requestList = importAuthorizationDTORepository.getAuthorizationByFilter(
+                    filter.getAuthorizationsNumber(),
+                    filter.getImporter(),
+                    filter.getExpirationDate(),
+                    filter.getSumm(),
+                    filter.getCurrency(),
+                    filter.getMedicament(),
+                    filter.getMedType());
+        } else {
+            requestList = importAuthorizationDTORepository.getAuthorizationByFilterDateRange(
+                    filter.getAuthorizationsNumber(),
+                    filter.getImporter(),
+                    filter.getSumm(),
+                    filter.getCurrency(),
+                    filter.getMedicament(),
+                    filter.getMedType(),
+                    filter.getLessThanToday(),
+                    filter.getMoreThanToday());
+        }
 //        if (requestList == null)
 //        {
 //            throw new CustomException("Inregistrarea de Import nu a fost gasita");

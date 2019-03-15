@@ -29,6 +29,10 @@ public class ImportAuthorizationSearchCriteria implements Serializable
     private String currency;
     private String medicament;
     private String medType;
-    private String status;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date lessThanToday;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date moreThanToday;
+//    private Boolean expired;
 
 }
