@@ -30,7 +30,6 @@ public class RegistrationRequestsEntity
     @JoinColumn(name = "company_id")
     private NmEconomicAgentsEntity company;
     @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
-//    @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.ALL} )
     @JoinColumn( name = "import_id" )
     private ImportAuthorizationEntity importAuthorizationEntity;
     @OneToOne( fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,CascadeType.PERSIST} )
@@ -111,7 +110,7 @@ public class RegistrationRequestsEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")
     private Set<ExpertListEntity> expertList = new HashSet<>();
-    @Column(name = "output_document_id")
+	@Column(name = "output_document_id")
     private Integer outputDocumentId;
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "request_id")

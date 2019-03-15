@@ -136,8 +136,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 'eudraCtNrTo': [{value: null, disabled: true}],
                 'codeFrom': [''],
                 'codeTo': [{value: null, disabled: true}],
-                'medicalInstitutionsFrom': [],
-                'medicalInstitutionsTo': [],
+                'medicalInstitutions': [],
                 'trialPopNatFrom': [''],
                 'trialPopNatTo': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
                 'trialPopInternatFrom': [''],
@@ -287,7 +286,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         item.main = false;
                     });
 
-                }, error => console.log(error)
+                }
             )
         );
     }
@@ -296,7 +295,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.administrationService.getClinicalTrailsPhases().subscribe(data => {
                 this.phaseList = data;
-            }, error => console.log(error))
+            })
         );
     }
 
@@ -309,7 +308,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.atcCodesInputsRfPr.pipe(
                 filter((result: string) => {
                     if (result && result.length > 0) {
-                        console.log('result && result.length > 0', result);
                         return true;
                     }
                 }),
@@ -376,7 +374,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.atcCodesInputs.pipe(
                 filter((result: string) => {
                     if (result && result.length > 0) {
-                        console.log('result && result.length > 0', result);
                         return true;
                     }
                 }),
@@ -423,7 +420,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 this.measureUnitsRfPr = data;
                 this.measureUnitsPlacebo = data;
                 this.loadingMeasureUnits = false;
-            }, error => console.log(error))
+            })
         );
     }
 
@@ -449,17 +446,15 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     }
 
     addMedicalInstitution() {
-        // console.log( 'this.addMediacalInstitutionForm',  this.addMediacalInstitutionForm);
-
         const dialogConfig2 = new MatDialogConfig();
 
-        dialogConfig2.disableClose = false;
+        dialogConfig2.disableClose = true;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
-        dialogConfig2.width = '650px';
+        dialogConfig2.width = '800px';
 
         dialogConfig2.data = {
-            medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value.name,
+            nmMedicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
             investigatorsList: this.allInvestigatorsList
         };
 
@@ -467,15 +462,16 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
-                console.log('result', result);
                 if (result == null || result == undefined || result.success === false) {
                     return;
                 }
 
-                const medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
-                medInst.investigators = result.investigators;
-                this.mediacalInstitutionsList.push(medInst);
-                const intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+                const medInst = result.medicalInstitution.nmMedicalInstitution;
+                result.medicalInstitution.isNew = true;
+                this.mediacalInstitutionsList.push(result.medicalInstitution);
+                console.log('this.mediacalInstitutionsList', this.mediacalInstitutionsList);
+                const intdexToDelete = this.allMediacalInstitutionsList.indexOf(medInst);
+                console.log('intdexToDelete', intdexToDelete);
                 this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
                 this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
                 this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
@@ -484,13 +480,9 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         );
     }
 
-    deleteMedicalInstitution(i) {
-        // console.log('i', i);
-        // console.log('this.mediacalInstitutionsList', this.mediacalInstitutionsList);
-        // console.log('this.allMediacalInstitutionsList', this.allMediacalInstitutionsList);
-
-        this.allMediacalInstitutionsList.push(this.mediacalInstitutionsList[i]);
-        this.mediacalInstitutionsList.splice(i, 1);
+    deleteMedicalInstitution(index: number, medInst: any) {
+        this.allMediacalInstitutionsList.push(medInst);
+        this.mediacalInstitutionsList.splice(index, 1);
         this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
     }
 
@@ -502,10 +494,10 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
                 if (this.mediacalInstitutionsList.length > 0) {
                     const missing = this.allMediacalInstitutionsList.filter(item =>
-                        !this.mediacalInstitutionsList.some(other => item.id === other.id));
+                        !this.mediacalInstitutionsList.some(other => item.id === other.nmMedicalInstitution.id));
                     this.allMediacalInstitutionsList = missing;
                 }
-            }, error => console.log(error))
+            })
         );
     }
 
@@ -518,18 +510,15 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                                 step.availableDocTypes ? availableDocsArr = step.availableDocTypes.split(',') : availableDocsArr = [];
                                 let outputDocsArr = [];
                                 step.outputDocTypes ? outputDocsArr = step.outputDocTypes.split(',') : outputDocsArr = [];
-                                // console.log('availableDocsArr', availableDocsArr);
                                 if (step.availableDocTypes) {
                                     this.docTypes = data2;
                                     this.docTypes = this.docTypes.filter(r => availableDocsArr.includes(r.category));
                                     this.outDocuments = this.outDocuments.filter(r => outputDocsArr.includes(r.docType.category));
                                 }
-                            },
-                            error => console.log(error)
+                            }
                         )
                     );
-                },
-                error => console.log(error)
+                }
             )
         );
     }
@@ -537,13 +526,10 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     initPage() {
         this.subscriptions.push(
             this.activatedRoute.params.subscribe(params => {
-                console.log('params', params);
                 this.subscriptions.push(this.requestService.getClinicalTrailAmendmentRequest(params['id']).subscribe(data => {
                         console.log('data', data);
-
                         this.initialData = data;
                         this.isAnalizePage = data.type.id == 4 && data.currentStep == 'A';
-                        console.log('his.isAnalizePage', this.isAnalizePage);
 
                         this.stepName = this.isAnalizePage ? 'Analiza dosarului' : 'Evaluarea primara';
                         this.navbarTitleService.showTitleMsg(this.stepName);
@@ -570,7 +556,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment').setValue(findAmendment);
 
-                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.medicalInstitutionsTo').setValue(
+                        this.clinicTrailAmendForm.get('clinicalTrailAmendment.medicalInstitutions').setValue(
                             findAmendment.medicalInstitutions == null ? [] : findAmendment.medicalInstitutions);
                         this.clinicTrailAmendForm.get('clinicalTrailAmendment.treatmentTo').setValue(
                             findAmendment.treatmentTo == null ? this.treatmentList[0] : findAmendment.treatmentTo);
@@ -593,10 +579,8 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         }
 
                         if (findAmendment.medicalInstitutions !== null) {
-                            this.mediacalInstitutionsList = findAmendment.medicalInstitutionsTo;
+                            this.mediacalInstitutionsList = findAmendment.medicalInstitutions;
                         }
-
-                        // console.log(' this.clinicTrailAmendForm', this.clinicTrailAmendForm);
 
                         this.docs = data.documents;
                         this.docs.forEach(doc => doc.isOld = true);
@@ -610,8 +594,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.loadDocTypes(data);
                         this.loadInvestigatorsList();
                         this.loadMedicalInstitutionsList();
-                    },
-                    error => console.log(error)
+                    }
                 ));
             })
         );
@@ -630,7 +613,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                    console.log('result', result);
                     this.expertList.push(result);
                 }
             }
@@ -639,37 +621,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     removeExpert(index: number) {
         this.expertList.splice(index, 1);
-    }
-
-    editMedicalInstitution(i) {
-        const dialogConfig2 = new MatDialogConfig();
-
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.height = '600px';
-        dialogConfig2.width = '650px';
-
-        // console.log('medInst', this.addMediacalInstitutionForm.get('medicalInstitution').value);
-        console.log('this.mediacalInstitutionsList[i]', this.mediacalInstitutionsList[i]);
-        dialogConfig2.data = {
-            medicalInstitution: this.mediacalInstitutionsList[i].name,
-            investigatorsList: this.allInvestigatorsList,
-            collectedInvestigators: this.mediacalInstitutionsList[i].investigators
-        };
-
-        const dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
-
-        this.subscriptions.push(
-            dialogRef.afterClosed().subscribe(result => {
-                console.log('result', result);
-                if (result == null || result == undefined || result.success === false) {
-                    return;
-                }
-                this.mediacalInstitutionsList[i].investigators = result.investigators;
-            })
-        );
     }
 
     addMedActiveSubstanceDialog() {
@@ -687,7 +638,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
-                console.log('result', result);
                 if (result !== null && result !== undefined && result.response) {
                     this.medActiveSubstances.push({
                         activeSubstance: result.activeSubstance,
@@ -709,7 +659,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
-        console.log('substance', substance);
 
         dialogConfig2.data = {
             activeSubstance: substance.activeSubstance,
@@ -764,7 +713,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
-                console.log('result', result);
                 if (result !== null && result !== undefined && result.response) {
                     this.refProdActiveSubstances.push({
                         activeSubstance: result.activeSubstance,
@@ -835,7 +783,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     save() {
         this.loadingService.show();
-        console.log('formData', this.clinicTrailAmendForm);
 
         const formModel = this.clinicTrailAmendForm.getRawValue();
         formModel.documents = this.docs;
@@ -843,7 +790,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.paymentOrders = this.paymentOrdersList;
         formModel.outputDocuments = this.outDocuments;
 
-        formModel.clinicalTrailAmendment.medicalInstitutionsTo = this.mediacalInstitutionsList;
+        formModel.clinicalTrailAmendment.medicalInstitutions = this.mediacalInstitutionsList;
 
         formModel.clinicalTrailAmendment.medicament = this.medicamentForm.value;
         formModel.clinicalTrailAmendment.medicament.activeSubstances = this.medActiveSubstances;
@@ -856,19 +803,16 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.assignedUser = this.authService.getUserName();
 
         const currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
-        console.log('currentAmendment', currentAmendment);
 
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
         formModel.expertList = this.expertList;
 
-        console.log('Save data', formModel);
         this.subscriptions.push(
             this.requestService.saveClinicalTrailAmendmentRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
                 this.errorHandlerService.showSuccess('Datele salvate cu success');
             }, error => {
                 this.loadingService.hide();
-                console.log(error);
             })
         );
     }
@@ -933,7 +877,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.paymentOrders = this.paymentOrdersList;
 
 
-        formModel.clinicalTrailAmendment.medicalInstitutionsTo = this.mediacalInstitutionsList;
+        formModel.clinicalTrailAmendment.medicalInstitutions = this.mediacalInstitutionsList;
 
         formModel.clinicalTrailAmendment.medicament = this.medicamentForm.value;
         formModel.clinicalTrailAmendment.medicament.activeSubstances = this.medActiveSubstances;
@@ -955,20 +899,15 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
         formModel.currentStep = this.isAnalizePage ? 'AP' : 'A';
 
         const currentAmendment = formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex];
-        // console.log('currentAmendment', currentAmendment);
         formModel.clinicalTrails.clinicTrialAmendEntities[this.amendmentIndex] = formModel.clinicalTrailAmendment;
 
-        console.log('Next page data', formModel);
-
         const pagePath = this.isAnalizePage ? '/dashboard/module/clinic-studies/approval-amendment/' : '/dashboard/module/clinic-studies/analyze-amendment/';
-        console.log('pagePath', pagePath);
         this.subscriptions.push(
             this.requestService.addClinicalTrailAmendmentNextRequest(formModel).subscribe(data => {
                 this.router.navigate([pagePath + data.body]);
                 this.loadingService.hide();
             }, error => {
                 this.loadingService.hide();
-                console.log(error);
             })
         );
     }
@@ -983,7 +922,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             dialogRef2.afterClosed().subscribe(result => {
-                // console.log('result', result);
                 if (result) {
                     this.loadingService.show();
                     const formModel = this.clinicTrailAmendForm.getRawValue();
@@ -1002,7 +940,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                             this.loadingService.hide();
                         }, error => {
                             this.loadingService.hide();
-                            console.log(error);
                         })
                     );
                 }
@@ -1013,10 +950,8 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
     requestAdditionalData() {
         this.loadingService.show();
         this.subscriptions.push(this.requestService.getClinicalTrailRequest(this.clinicTrailAmendForm.get('id').value).subscribe(data => {
-                // console.log('getClinicalTrailRequest', data);
                 this.docs = data.documents;
                 const expertDispozition = data.documents.find(doc => doc.docType.category == 'DDA');
-                //console.log('expertDispozition', expertDispozition);
                 if (!expertDispozition) {
                     this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata.');
                     this.loadingService.hide();
@@ -1024,8 +959,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 }
 
                 const addDataList = data.outputDocuments.filter(doc => doc.docType.category == 'SL');
-                // console.log('addDataList', addDataList);
-                // console.log('addDataList.length', addDataList.length);
                 const dialogRef2 = this.dialogConfirmation.open(AdditionalDataDialogComponent, {
                     width: '800px',
                     height: '600px',
@@ -1041,7 +974,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                 });
 
                 dialogRef2.afterClosed().subscribe(result => {
-                    console.log('dialog result', result);
                     if (result && result) {
                         const dataToSubmit = {
                             date: result.date,
@@ -1057,9 +989,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         };
 
                         this.documentService.addSLC(dataToSubmit).subscribe(data2 => {
-                            console.log('outDocument', data2);
                             this.outDocuments.push(data2.body);
-                            console.log('outDocuments', this.outDocuments);
 
                         });
                     }
@@ -1067,7 +997,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
                 this.loadingService.hide();
             }, error => {
-                console.log(error);
                 this.loadingService.hide();
             })
         );
@@ -1075,8 +1004,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     viewDoc(document: any) {
         const formValue = this.clinicTrailAmendForm.value;
-        console.log('formValue', formValue);
-        // console.log('viewDoc', document);
         const modelToSubmit = {
             nrDoc: document.number,
             responsiblePerson: formValue.registrationRequestMandatedContacts[0].mandatedLastname + ' ' + formValue.registrationRequestMandatedContacts[0].mandatedFirstname,
@@ -1090,7 +1017,6 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
             function: document.signerFunction,
             signerName: document.signerName
         };
-        // console.log('modelToSubmit', modelToSubmit);
         let observable: Observable<any> = null;
         observable = this.documentService.viewRequestNew(modelToSubmit);
 
@@ -1122,7 +1048,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                     this.documentService.deleteSLById(doc.id).subscribe(data => {
                         // this.initialData.outputDocuments.splice(index, 1);
                         this.outDocuments.splice(index, 1);
-                    }, error => console.log(error))
+                    })
                 );
             }
         });

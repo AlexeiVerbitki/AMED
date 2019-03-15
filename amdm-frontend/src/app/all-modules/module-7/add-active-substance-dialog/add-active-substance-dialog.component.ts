@@ -9,6 +9,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
 import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
 import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
 import {AddDeclarationDialogComponent} from "../add-declaration-dialog/add-declaration-dialog.component";
+import {DecimalPipe} from "@angular/common";
 
 @Component({
     selector: 'app-add-active-substance-dialog',
@@ -24,20 +25,27 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
 
 
     rFormSubbmitted = false;
+    rFormDeclarationSubbmitted = false;
     rForm: FormGroup;
 
     substanceUnits: any[];
     allSubstanceUnits: any[];
     activeSubstancesTable: any[] = [];
     selectedSubstancesTable: any[] = [];
+    historyDeclarations: any[] = [];
+    historyViewDetails: any[] = [];
 
     reqId: any;
 
     otherSelectedSubstanceDetails: any[] = [];
 
+    commercialQuantityInvalid : boolean;
+
     selectedSubstance: any;
     authorizationType: any;
-    viewMode = false;
+    declarationMode = false;
+
+    numberPipe: DecimalPipe = new DecimalPipe('en-US');
 
     private subscriptions: Subscription[] = [];
 
@@ -47,23 +55,21 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
                 private fb: FormBuilder,
                 private loadingService: LoaderService,
                 private administrationService: AdministrationService,
-                private errorHandlerService: SuccessOrErrorHandlerService,
-                private drugDecisionsService: DrugDecisionsService,
-                public dialogDeclaration: MatDialog) {
+                private drugDecisionsService: DrugDecisionsService) {
     }
 
     ngOnInit() {
-        this.viewMode = this.dataDialog.details.viewMode;
+        this.declarationMode = this.dataDialog.details.viewMode;
         this.selectedSubstance = this.dataDialog.details.substance;
         this.selectedSubstancesTable = this.selectedSubstance.details;
-        if (!this.selectedSubstancesTable)
-        {
+        if (!this.selectedSubstancesTable) {
             this.selectedSubstancesTable = [];
         }
         this.authorizationType = this.dataDialog.details.authorizationType;
         this.otherSelectedSubstanceDetails = this.dataDialog.details.otherSelectedSubstanceDetails;
         this.reqId = this.dataDialog.details.reqId;
         this.initFormData();
+        this.patchData();
         this.getAuthorizedSubstances();
 
         this.subscriptions.push(
@@ -83,7 +89,68 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
             'availableQuantity': {disabled: true, value: []},
             'substance': [null, Validators.required],
             'availableQuantityUM': {disabled: true, value: null},
+            'commercialQuantity': [null, this.declarationMode? Validators.required : null],
+            'commercialQuantityUM': {
+                disabled: true,
+                value: this.declarationMode ? this.selectedSubstance.packagingQuantityUnitDesc : null
+            },
+            'declarationDate': [null, this.declarationMode? Validators.required : null],
         });
+    }
+
+
+    private patchData() {
+        if (this.declarationMode) {
+            this.selectedSubstancesTable.forEach(sst => {
+                sst.declarations.forEach(df => {
+                    this.historyDeclarations.push(df);
+                })
+
+            });
+
+            let tmpList: any [] = [];
+
+            this.selectedSubstancesTable.forEach(hd => {
+                hd.declarations.forEach(po => {
+                    tmpList.push({
+                        substanceName: hd.substanceName,
+                        quantitySubstance: po.substActiveQuantityUsed,
+                        umActiveName: hd.authorizedQuantityUnitDesc,
+                        quantity: po.quantity,
+                        declarationDate: po.declarationDate,
+                        groupKey: po.groupKey
+                    });
+
+                });
+            });
+
+            let gcList: any [] = [];
+
+            tmpList.forEach(pp => {
+               if (!gcList.includes(pp.groupKey)){
+                   gcList.push(pp.groupKey);
+               }
+            });
+
+            gcList.forEach(oi => {
+                let nameSeparated: any [] = [], quantitySeparated: any [] = [], umSeparated: any [] = [];
+
+                let dt : any[] = tmpList.filter(kk => kk.groupKey === oi);
+                dt.forEach(ty => {
+                    nameSeparated.push(ty.substanceName);
+                    umSeparated.push(ty.umActiveName);
+                    quantitySeparated.push(ty.quantitySubstance);
+                });
+
+                this.historyViewDetails.push({
+                    quantity: dt[0].quantity,
+                    declarationDate: dt[0].declarationDate,
+                    substanceName: nameSeparated,
+                    quantitySubstance: quantitySeparated,
+                    umActiveName: umSeparated,
+                });
+            });
+        }
     }
 
 
@@ -161,7 +228,7 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
     ok() {
         this.dialogRef.close({
             success: true,
-            details: this.selectedSubstancesTable
+            details: this.selectedSubstancesTable,
         });
     }
 
@@ -188,7 +255,7 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
         }
 
         let initialAuthQuantity = this.rForm.value.authorizedQuantity;
-        if (this.rForm.get('authorizedQuantity').value && this.rForm.get('availableQuantity').value ) {
+        if (this.rForm.get('authorizedQuantity').value && this.rForm.get('availableQuantity').value) {
 
             if (this.rForm.get('unitOfMeasurement').value.unitCode && this.rForm.get('substance').value.unitOfMeasureCode != this.rForm.get('unitOfMeasurement').value.unitCode) {
                 this.rForm.get('authorizedQuantity').setValue((this.rForm.value.authorizedQuantity * this.rForm.get('unitOfMeasurement').value.refUnitCodeRate) / this.rForm.get('unitOfMeasurement').value.unitCodeRate);
@@ -198,7 +265,6 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
         if (this.rForm.get('authorizedQuantity').value && this.rForm.get('availableQuantity').value
             && this.rForm.get('authorizedQuantity').value > this.rForm.get('availableQuantity').value) {
             this.rForm.get('authorizedQuantity').setValue(initialAuthQuantity);
-            this.errorHandlerService.showError('Cantitatea autorizata nu poate fi mai mare ca cantitatea admisibila.');
             return;
         }
 
@@ -258,13 +324,12 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
                     }
 
                     this.otherSelectedSubstanceDetails.forEach(oss => {
-                        if (oss.details)
-                        {
+                        if (oss.details) {
                             resultOther += oss.details.filter(a => a.authorizedDrugSubstance.id === val.id).map(o => o.authorizedQuantity).reduce((x, y) => x + y, 0);
                         }
                     })
 
-                    if (data - result -  resultOther > 0) {
+                    if (data - result - resultOther > 0) {
                         this.rForm.get('availableQuantity').setValue(data - result - resultOther);
                         // val.quantity = this.rForm.get('availableQuantity').value;
                     }
@@ -273,25 +338,6 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
         );
 
     }
-
-    validateAuthorizedQuantity() {
-        if (this.rForm.value.authorizedQuantity != null && this.rForm.get('availableQuantity').value != null && this.rForm.get('substance') != null && this.rForm.get('unitOfMeasurement') != null) {
-
-            if (this.rForm.get('unitOfMeasurement').value.unitCode && this.rForm.get('substance').value.unitOfMeasureCode != this.rForm.get('unitOfMeasurement').value.unitCode) {
-
-                this.rForm.value.authorizedQuantity = (this.rForm.value.authorizedQuantity * this.rForm.get('unitOfMeasurement').value.refUnitCodeRate) / this.rForm.get('unitOfMeasurement').value.unitCodeRate;
-
-            }
-
-        }
-        if (this.rForm.value.authorizedQuantity != null && this.rForm.get('availableQuantity').value != null
-            && this.rForm.value.authorizedQuantity > this.rForm.get('availableQuantity').value) {
-            this.errorHandlerService.showError('Cantitatea autorizata nu poate fi mai mare ca cantitatea admisibila.');
-            return;
-        }
-
-    }
-
 
     removeSubstance(index) {
 
@@ -309,33 +355,86 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
 
     }
 
-    declare(substance: any) {
+    declareQuantity() {
+        this.rFormDeclarationSubbmitted = true;
+        this.commercialQuantityInvalid = false;
+        if (this.rForm.get('commercialQuantity').invalid || this.rForm.get('declarationDate').invalid) {
+            return;
+        }
 
-        const data = {
-            substance: substance,
-            mainSubstanceDetails: this.selectedSubstance
-        };
+        //check if remaining is OK
+        let comQuantityTotal = this.selectedSubstance.packagingQuantity;
+        let comQuantityDeclared = this.rForm.get('commercialQuantity').value;
 
-        const dialogRef2 = this.dialogDeclaration.open(AddDeclarationDialogComponent, {
-            data: {
-                details: data,
-                parentWindow: window
-            },
-            hasBackdrop: false,
-            disableClose: false,
-            autoFocus: true,
-            panelClass: 'custom-dialog-container',
-            width: '1000px',
+        let substanceData = this.selectedSubstancesTable[0];
+        let substActiveQuantityToBeUsed = parseFloat(this.numberPipe.transform((substanceData.authorizedQuantity * comQuantityDeclared) / comQuantityTotal, '1.4-4'));
 
-        });
+        if (substActiveQuantityToBeUsed > substanceData.authorizedQuantityRemaining) {
+            this.commercialQuantityInvalid = true;
+            return;
+        }
+        this.rFormDeclarationSubbmitted = false;
 
-        dialogRef2.afterClosed().subscribe(result => {
-            if (result.success) {
-                substance.authorizedQuantityRemaining = result.quantityRemaining;
-            }
-        });
+        this.subscriptions.push(
+            this.drugDecisionsService.generateDeclarationNumber().subscribe(data => {
+                    const generatedSeq = data[0];
+
+
+                    let declarationDate = this.rForm.get('declarationDate').value;
+
+                    this.selectedSubstancesTable.forEach(sst => {
+                        let substActivTotal = sst.authorizedQuantity;
+                        let substActiveQuantityUsed = parseFloat(this.numberPipe.transform((substActivTotal * comQuantityDeclared) / comQuantityTotal, '1.4-4'));
+                        sst.authorizedQuantityRemaining = parseFloat(this.numberPipe.transform(sst.authorizedQuantityRemaining - substActiveQuantityUsed, '1.4-4'));
+
+                        let declaration = {
+                            groupKey: generatedSeq,
+                            substActiveQuantityUsed: substActiveQuantityUsed,
+                            quantity: comQuantityDeclared,
+                            declarationDate: declarationDate
+                        };
+
+                        this.historyDeclarations.push(declaration);
+
+                        sst.declarations.push(declaration);
+
+
+                    });
+                    this.completeHistoryViewData(generatedSeq, comQuantityDeclared, declarationDate);
+
+
+                    this.rForm.get('declarationDate').setValue(null);
+                    this.rForm.get('commercialQuantity').setValue(null);
+                    // this.rForm.get('commercialQuantityUM').setValue(null);
+
+
+                }
+            )
+        );
     }
 
+
+    private completeHistoryViewData(generatedSeq, comQuantityDeclared, declarationDate) {
+        let nameSeparated: any [] = [], quantitySeparated: any [] = [], umSeparated: any [] = [];
+        this.selectedSubstancesTable.forEach(hd => {
+            nameSeparated.push(hd.substanceName);
+            umSeparated.push(hd.authorizedQuantityUnitDesc);
+        });
+
+        this.historyDeclarations.filter(dd => {
+            return dd.groupKey === generatedSeq;
+        }).forEach(hd => {
+            quantitySeparated.push(hd.substActiveQuantityUsed);
+        });
+
+        this.historyViewDetails.push({
+            quantity: comQuantityDeclared,
+            declarationDate: declarationDate,
+            substanceName: nameSeparated,
+            quantitySubstance: quantitySeparated,
+            umActiveName: umSeparated,
+        });
+    }
 
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());

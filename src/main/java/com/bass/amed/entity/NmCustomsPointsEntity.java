@@ -9,8 +9,6 @@ public class NmCustomsPointsEntity {
 	private String  code;
 	private String  description;
 
-
-
 	@Id
 	@Column(name = "id")
 	public Integer getId() {
@@ -45,36 +43,42 @@ public class NmCustomsPointsEntity {
 	}
 
 	@Override
-	public boolean equals(Object o)
-	{
-		if (this == o)
-		{
+	public int hashCode() {
+		int result = id != null ? id
+				.hashCode() : 0;
+		result = 31 * result + (code != null ? code
+				.hashCode() : 0);
+		result = 31 * result + (description != null ? description
+				.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public boolean equals(
+			Object o) {
+		if (this == o) {
 			return true;
 		}
-		if (!(o instanceof NmCustomsPointsEntity))
-		{
+		if (o == null || getClass() != o
+				.getClass()) {
 			return false;
 		}
 
 		NmCustomsPointsEntity that = (NmCustomsPointsEntity) o;
 
-		if (id != null ? !id.equals(that.id) : that.id != null)
-		{
+		if (id != null ? !id
+				.equals(that.id) : that.id != null) {
 			return false;
 		}
-		if (code != null ? !code.equals(that.code) : that.code != null)
-		{
+		if (code != null ? !code
+				.equals(that.code) : that.code != null) {
 			return false;
 		}
-		return description != null ? description.equals(that.description) : that.description == null;
-	}
+		if (description != null ? !description
+				.equals(that.description) : that.description != null) {
+			return false;
+		}
 
-	@Override
-	public int hashCode()
-	{
-		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (code != null ? code.hashCode() : 0);
-		result = 31 * result + (description != null ? description.hashCode() : 0);
-		return result;
+		return true;
 	}
 }

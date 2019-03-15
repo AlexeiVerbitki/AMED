@@ -202,10 +202,10 @@ public class MedAnnihilationController
                                 p.setSeria(m.getSeria());
                                 p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                                 p.setNotes(m.getNote());
-//                                p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
+                                p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
                                 p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
                                 p.setTaxNIM(String.valueOf(AmountUtils.round(m.getTax() * m.getQuantity(), 2)));
-//                                p.setDate(date);
+                                p.setDate(date);
                                 p.setPrimaryPackage(m.getPrimaryPackage());
                                 p.setDocNr(nrIncasari);
 
@@ -221,10 +221,10 @@ public class MedAnnihilationController
                             p.setSeria(m.getSeria());
                             p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                             p.setNotes(m.getNote());
-//                            p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
+                            p.setConfirmatoryDocuments(m.getConfirmativeDocuments());
                             p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
                             p.setTaxNIM(String.valueOf(AmountUtils.round(m.getTax() * m.getQuantity(), 2)));
-//                            p.setDate(date);
+                            p.setDate(date);
                             p.setPrimaryPackage(m.getPrimaryPackage());
                             p.setDocNr(nrIncasari);
 

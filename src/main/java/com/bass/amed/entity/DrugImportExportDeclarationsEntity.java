@@ -24,6 +24,8 @@ public class DrugImportExportDeclarationsEntity
     @Basic
     @Column(name = "quantity")
     private Double quantity;
+    @Column(name = "group_key")
+    private Integer groupKey;
 
 
 }

@@ -19,6 +19,8 @@ public class MedicamentDetailsDTO
     private String registerNumber;
     private String registrationDate;
     private String division;
+    private String volume;
+    private String volumeQuantityMeasurement;
     private String expirationDate;
     private String authorizationHolderDescription;
 

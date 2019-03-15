@@ -7,7 +7,6 @@ import {ClinicalTrialService} from '../../../../shared/service/clinical-trial.se
 import {ReportRegisterMode} from '../../../../shared/enum/report-register-mode.enum';
 import {SpecificReportType} from '../../../../shared/enum/specific-report-type.enum';
 import {ReportLevel} from '../../../../shared/enum/report-level.enum';
-import {Casuality} from '../../../../shared/enum/report-casuality.enum';
 import {ReportGender} from '../../../../shared/enum/report-gender.enum';
 import {ReportTypeSaesusar} from '../../../../shared/enum/report-type-saesusar.enum';
 import {ReportResponseType} from '../../../../shared/enum/report-response-type.enum';
@@ -22,18 +21,16 @@ import {UploadFileService} from '../../../../shared/service/upload/upload-file.s
 })
 export class NotificationDetailslsComponent implements OnInit, OnDestroy {
 
-    private subscriptions: Subscription[] = [];
     ctNotifForm: FormGroup;
     isPatientDied = false;
-
     registerType = ReportRegisterMode;
     specificReportType = SpecificReportType;
     level = ReportLevel;
-    casuality = Casuality;
     reportGender = ReportGender;
     reportTypeSaesusar = ReportTypeSaesusar;
     reportResponseType = ReportResponseType;
     reportSource = ReportSource;
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
@@ -50,7 +47,7 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
             'documents': [],
             'title': [{value: null, disabled: true}],
             'clinicTrailNotificationTypeEntity': [],
-            'startDateInternational': {value: null, disabled: true},
+            // 'startDateInternational': {value: null, disabled: true},
             'startDateNational': {value: null, disabled: true},
             'endDateNational': {value: null, disabled: true},
             'endDateInternational': {value: null, disabled: true},
@@ -87,7 +84,6 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
                 'studyId': {value: null, disabled: true},
                 'patientId': {value: null, disabled: true},
                 'centerId': {value: null, disabled: true},
-                'casuality': {value: null, disabled: true},
                 'actionTakenDrug': {value: null, disabled: true},
                 'companyRemarks': {value: null, disabled: true},
                 'patientInitials': {value: null, disabled: true},
@@ -112,8 +108,9 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
                 'nameAdressManufacturer': {value: null, disabled: true},
                 'mfrControlNo': {value: null, disabled: true},
                 'dateManufactReceived': {value: null, disabled: true},
-                'reportSource': {value: null, disabled: true}
-
+                'reportSource': {value: null, disabled: true},
+                'casualityPerReporter': {value: null, disabled: true},
+                'casualityPerMfr': {value: null, disabled: true}
             })
         });
 
@@ -125,15 +122,18 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
                 console.log('currentNotification', currentNotification);
                 this.ctNotifForm.get('title').setValue(currentNotification.title);
                 this.ctNotifForm.get('clinicTrailNotificationTypeEntity').setValue(currentNotification.clinicTrailNotificationTypeEntity);
-                this.ctNotifForm.get('startDateInternational').setValue(data.clinicalTrails.startDateInternational ? new Date(data.clinicalTrails.startDateInternational) : null);
+                // this.ctNotifForm.get('startDateInternational').
+                // setValue(data.clinicalTrails.startDateInternational ? new Date(data.clinicalTrails.startDateInternational) : null);
                 this.ctNotifForm.get('startDateNational').setValue(data.clinicalTrails.startDateNational ? new Date(data.clinicalTrails.startDateNational) : null);
                 this.ctNotifForm.get('endDateNational').setValue(data.clinicalTrails.endDateNational ? new Date(data.clinicalTrails.endDateNational) : null);
                 this.ctNotifForm.get('endDateInternational').setValue(data.clinicalTrails.endDateInternational ? new Date(data.clinicalTrails.endDateInternational) : null);
 
                 if (currentNotification.clinicTrailNotificationTypeEntity.code == 'DSUR') {
                     this.ctNotifForm.get('reportDsurEntity.registerType').setValue(this.registerType[currentNotification.reportDsurEntity.registerType]);
-                    this.ctNotifForm.get('reportDsurEntity.dateFrom').setValue(currentNotification.reportDsurEntity.dateFrom ? new Date(currentNotification.reportDsurEntity.dateFrom) : null);
-                    this.ctNotifForm.get('reportDsurEntity.dateTo').setValue(currentNotification.reportDsurEntity.dateTo ? new Date(currentNotification.reportDsurEntity.dateTo) : null);
+                    this.ctNotifForm.get('reportDsurEntity.dateFrom').setValue(
+                        currentNotification.reportDsurEntity.dateFrom ? new Date(currentNotification.reportDsurEntity.dateFrom) : null);
+                    this.ctNotifForm.get('reportDsurEntity.dateTo').setValue(
+                        currentNotification.reportDsurEntity.dateTo ? new Date(currentNotification.reportDsurEntity.dateTo) : null);
                     this.ctNotifForm.get('reportDsurEntity.drugName').setValue(currentNotification.reportDsurEntity.drugName);
                     this.ctNotifForm.get('reportDsurEntity.reporter').setValue(currentNotification.reportDsurEntity.reporter);
                     this.ctNotifForm.get('reportDsurEntity.identifiedRisks').setValue(currentNotification.reportDsurEntity.identifiedRisks);
@@ -142,15 +142,18 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
                     this.ctNotifForm.get('reportDsurEntity.conclusions').setValue(currentNotification.reportDsurEntity.conclusions);
                 } else if (currentNotification.clinicTrailNotificationTypeEntity.code == 'LLR') {
                     this.ctNotifForm.get('reportSarLlrEntity.registerType').setValue(this.registerType[currentNotification.reportSarLlrEntity.registerType]);
-                    this.ctNotifForm.get('reportSarLlrEntity.dateFrom').setValue(currentNotification.reportSarLlrEntity.dateFrom ? new Date(currentNotification.reportSarLlrEntity.dateFrom) : null);
-                    this.ctNotifForm.get('reportSarLlrEntity.dateTo').setValue(currentNotification.reportSarLlrEntity.dateTo ? new Date(currentNotification.reportSarLlrEntity.dateTo) : null);
+                    this.ctNotifForm.get('reportSarLlrEntity.dateFrom').setValue(
+                        currentNotification.reportSarLlrEntity.dateFrom ? new Date(currentNotification.reportSarLlrEntity.dateFrom) : null);
+                    this.ctNotifForm.get('reportSarLlrEntity.dateTo').setValue(
+                        currentNotification.reportSarLlrEntity.dateTo ? new Date(currentNotification.reportSarLlrEntity.dateTo) : null);
                     this.ctNotifForm.get('reportSarLlrEntity.reporter').setValue(currentNotification.reportSarLlrEntity.reporter);
                     this.ctNotifForm.get('reportSarLlrEntity.recordedCases').setValue(currentNotification.reportSarLlrEntity.recordedCases);
                     this.ctNotifForm.get('reportSarLlrEntity.conclusions').setValue(currentNotification.reportSarLlrEntity.conclusions);
                 } else if (currentNotification.clinicTrailNotificationTypeEntity.code == 'SUSAR/SAE') {
                     console.log('specificReportType', currentNotification.reportSaeSusarEntity.specificReportType);
                     this.ctNotifForm.get('reportSaeSusarEntity.specificReportType').setValue(this.specificReportType[currentNotification.reportSaeSusarEntity.specificReportType]);
-                    this.ctNotifForm.get('reportSaeSusarEntity.thisReportDate').setValue(currentNotification.reportSaeSusarEntity.thisReportDate ? new Date(currentNotification.reportSaeSusarEntity.thisReportDate) : null);
+                    this.ctNotifForm.get('reportSaeSusarEntity.thisReportDate').setValue(
+                        currentNotification.reportSaeSusarEntity.thisReportDate ? new Date(currentNotification.reportSaeSusarEntity.thisReportDate) : null);
                     this.ctNotifForm.get('reportSaeSusarEntity.registerType').setValue(this.registerType[currentNotification.reportSaeSusarEntity.registerType]);
                     this.ctNotifForm.get('reportSaeSusarEntity.reporter').setValue(currentNotification.reportSaeSusarEntity.reporter);
                     this.ctNotifForm.get('reportSaeSusarEntity.reportType').setValue(currentNotification.reportSaeSusarEntity.reportType);
@@ -158,18 +161,21 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
                     this.ctNotifForm.get('reportSaeSusarEntity.studyId').setValue(currentNotification.reportSaeSusarEntity.studyId);
                     this.ctNotifForm.get('reportSaeSusarEntity.patientId').setValue(currentNotification.reportSaeSusarEntity.patientId);
                     this.ctNotifForm.get('reportSaeSusarEntity.centerId').setValue(currentNotification.reportSaeSusarEntity.centerId);
-                    this.ctNotifForm.get('reportSaeSusarEntity.casuality').setValue(this.casuality[currentNotification.reportSaeSusarEntity.casuality]);
                     this.ctNotifForm.get('reportSaeSusarEntity.actionTakenDrug').setValue(currentNotification.reportSaeSusarEntity.actionTakenDrug);
                     this.ctNotifForm.get('reportSaeSusarEntity.companyRemarks').setValue(currentNotification.reportSaeSusarEntity.companyRemarks);
                     this.ctNotifForm.get('reportSaeSusarEntity.patientInitials').setValue(currentNotification.reportSaeSusarEntity.patientInitials);
-                    this.ctNotifForm.get('reportSaeSusarEntity.dateOfBirth').setValue(currentNotification.reportSaeSusarEntity.dateOfBirth ? new Date(currentNotification.reportSaeSusarEntity.dateOfBirth) : null);
+                    this.ctNotifForm.get('reportSaeSusarEntity.dateOfBirth').setValue(
+                        currentNotification.reportSaeSusarEntity.dateOfBirth ? new Date(currentNotification.reportSaeSusarEntity.dateOfBirth) : null);
                     this.ctNotifForm.get('reportSaeSusarEntity.age').setValue(currentNotification.reportSaeSusarEntity.age);
                     this.ctNotifForm.get('reportSaeSusarEntity.sex').setValue(this.reportGender[currentNotification.reportSaeSusarEntity.sex]);
-                    this.ctNotifForm.get('reportSaeSusarEntity.reactionOnSet').setValue(currentNotification.reportSaeSusarEntity.reactionOnSet ? new Date(currentNotification.reportSaeSusarEntity.reactionOnSet) : null);
+                    this.ctNotifForm.get('reportSaeSusarEntity.reactionOnSet').setValue(
+                        currentNotification.reportSaeSusarEntity.reactionOnSet ? new Date(currentNotification.reportSaeSusarEntity.reactionOnSet) : null);
                     this.ctNotifForm.get('reportSaeSusarEntity.describeReactions').setValue(currentNotification.reportSaeSusarEntity.describeReactions);
                     this.ctNotifForm.get('reportSaeSusarEntity.typeSaesusar').setValue(this.reportTypeSaesusar[currentNotification.reportSaeSusarEntity.typeSaesusar]);
                     this.isPatientDied = this.reportTypeSaesusar[currentNotification.reportSaeSusarEntity.typeSaesusar] == 'PATIENT DIED';
-                    this.isPatientDied ? this.ctNotifForm.get('reportSaeSusarEntity.patientDiedDate').setValue(new Date(currentNotification.reportSaeSusarEntity.patientDiedDate)) : null;
+                    this.isPatientDied
+                        ? this.ctNotifForm.get('reportSaeSusarEntity.patientDiedDate').setValue(new Date(currentNotification.reportSaeSusarEntity.patientDiedDate))
+                        : null;
                     this.ctNotifForm.get('reportSaeSusarEntity.suspectDrug').setValue(currentNotification.reportSaeSusarEntity.suspectDrug);
                     this.ctNotifForm.get('reportSaeSusarEntity.dailyDose').setValue(currentNotification.reportSaeSusarEntity.dailyDose);
                     this.ctNotifForm.get('reportSaeSusarEntity.routesOfAdmin').setValue(currentNotification.reportSaeSusarEntity.routesOfAdmin);
@@ -186,11 +192,11 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
                     this.ctNotifForm.get('reportSaeSusarEntity.mfrControlNo').setValue(currentNotification.reportSaeSusarEntity.mfrControlNo);
                     this.ctNotifForm.get('reportSaeSusarEntity.dateManufactReceived').setValue(new Date(currentNotification.reportSaeSusarEntity.dateManufactReceived));
                     this.ctNotifForm.get('reportSaeSusarEntity.reportSource').setValue(this.reportSource[currentNotification.reportSaeSusarEntity.reportSource]);
-
+                    this.ctNotifForm.get('reportSaeSusarEntity.casualityPerReporter').setValue(currentNotification.reportSaeSusarEntity.casualityPerReporter);
+                    this.ctNotifForm.get('reportSaeSusarEntity.casualityPerMfr').setValue(currentNotification.reportSaeSusarEntity.casualityPerMfr);
                 }
 
                 console.log('this.ctNotifForm', this.ctNotifForm);
-
             })
         );
     }
@@ -209,15 +215,15 @@ export class NotificationDetailslsComponent implements OnInit, OnDestroy {
         );
     }
 
-    private saveToFileSystem(response: any, docName: string) {
-        const blob = new Blob([response]);
-        saveAs(blob, docName);
-    }
-
     ngOnDestroy(): void {
         this.subscriptions.forEach(s => {
             s.unsubscribe();
         });
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
     }
 
 }

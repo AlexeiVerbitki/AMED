@@ -20,7 +20,8 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 
     List<MedicamentNamesListProjection> findByNameStartingWithIgnoreCase(String name);
 
-    MedicamentEntity findByCode(String code);
+    MedicamentEntity findByCodeAndStatus(String code,String status);
+    List<MedicamentEntity> findByCode(String code);
 
 //    Optional<MedicamentEntity> findById(Integer id);
 
@@ -105,4 +106,8 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
     @Query(value = "SELECT m.* FROM medicament m join nm_prices np on m.id = np.medicament_id WHERE (upper(m.name) LIKE upper(CONCAT(?1, '%')) OR m.code LIKE (CONCAT(?1, '%'))) AND m.status = 'F'", nativeQuery
             = true)
     List<MedicamentEntity> findAllByNameWithPrice(String name, String status);
+
+    @Query(value = "SELECT m.* FROM medicament m WHERE m.status = 'F' and m.request_id is null and m.registration_number is not null and m.registration_number!=0", nativeQuery
+            = true)
+    List<MedicamentEntity> findByRequestIdIsNull();
 }

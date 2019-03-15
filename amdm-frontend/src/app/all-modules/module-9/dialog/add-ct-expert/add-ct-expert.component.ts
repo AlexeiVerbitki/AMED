@@ -30,8 +30,7 @@ export class AddCtExpertComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.administrationService.getAllEmployees().subscribe(data => {
                     this.experts = data;
-                },
-                error => console.log(error)
+                }
             )
         );
     }

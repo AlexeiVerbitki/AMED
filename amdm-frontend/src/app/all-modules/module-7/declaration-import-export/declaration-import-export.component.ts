@@ -115,7 +115,7 @@ export class DeclarationImportExportComponent implements OnInit, OnDestroy {
                 dt.substanceCode = dt.authorizedDrugSubstance.substanceCode;
                 dt.authorizedQuantityUnitDesc = this.allSubstanceUnits.find(asu => asu.code === dt.authorizedQuantityUnitCode).description;
                 const authorizedQuantityRemaining = dt.authorizedQuantity - dt.declarations.map(dcl => dcl.substActiveQuantityUsed).reduce((a, b) => a + b, 0);
-                dt.authorizedQuantityRemaining = this.numberPipe.transform(authorizedQuantityRemaining, '1.2-2');
+                dt.authorizedQuantityRemaining = this.numberPipe.transform(authorizedQuantityRemaining, '1.4-4');
             })
            sf.packagingQuantityUnitDesc = this.allSubstanceUnits.find(asu => asu.code === sf.requestQuantityUnitCode).description;
         });
@@ -144,7 +144,7 @@ export class DeclarationImportExportComponent implements OnInit, OnDestroy {
                 details: data,
                 parentWindow: window
             },
-            hasBackdrop: false,
+            hasBackdrop: true,
             disableClose: false,
             autoFocus: true,
             panelClass: 'custom-dialog-container',
@@ -221,7 +221,7 @@ export class DeclarationImportExportComponent implements OnInit, OnDestroy {
                 details: data,
                 parentWindow: window
             },
-            hasBackdrop: false,
+            hasBackdrop: true,
             disableClose: false,
             autoFocus: true,
             panelClass: 'custom-dialog-container',
@@ -230,7 +230,7 @@ export class DeclarationImportExportComponent implements OnInit, OnDestroy {
         });
 
         dialogRef2.afterClosed().subscribe(result => {
-            if (result.success) {
+            if (result && result.success) {
                 substance.details = result.details;
             }
         });

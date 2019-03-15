@@ -47,10 +47,8 @@ export class DdCtListComponent implements OnInit {
     loadDDs() {
         this.subscriptions.push(
             this.requestService.getDDCs().subscribe(data => {
-                    // console.log('data', data);
                     this.dataSource.data = data;
-                },
-                error => console.log(error)
+                }
             )
         );
     }
@@ -80,7 +78,6 @@ export class DdCtListComponent implements OnInit {
                 window.open(fileURL);
             },
             error => {
-                console.log(error);
             }
             )
         );
@@ -106,7 +103,6 @@ export class DdCtListComponent implements OnInit {
                     },
                     error => {
                         this.loadingService.hide();
-                        console.log(error);
                     }
                     )
                 );

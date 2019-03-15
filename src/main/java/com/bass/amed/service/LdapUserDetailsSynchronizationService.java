@@ -48,7 +48,7 @@ public class LdapUserDetailsSynchronizationService
     {
         if(ldapContextSource.getPassword().isEmpty())
         {
-            throw new CustomException("test", HttpStatus.UNAUTHORIZED);
+            throw new CustomException("Need to authenticate", HttpStatus.UNAUTHORIZED);
         }
         List<LdapUserDetailsDTO> ldapUserDetails = getAllLdapUserDetails();
         newRoles = syncronizeRoles(ldapUserDetails);

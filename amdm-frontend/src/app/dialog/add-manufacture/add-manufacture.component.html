@@ -9,6 +9,10 @@
 					           placeholder="Producător *"
 					           (ngModelChange)="checkActiveSubstanceManufacture()"
 					           formControlName="manufacture">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.description}} <br/>
+							<small class="form-text text-muted">{{item.address}}</small>
+						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && (aForm.get('manufacture').value==null || aForm.get('manufacture').value.toString().length==0)">
 						<small class="text-muted"><strong class="text-danger">Producatorul trebuie selectat</strong></small>

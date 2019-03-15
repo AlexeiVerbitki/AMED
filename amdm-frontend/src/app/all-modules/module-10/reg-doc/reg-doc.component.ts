@@ -31,6 +31,7 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
     docTypes: any[];
     executors: any[];
     registerCodes: any[];
+    listOfInLetters: any[];
 
     generatedDocNrSeq: number;
     formSubmitted = false;
@@ -39,7 +40,7 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
     isExecutor = false;
     solicitant = false;
     execTerm = false;
-    isOutLetter = false;
+    isInLetter = false;
 
     private subscriptions: Subscription[] = [];
 
@@ -59,7 +60,8 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
                 'recipient': [null],
                 'executorList': [[], Validators.required],
                 'executionDate': [null],
-                'problemDescription': [null]
+                'problemDescription': [null],
+                'letterNumber': [null]
             }
         );
     }
@@ -96,6 +98,10 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
             error => console.log(error)
             )
         );
+
+        this.subscriptions.push((this.requestService.retrieveInLetters().subscribe(data => {
+            this.listOfInLetters = data;
+        })));
         this.subscribeForValueChanges();
     }
 
@@ -110,38 +116,42 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
                 if (regRequestCode == null) {
                     this.isExecutor = false;
                     this.execTerm = false;
-                    this.isOutLetter = false;
+                    this.isInLetter = false;
                 } else if (regRequestCode.registerCode == 'Rg01') {
                     this.initialDocTypes.forEach(doc => 'AX,SIN'.includes(doc.category) ? this.docTypes.push(doc) : null);
-                    this.solicitant = true;
-                    this.isExecutor = false;
-                    this.execTerm = false;
-                    this.isOutLetter = true;
-                    this.rForm.get('executorList').setValidators(null);
-                } else if (regRequestCode.registerCode == 'Rg02') {
-                    this.initialDocTypes.forEach(doc => 'AX,SIE'.includes(doc.category) ? this.docTypes.push(doc) : null);
                     this.solicitant = false;
                     this.isExecutor = true;
-                    this.execTerm = false;
-                    this.isOutLetter = false;
+                    this.execTerm = true;
+                    this.isInLetter = false;
                     this.rForm.get('executorList').setValidators(Validators.required);
+                } else if (regRequestCode.registerCode == 'Rg02') {
+                    this.initialDocTypes.forEach(doc => 'AX,SIE'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.solicitant = true;
+                    this.isExecutor = true;
+                    this.execTerm = false;
+                    this.isInLetter = true;
+                    this.rForm.get('executorList').setValidators(null);
                 } else if (regRequestCode.registerCode == 'Rg03') {
                     this.initialDocTypes.forEach(doc => 'AX,DI'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.solicitant = false;
                     this.isExecutor = true;
                     this.execTerm = true;
-                    this.isOutLetter = false;
-                    this.rForm.get('executorList').setValidators(Validators.required);
+                    this.isInLetter = false;
+                    this.rForm.get('executorList').setValidators(null);
                 } else if (regRequestCode.registerCode == 'Rg04') {
                     this.initialDocTypes.forEach(doc => 'AX,OR'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.solicitant = false;
                     this.isExecutor = true;
                     this.execTerm = true;
-                    this.isOutLetter = false;
-                    this.rForm.get('executorList').setValidators(Validators.required);
+                    this.isInLetter = false;
+                    this.rForm.get('executorList').setValidators(null);
+                    console.log('rg 04 validators');
                 } else if (regRequestCode.registerCode == 'Rg05') {
                     this.initialDocTypes.forEach(doc => 'AX,PT'.includes(doc.category) ? this.docTypes.push(doc) : null);
+                    this.solicitant = false;
                     this.isExecutor = true;
                     this.execTerm = true;
-                    this.isOutLetter = false;
+                    this.isInLetter = false;
                     this.rForm.get('executorList').setValidators(Validators.required);
                 }
                 this.rForm.get('executorList').updateValueAndValidity();
@@ -152,7 +162,6 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
 
     nextStep() {
         this.formSubmitted = true;
-        console.log(this.checkIfDocTypeIsValidForRegistry());
         if (this.documents.length === 0 || !this.rForm.valid || !this.checkIfDocTypeIsValidForRegistry()) {
             return;
         }
@@ -171,8 +180,9 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
         modelToSubmit.registrationRequestsEntity.startDate = this.rForm.get('startDate').value;
         modelToSubmit.registrationRequestsEntity.regSubject = this.rForm.get('problemDescription').value;
 
-        if (this.rForm.get('requestNumber').value.registerCode == 'Rg01') {
-            modelToSubmit.registrationRequestsEntity.currentStep = 'FI';
+        if (this.isFlowFinished()) {
+            modelToSubmit.registrationRequestsEntity.currentStep = 'F';
+            modelToSubmit.registrationRequestsEntity.endDate = new Date();
 
             modelToSubmit.registrationRequestsEntity.requestHistories = [{
                 startDate: this.rForm.get('startDate').value,
@@ -194,7 +204,8 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
         modelToSubmit.recipient = this.rForm.get('recipient').value;
         modelToSubmit.executionDate = this.rForm.get('executionDate').value;
         modelToSubmit.problemDescription = this.rForm.get('problemDescription').value;
-
+        modelToSubmit.letterNumber = this.rForm.get('letterNumber').value;
+        console.log(this.rForm.value.executorList);
         if (this.rForm.value.executorList != null) {
             this.rForm.value.executorList.forEach(elem => modelToSubmit.executors.push({
                 name: elem.username, fullname: elem.fullname, confirmed: false
@@ -210,6 +221,19 @@ export class RegDocComponent implements OnInit, OnDestroy, CanModuleDeactivate {
                 this.router.navigate(['dashboard/homepage/']);
             }, error => this.loadingService.hide())
         );
+    }
+
+    isFlowFinished(): boolean {
+        if (this.rForm.get('requestNumber').value.registerCode == 'Rg02') {
+            return true;
+        }
+        if (this.rForm.get('requestNumber').value.registerCode == 'Rg03' && this.rForm.get('executorList').value.length == 0) {
+            return true;
+        }
+        if (this.rForm.get('requestNumber').value.registerCode == 'Rg04' && this.rForm.get('executorList').value.length == 0) {
+            return true;
+        }
+        return false;
     }
 
     checkIfDocTypeIsValidForRegistry(): boolean {

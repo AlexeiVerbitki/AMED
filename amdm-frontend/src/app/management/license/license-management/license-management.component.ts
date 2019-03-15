@@ -124,7 +124,7 @@ export class LicenseManagementComponent implements OnInit, OnDestroy {
             data: {
                 licenseId: licenseId,
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

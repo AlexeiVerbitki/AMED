@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NmPricesRepository extends JpaRepository<NmPricesEntity, Integer>
 {
-    NmPricesEntity findOneByMedicamentIdAndStatus(Integer mId, String status);
+    NmPricesEntity findFirstByMedicamentIdAndStatusOrderByExpirationDateDesc(Integer mId, String status);
     List<NmPricesEntity> findOneByMedicamentId(Integer medId);
 
 

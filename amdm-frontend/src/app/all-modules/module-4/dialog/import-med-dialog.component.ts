@@ -140,7 +140,6 @@ export class ImportMedDialogComponent implements OnInit, OnDestroy {
             const nameValid = this.dialogData.medicament.name;
             const quantityValid = this.dialogData.quantity;
             const approvedQuantityValid = this.dialogData.medicament.approvedQuantity;
-            // const approvedQuantityValid = this.dialogData.approvedQuantity;
             const priceValid = this.dialogData.price;
             const currencyValid = this.dialogData.currency;
 

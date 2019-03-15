@@ -20,7 +20,7 @@
 			<th scope="col">Denumire</th>
 			<th scope="col">Data incarcarii</th>
 			<th scope="col">Divizari</th>
-			<th *ngIf="isModify" scope="col">Status</th>
+			<!--<th *ngIf="isModify" scope="col">Status</th>-->
 			<th scope="col">Actiuni</th>
 		</tr>
 		</thead>
@@ -29,7 +29,7 @@
 			<td>{{ instruction.name }}</td>
 			<td>{{ instruction.date | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
 			<td>{{ getConcatenatedDivision(instruction.divisions) }}</td>
-			<td *ngIf="isModify">{{ instruction.status=='O' ? 'Instructiune existenta' : (instruction.status=='N' ? 'Instructiune noua' : 'Instructiune  modificata') }}</td>
+			<!--<td *ngIf="isModify">{{ instruction.status=='O' ? 'Instructiune existenta' : (instruction.status=='N' ? 'Instructiune noua' : 'Instructiune  modificata') }}</td>-->
 			<td>
 				<button type="button" class="btn btn-mdb-color btn-sm waves-light" (click)="viewFile(instruction)"
 				        mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>

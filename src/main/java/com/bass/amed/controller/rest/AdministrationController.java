@@ -123,6 +123,8 @@ public class AdministrationController
     private ScrRoleRepository                     scrRoleRepository;
     @Autowired
     private ScrAuthorityRepository                scrAuthorityRepository;
+    @Autowired
+    private CtMedInstSubdivRepository ctMedInstSubdivRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr()
@@ -427,16 +429,17 @@ public class AdministrationController
     }
 
     @RequestMapping("/all-investigators")
-    public ResponseEntity<List<CtInvestigatorEntity>> retrieveAllInvestigators()
+    public ResponseEntity<List<NmInvestigatorsEntity>> retrieveAllInvestigators()
     {
         LOGGER.debug("Retrieve all investigators");
         return new ResponseEntity<>(investigatorRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-medical-institutions")
-    public ResponseEntity<List<CtMedicalInstitutionEntity>> retrieveMedicalInstitutions()
+    public ResponseEntity<List<NmMedicalInstitutionEntity>> retrieveMedicalInstitutions()
     {
         LOGGER.debug("Retrieve all investigators");
+        List<NmMedicalInstitutionEntity> institutions = medicalInstitutionsRepository.findAll();
         return new ResponseEntity<>(medicalInstitutionsRepository.findAll(), HttpStatus.OK);
     }
 
@@ -870,5 +873,11 @@ public class AdministrationController
         return new ResponseEntity<>("{\"val1\" : {" + json + "},\"val2\" : {" + jsonWithIds + "} }", HttpStatus.OK);
     }
 
+    @GetMapping("/get-med-inst-subdivisions-by-id")
+    public ResponseEntity<List<NmMedInstSubdivisionsEntity>> getMedInstSubdivisionsById(@RequestParam(value = "id") Integer id) 
+	{
+        LOGGER.debug("Retrieve medical institution subdivisions by id");
+        return new ResponseEntity<>(ctMedInstSubdivRepository.findSubdivisionsByMedicalInstitutionId(id), HttpStatus.OK);
+    }
 
 }

@@ -69,7 +69,8 @@ export class RegCerereGmpComponent implements OnInit, OnDestroy, CanModuleDeacti
             'dataEliberariiLic': {disabled: true, value: null},
             'dataExpirariiLic': {disabled: true, value: null},
             'adresa': [null],
-            'idno': [null]
+            'idno': [null],
+            'regSubject': ['', Validators.required]
         });
     }
 

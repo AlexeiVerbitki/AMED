@@ -208,7 +208,7 @@ export class AnnihilationManagementComponent implements OnInit, OnDestroy {
             data: {
                 annihilationId: annihilationId,
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

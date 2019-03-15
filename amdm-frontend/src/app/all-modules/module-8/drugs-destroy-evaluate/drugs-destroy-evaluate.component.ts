@@ -412,7 +412,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
                 annihilationMed: medicamentToDestroy,
                 destructionMethods: this.destructionMethods
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

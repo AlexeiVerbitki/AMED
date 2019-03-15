@@ -26,7 +26,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                         }
                         localStorage.removeItem('authenticationToken');
                         this.router.navigateByUrl('/', {preserveQueryParams: true});
-                        // return throwError(error.message);
+                        return throwError(error.message);
                     }
                     let errMsg = '';
                     if (error.status === 404) {

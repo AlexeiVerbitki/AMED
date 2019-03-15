@@ -8,12 +8,15 @@ import com.bass.amed.dto.drugs.DrugDecisionsFilterDetailsDTO;
 import com.bass.amed.dto.drugs.OldDrugDecisionDetailsDTO;
 import com.bass.amed.entity.*;
 import com.bass.amed.entity.sequence.SeqDrugAuthorizationNumberEntity;
+import com.bass.amed.entity.sequence.SeqDrugDeclarationEntity;
+import com.bass.amed.entity.sequence.SeqLicenseNumberEntity;
 import com.bass.amed.exception.CustomException;
 import com.bass.amed.projection.DrugRemainingSubstanceProjection;
 import com.bass.amed.repository.EconomicAgentsRepository;
 import com.bass.amed.repository.RequestRepository;
 import com.bass.amed.repository.RequestTypeRepository;
 import com.bass.amed.repository.drugs.*;
+import com.bass.amed.repository.sequence.SeqDrugDeclarationRepository;
 import com.bass.amed.utils.AmountUtils;
 import com.bass.amed.utils.Utils;
 import org.slf4j.Logger;
@@ -60,6 +63,8 @@ public class DrugDecisionsController {
     private SeqDrugAuthorizationNumberRepository seqDrugAuthorizationNumberRepository;
     @Autowired
     private DrugImportExportDeclarationsRepository drugImportExportDeclarationsRepository;
+    @Autowired
+    private SeqDrugDeclarationRepository seqDrugDeclarationRepository;
 
     @Autowired
     private JobSchedulerComponent jobSchedulerComponent;
@@ -228,5 +233,14 @@ public class DrugDecisionsController {
 
         Double total = authOpt.get().getQuantity() -( notFinishedAuthorizations.isPresent() ? notFinishedAuthorizations.get() : 0.0 ) - totalFinishedUsed;
         return new ResponseEntity<>(AmountUtils.round(total,2), HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/generate-declaration-number")
+    public ResponseEntity<List<Integer>> generateDeclarationNumber()
+    {
+        SeqDrugDeclarationEntity seq = new SeqDrugDeclarationEntity();
+        seqDrugDeclarationRepository.save(seq);
+        return new ResponseEntity<>(Arrays.asList(seq.getId()), HttpStatus.OK);
     }
 }

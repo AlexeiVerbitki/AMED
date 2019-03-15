@@ -170,6 +170,7 @@ export class RequestService {
         return this.http.get('/api/load-requests-by-import-id', {params: {id: id}});
     }
 
+   
     getAuthorizationByFilter(request): Observable<any> {
         return this.http.post<any>('/api/load-import-authorization-by-filter', request, {observe: 'response'});
     }
@@ -312,4 +313,7 @@ export class RequestService {
         return this.http.post<any>('/api/interrupt-gmp-process', details, {observe: 'response'});
     }
 
+    retrieveInLetters(): Observable<any> {
+        return this.http.get('/api/retrieve-in-letters', {responseType: 'json'});
+}
 }

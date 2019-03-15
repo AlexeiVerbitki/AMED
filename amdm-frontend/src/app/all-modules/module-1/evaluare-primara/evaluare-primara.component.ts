@@ -66,6 +66,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     loadingManufacture = false;
     standarts: any[];
     removeExperts = false;
+    oldType: any;
 
     constructor(public dialog: MatDialog,
                 private fb: FormBuilder,
@@ -133,8 +134,21 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.eForm.get('regnr').valueChanges.subscribe(val => {
             if (val && val.regnr) {
                 this.loadMedicamentDetailsByRegNr(val.regnr);
-            } else {
-                this.clearAllDetails();
+            }
+        });
+        this.eForm.get('type').valueChanges.subscribe(val => {
+            if (val && val.code != 'MERG' && val.code != 'MERS') {
+                this.eForm.get('medicament.dose').enable();
+                this.eForm.get('medicament.pharmaceuticalFormType').enable();
+                this.eForm.get('medicament.pharmaceuticalForm').enable();
+                this.eForm.get('medicament.atcCode').enable();
+                this.eForm.get('medicament.group').enable();
+                this.eForm.get('medicament.prescription').enable();
+                this.eForm.get('medicament.internationalMedicamentName').enable();
+                this.eForm.get('medicament.medTypesValues').enable();
+                this.eForm.get('medicament.authorizationHolder').enable();
+                this.eForm.get('medicament.termsOfValidity').enable();
+                this.eForm.get('medicament.commercialName').enable();
             }
         });
     }
@@ -147,6 +161,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.fillRequestDetails(data);
                         this.initiateMedicamentDetails(data, false);
                         if (data.type && (data.type.code == 'MERG' || data.type.code == 'MERS')) {
+                            this.eForm.get('regnr').setValue(data.medicaments[0].registrationNumber);
                             this.disabeFieldsForRepeatedRegistration();
                         }
                     })
@@ -157,7 +172,9 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     clearAllDetails() {
         this.formSubmitted = false;
-        this.initialData.medicaments = [];
+        if (this.initialData) {
+            this.initialData.medicaments = [];
+        }
         this.divisions = [];
         this.displayInstructions();
         this.displayMachets();
@@ -221,6 +238,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.eForm.get('medicament.medTypesValues').disable();
         this.eForm.get('medicament.authorizationHolder').disable();
         this.eForm.get('medicament.termsOfValidity').disable();
+        this.eForm.get('medicament.commercialName').disable();
     }
 
     fillRequestDetails(data: any) {
@@ -234,7 +252,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.eForm.get('requestHistories').setValue(data.requestHistories);
         this.eForm.get('company').setValue(data.company);
         this.eForm.get('companyValue').setValue(data.company.name);
-	    this.standarts = data.laboratorReferenceStandards;
+        this.standarts = data.laboratorReferenceStandards;
     }
 
     initiateMedicamentDetails(data: any, isRepeatedRegistration: boolean) {
@@ -248,7 +266,6 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             data.type = this.reqTypes.find(t => t.code == this.eForm.get('type').value.code);
             data.labIncluded = false;
         }
-        console.log( this.outDocuments);
         const rl = this.outDocuments.find(r => r.docType.category == 'RL');
         if (rl && (rl.responseReceived == 0 || rl.responseReceived)) {
             this.eForm.get('labResponse').setValue(rl.responseReceived.toString());
@@ -388,12 +405,12 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 if (entry.number) {
                     const rl = this.documents.find(r => r.docType.category == 'RL');
                     if (rl) {
-                        entry.status = 'Inclus in actul de primire-predare. Raspuns primit.';
+                        entry.status = 'Inclus in actul de predare-primire. Raspuns primit.';
                     } else {
-                        entry.status = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                        entry.status = 'Inclus in actul de predare-primire. Asteptare raspuns.';
                     }
                 } else {
-                    entry.status = 'Urmeaza a fi inclus in actul de primire-predare';
+                    entry.status = 'Urmeaza a fi inclus in actul de predare-primire';
                 }
             }
         }
@@ -467,7 +484,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                                     this.outDocuments.push({
                                         name: 'Solicitare desfasurare analize de laborator',
                                         docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                                        status: 'Urmeaza a fi inclus in actul de primire-predare',
+                                        status: 'Urmeaza a fi inclus in actul de predare-primire',
                                         date: new Date()
                                     });
                                 } else if (dataDB.labIncluded == 1 && dataDB.labNumber) {
@@ -479,9 +496,9 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                                     const rl = this.documents.find(r => r.docType.category == 'RL');
                                     let statusDoc = '';
                                     if (rl) {
-                                        statusDoc = 'Inclus in actul de primire-predare. Raspuns primit.';
+                                        statusDoc = 'Inclus in actul de predare-primire. Raspuns primit.';
                                     } else {
-                                        statusDoc = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                                        statusDoc = 'Inclus in actul de predare-primire. Asteptare raspuns.';
                                     }
                                     this.outDocuments.push({
                                         name: 'Solicitare desfasurare analize de laborator',
@@ -889,7 +906,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.outDocuments.push({
                             name: 'Solicitare desfasurare analize de laborator',
                             docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                            status: 'Urmeaza a fi inclus in actul de primire-predare',
+                            status: 'Urmeaza a fi inclus in actul de predare-primire',
                             date: new Date()
                         });
                         this.standarts = result.standards;
@@ -1104,9 +1121,6 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     }
 
     checkProducatorProdusFinit(manufacture: any, value: any) {
-        for (const m of this.manufacturesTable) {
-            m.producatorProdusFinit = false;
-        }
         manufacture.producatorProdusFinit = value.checked;
         this.payment.manufactureModified();
     }
@@ -1249,7 +1263,9 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
-        dialogConfig2.data = division;
+        const disabledMainFields =  this.eForm.get('type').value
+            && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS');
+        dialogConfig2.data = {division : division, disabledMainFields : disabledMainFields};
 
         const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
 
@@ -1258,6 +1274,11 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 this.divisions[index].samplesNumber = result.samplesNumber;
                 this.divisions[index].serialNr = result.serialNr;
                 this.divisions[index].samplesExpirationDate = result.samplesExpirationDate;
+                if (!disabledMainFields) {
+                    this.divisions[index].description = result.division;
+                    this.divisions[index].volume = result.volume;
+                    this.divisions[index].volumeQuantityMeasurement = result.volumeQuantityMeasurement;
+                }
             }
         });
     }
@@ -1515,18 +1536,21 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.displayMachets();
     }
 
-    typeWasChanged() {
-        if (this.eForm.get('type').value && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
-            this.eForm.get('medicament.dose').enable();
-            this.eForm.get('medicament.pharmaceuticalFormType').enable();
-            this.eForm.get('medicament.pharmaceuticalForm').enable();
-            this.eForm.get('medicament.atcCode').enable();
-            this.eForm.get('medicament.group').enable();
-            this.eForm.get('medicament.prescription').enable();
-            this.eForm.get('medicament.internationalMedicamentName').enable();
-            this.eForm.get('medicament.medTypesValues').enable();
-            this.eForm.get('medicament.authorizationHolder').enable();
-            this.eForm.get('medicament.termsOfValidity').enable();
+    typeWasChanged(event) {
+        // if (this.eForm.get('type').value && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
+        //     this.eForm.get('medicament.dose').enable();
+        //     this.eForm.get('medicament.pharmaceuticalFormType').enable();
+        //     this.eForm.get('medicament.pharmaceuticalForm').enable();
+        //     this.eForm.get('medicament.atcCode').enable();
+        //     this.eForm.get('medicament.group').enable();
+        //     this.eForm.get('medicament.prescription').enable();
+        //     this.eForm.get('medicament.internationalMedicamentName').enable();
+        //     this.eForm.get('medicament.medTypesValues').enable();
+        //     this.eForm.get('medicament.authorizationHolder').enable();
+        //     this.eForm.get('medicament.termsOfValidity').enable();
+        // }
+        if (event && this.oldType && event.code != 'MEDF' && event.code != this.oldType.code) {
+            this.clearAllDetails();
         }
     }
 }

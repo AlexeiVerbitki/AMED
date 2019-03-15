@@ -23,11 +23,11 @@
                     <div class="md-form-modified-select">
                         <ng-select class="treatment" [items]="treatmentList"
                                    bindLabel="description"
-                                   placeholder="Tratament"
+                                   placeholder="Tip studiu"
                                    formControlName="treatment"
                         >
                             <ng-template ng-option-tmp let-item="item">
-                                {{item?.description}}
+                                {{item.description}}
                             </ng-template>
                         </ng-select>
                     </div>
@@ -38,11 +38,11 @@
                     <div class="md-form-modified-select">
                         <ng-select class="treatment" [items]="provenanceList"
                                    bindLabel="description"
-                                   placeholder="Provenienta"
+                                   placeholder="Categorie studiu"
                                    formControlName="provenance"
                         >
                             <ng-template ng-option-tmp let-item="item">
-                                {{item?.description}}
+                                {{item.description}}
                             </ng-template>
                         </ng-select>
                     </div>
@@ -113,7 +113,7 @@
                             </ng-container>
                             <ng-container matColumnDef="treatment">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
-                                    Tratament
+                                    Tip studiu
                                 </th>
                                 <td mat-cell *matCellDef="let element" class="text-center">
                                     {{element.treatment}}
@@ -121,7 +121,7 @@
                             </ng-container>
                             <ng-container matColumnDef="provenance">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text">
-                                    Provenienta
+                                    Categorie studiu
                                 </th>
                                 <td mat-cell *matCellDef="let element" class="text-center">
                                     {{element.provenance}}

@@ -17,7 +17,6 @@ export class EvaluateModalComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.historyEntity);
         this.historyEntity.actionDescription = '';
         this.historyEntity.assignee = this.authService.getUserName();
     }

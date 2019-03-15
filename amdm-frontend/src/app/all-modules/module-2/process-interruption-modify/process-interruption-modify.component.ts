@@ -118,8 +118,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
         this.subscriptions.push(
             this.administrationService.generateDocNr().subscribe(data => {
                     this.generatedDocNrSeq = data;
-                },
-                error => console.log(error)
+                }
             )
         );
 
@@ -129,12 +128,10 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
                                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
-                            },
-                            error => console.log(error)
+                            }
                         )
                     );
-                },
-                error => console.log(error)
+                }
             )
         );
     }
@@ -162,7 +159,6 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                 const fileURL = URL.createObjectURL(file);
                 window.open(fileURL);
             }, error => {
-                console.log('error ', error);
             }
             )
         );
@@ -254,7 +250,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                 this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(this.initialData).subscribe(data => {
                         this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
-                    }, error => console.log(error))
+                    })
                 );
             }
         });
@@ -304,7 +300,6 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                     const fileURL = URL.createObjectURL(file);
                     window.open(fileURL);
                 }, error => {
-                    console.log('error ', error);
                 }
                 )
             );
@@ -330,7 +325,7 @@ export class ProcessInterruptionModifyComponent implements OnInit {
                 this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(this.initialData).subscribe(data => {
                         this.outputDocuments = data.body.outputDocuments;
                         this.checkOutputDocumentsStatus();
-                    }, error => console.log(error))
+                    })
                 );
             }
         });

@@ -256,27 +256,32 @@ public final class AuditUtils
                                 "Staţionar"), medFinal.getPrescription() == 1 ? "Cu prescripţie" : (medFinal.getPrescription() == 0 ? "Fără prescripţie" :
                                 "Staţionar"), medFinal.getId(), request.getId()));
             }
-            if (!medFinal.getOriginale().equals(medInitial.getOriginale()))
+            Boolean isMedicamentFinalOriginal = Boolean.TRUE.equals(medFinal.getOriginale());
+            if (!isMedicamentFinalOriginal.equals(medInitial.getOriginale()))
             {
                 dummyEntities.add(fillAuditLogEntityForMedicamentPostAuthorization("medicament original",
                         Boolean.TRUE.equals(medInitial.getOriginale()) ? "Da" : "Nu", Boolean.TRUE.equals(medFinal.getOriginale()) ? "Da" : "Nu", medFinal.getId(), request.getId()));
             }
-            if (!medFinal.getOrphan().equals(medInitial.getOrphan()))
+            Boolean isMedicamentFinalOrphan = Boolean.TRUE.equals(medFinal.getOrphan());
+            if (!isMedicamentFinalOrphan.equals(medInitial.getOrphan()))
             {
                 dummyEntities.add(fillAuditLogEntityForMedicamentPostAuthorization("medicament orfan",
                         Boolean.TRUE.equals(medInitial.getOrphan()) ? "Da" : "Nu", Boolean.TRUE.equals(medFinal.getOrphan()) ? "Da" : "Nu", medFinal.getId(), request.getId()));
             }
-            if (!medFinal.getVitale().equals(medInitial.getVitale()))
+            Boolean isMedicamentFinalVital = Boolean.TRUE.equals(medFinal.getVitale());
+            if (!isMedicamentFinalVital.equals(medInitial.getVitale()))
             {
                 dummyEntities.add(fillAuditLogEntityForMedicamentPostAuthorization("medicament vital",
                         Boolean.TRUE.equals(medInitial.getVitale()) ? "Da" : "Nu", Boolean.TRUE.equals(medFinal.getVitale()) ? "Da" : "Nu", medFinal.getId(), request.getId()));
             }
-            if (!medFinal.getVitale().equals(medInitial.getVitale()))
+            Boolean isMedicamentFinalEsential = Boolean.TRUE.equals(medFinal.getEsentiale());
+            if (!isMedicamentFinalEsential.equals(medInitial.getEsentiale()))
             {
                 dummyEntities.add(fillAuditLogEntityForMedicamentPostAuthorization("medicament esential",
                         Boolean.TRUE.equals(medInitial.getEsentiale()) ? "Da" : "Nu", Boolean.TRUE.equals(medFinal.getEsentiale()) ? "Da" : "Nu", medFinal.getId(), request.getId()));
             }
-            if (!medFinal.getVitale().equals(medInitial.getVitale()))
+            Boolean isMedicamentFinalNonEsential = Boolean.TRUE.equals(medFinal.getNonesentiale());
+            if (!isMedicamentFinalNonEsential.equals(medInitial.getNonesentiale()))
             {
                 dummyEntities.add(fillAuditLogEntityForMedicamentPostAuthorization("medicament nonesential",
                         Boolean.TRUE.equals(medInitial.getNonesentiale()) ? "Da" : "Nu", Boolean.TRUE.equals(medFinal.getNonesentiale()) ? "Da" : "Nu", medFinal.getId(), request.getId()));
@@ -534,21 +539,21 @@ public final class AuditUtils
         }
 
         //Unitatea medicala auditing
-        clinicalTrialsEntity.getMedicalInstitutions().forEach(ctMedicalInstitutionEntity -> {
-            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("institutia medicala id", ctMedicalInstitutionEntity.getId(), clinicalTrialsEntity.getId(), request.getId()));
-            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("institutia medicala", ctMedicalInstitutionEntity.getName(), clinicalTrialsEntity.getId(), request.getId()));
-
-            ctMedicalInstitutionEntity.getInvestigators().forEach(investigator -> {
-                if (investigator.getMain() == true)
-                {
-                    dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("investigator principal pentru institutia Id:" + ctMedicalInstitutionEntity.getId(), investigator.getFirstName().concat(" ").concat(investigator.getLastName()), clinicalTrialsEntity.getId(), request.getId()));
-                }
-                else
-                {
-                    dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("investigator pentru institutia Id:" + ctMedicalInstitutionEntity.getId(), investigator.getFirstName().concat(" ").concat(investigator.getLastName()), clinicalTrialsEntity.getId(), request.getId()));
-                }
-            });
-        });
+//        clinicalTrialsEntity.getMedicalInstitutions().forEach(ctMedicalInstitutionEntity -> {
+////            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("institutia medicala id", ctMedicalInstitutionEntity.getId(), clinicalTrialsEntity.getId(), request.getId()));
+////            dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("institutia medicala", ctMedicalInstitutionEntity.getName(), clinicalTrialsEntity.getId(), request.getId()));
+//
+////            ctMedicalInstitutionEntity.getInvestigators().forEach(investigator -> {
+////                if (investigator.getMain() == true)
+////                {
+////                    dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("investigator principal pentru institutia Id:" + ctMedicalInstitutionEntity.getId(), investigator.getFirstName().concat(" ").concat(investigator.getLastName()), clinicalTrialsEntity.getId(), request.getId()));
+////                }
+////                else
+////                {
+////                    dummyEntities.add(fillAuditLogEntityForClinicalTrialRegistration("investigator pentru institutia Id:" + ctMedicalInstitutionEntity.getId(), investigator.getFirstName().concat(" ").concat(investigator.getLastName()), clinicalTrialsEntity.getId(), request.getId()));
+////                }
+////            });
+//        });
     }
 
     private static void fillActiveSubstances(Set<NotRegMedActiveSubstEntity> activeSubstEntities, List<AuditLogEntity> dummyEntities, Integer entityId, Integer requestId)
@@ -744,8 +749,8 @@ public final class AuditUtils
                     placebo.getAdministModeTo(), placebo.getId(), request.getId()));
 
         //Unitatea medicala auditing
-        Set<CtMedicalInstitutionEntity> institutionEntitiesFrom = clinicTrialAmendEntity.getMedicalInstitutionsFrom();
-        Set<CtMedicalInstitutionEntity> institutionEntitiesTo   = clinicTrialAmendEntity.getMedicalInstitutionsTo();
+//        Set<NmMedicalInstitutionEntity> institutionEntitiesFrom = clinicTrialAmendEntity.getMedicalInstitutionsFrom();
+//        Set<NmMedicalInstitutionEntity> institutionEntitiesTo   = clinicTrialAmendEntity.getMedicalInstitutionsTo();
     }
 
     private static void fillAmendmentActiveSubstances(Set<CtMedAmendActiveSubstEntity> activeSubstEntities, List<AuditLogEntity> dummyEntities, Integer entityId, Integer requestId)

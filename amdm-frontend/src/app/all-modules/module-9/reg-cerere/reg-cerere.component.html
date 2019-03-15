@@ -31,8 +31,8 @@
                                [typeahead]="companyInputs"
                                required="true">
                         <ng-template ng-option-tmp let-item="item">
-                            {{item?.name}} <br/>
-                            <small class="form-text text-muted">{{item?.idno}}</small>
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.idno}}</small>
                         </ng-template>
                     </ng-select>
                 </div>
@@ -137,11 +137,11 @@
                                        [typeahead]="clinicalTrailInputs"
                                        required="true">
                                 <ng-template ng-option-tmp let-item="item">
-                                    {{item?.code}} <br/>
-                                    <small class="form-text text-muted">{{item?.eudraCtNr}}</small>
+                                    {{item.code}} <br/>
+                                    <small class="form-text text-muted">{{item.eudraCtNr}}</small>
                                 </ng-template>
                                 <ng-template ng-label-tmp let-item="item">
-                                    {{item?.code + ' / ' + item.eudraCtNr}}
+                                    {{item.code + ' / ' + item.eudraCtNr}}
                                 </ng-template>
                             </ng-select>
                         </div>

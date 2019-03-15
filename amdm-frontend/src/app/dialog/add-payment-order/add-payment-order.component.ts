@@ -37,8 +37,7 @@ export class AddPaymentOrderComponent implements OnInit {
                     if (this.dataDialog.bonSuplimentarNotRender) {
                         this.serviceCharges = this.serviceCharges.filter(r => r.category != 'BS');
                     }
-                },
-                error => console.log(error)
+                }
             )
         );
     }

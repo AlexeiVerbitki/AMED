@@ -79,7 +79,7 @@
         </div>
         <hr>
 
-        <div *ngIf="this.mediacalInstitutionsFromList.length != 0">
+        <div *ngIf="this.areMedInstModified">
             <div class="gradient-card-header bg-sidebar border-gradient">
                 <div class="container-fluid">
                     <!-- Title -->
@@ -93,62 +93,75 @@
             <div class="card-body card-body-cascade">
                 <div class="container-fluid">
                     <div class="row text-center align-items-center">
-                        <div class="col-4 bg-sidebar white-text">
+                        <div class="col-5 bg-sidebar white-text">
                             <div class="ptc">Unitatea medicală pentru desfășurarea studiului</div>
                             <div class="row grey darken-3 white-text">
-                                <div class="col-6">
+                                <div class="col-5">
                                     <div class="ptc">Denumire</div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="ptc">Adresa</div>
+                                <div class="col-7">
+                                    <div class="ptc">Subdiviziune</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8 bg-sidebar white-text">
+                        <div class="col-7 bg-sidebar white-text">
                             <div class="ptc">Lista de investigatori</div>
                             <div class="row text-center">
-                                <div class="col grey darken-3 white-text">
+                                <div class="col-4 grey darken-3 white-text">
                                     <div class="ptc">Nume</div>
                                 </div>
-                                <div class="col grey darken-3 white-text">
-                                    <div class="ptc">Prenume</div>
+                                <div class="col-2 grey darken-3 white-text">
+                                    <div class="ptc ml-15">Prenume</div>
+                                </div>
+                                <div class="col-4 grey darken-3 white-text">
+                                    <div class="ptc ml-15r">Titlul</div>
                                 </div>
                                 <div class="col grey darken-3 white-text">
-                                    <div class="ptc">Titlul</div>
-                                </div>
-                                <div class="col grey darken-3 white-text">
-                                    <div class="ptc">Status</div>
+                                    <div class="ptc ml-5p">Status</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row text-center align-items-center">
-                        <div class="col-12">
-                            <div class="row border-row border-bottom py-2"
-                                 *ngFor="let el of mediacalInstitutionsFromList; let i = index">
-                                <div class="col-4">
-                                    <div class="row">
-                                        <div class="col-6 border-specs ptc">{{el.name}}</div>
-                                        <div class="col-6 border-specs ptc">{{el.address}}</div>
+                        <div class="col">
+                            <div class="row text-center align-items-center border"
+                                 *ngFor="let medInst of this.mediacalInstitutionsFromList; let i = index">
+                                <div class="col-2">
+                                    <div class="row align-items-center">
+                                        <div class="col ptc">{{medInst.nmMedicalInstitution.name}}</div>
                                     </div>
                                 </div>
-                                <div class="col-8">
-                                    <div class="row py-2" *ngFor="let x of el.investigators">
-                                        <div class="col border-specs ptc">{{x.firstName}}</div>
-                                        <div class="col border-specs ptc">{{x.lastName}}</div>
-                                        <div class="col border-specs ptc">{{x.title}}</div>
-                                        <div class="col border-specs ptc">
-                                            <span *ngIf="x.main===true">Principal</span>
+
+                                <div class="col-10">
+                                    <div class="row text-center align-items-center"
+                                         *ngFor="let subdiv of medInst.subdivisionsList">
+                                        <div class="col-4">
+                                            <div class="row align-items-center">
+                                                <div class="col ptc">{{subdiv.nmSubdivision.name}}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-8">
+                                            <div class="row text-center align-items-center"
+                                                 *ngFor="let investigat of subdiv.investigatorsList">
+                                                <div class="col-3 ptc">{{investigat.nmInvestigator.firstName}}</div>
+                                                <div class="col-3 ptc">{{investigat.nmInvestigator.lastName}}</div>
+                                                <div class="col-4 ptc">{{investigat.nmInvestigator.title}}</div>
+                                                <div class="col-2 border-specs ptc">
+                                                    <span *ngIf="investigat.isMain===true">Principal</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
+
+
             <div class="mt-2"><hr></div>
             <div class="gradient-card-header bg-sidebar border-gradient">
                 <div class="container-fluid">
@@ -163,61 +176,74 @@
             <div class="card-body card-body-cascade">
                 <div class="container-fluid">
                     <div class="row text-center align-items-center">
-                        <div class="col-4 bg-sidebar white-text">
+                        <div class="col-5 bg-sidebar white-text">
                             <div class="ptc">Unitatea medicală pentru desfășurarea studiului</div>
                             <div class="row grey darken-3 white-text">
-                                <div class="col-6">
+                                <div class="col-5">
                                     <div class="ptc">Denumire</div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="ptc">Adresa</div>
+                                <div class="col-7">
+                                    <div class="ptc">Subdiviziune</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-8 bg-sidebar white-text">
+                        <div class="col-7 bg-sidebar white-text">
                             <div class="ptc">Lista de investigatori</div>
                             <div class="row text-center">
-                                <div class="col grey darken-3 white-text">
+                                <div class="col-4 grey darken-3 white-text">
                                     <div class="ptc">Nume</div>
                                 </div>
-                                <div class="col grey darken-3 white-text">
-                                    <div class="ptc">Prenume</div>
+                                <div class="col-2 grey darken-3 white-text">
+                                    <div class="ptc ml-15">Prenume</div>
+                                </div>
+                                <div class="col-4 grey darken-3 white-text">
+                                    <div class="ptc ml-15r">Titlul</div>
                                 </div>
                                 <div class="col grey darken-3 white-text">
-                                    <div class="ptc">Titlul</div>
-                                </div>
-                                <div class="col grey darken-3 white-text">
-                                    <div class="ptc">Status</div>
+                                    <div class="ptc ml-5p">Status</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row text-center align-items-center">
-                        <div class="col-12">
-                            <div class="row border-row border-bottom py-2"
-                                 *ngFor="let el of mediacalInstitutionsToList; let i = index">
-                                <div class="col-4">
-                                    <div class="row">
-                                        <div class="col-6 border-specs ptc">{{el.name}}</div>
-                                        <div class="col-6 border-specs ptc">{{el.address}}</div>
+                        <div class="col">
+                            <div class="row text-center align-items-center border"
+                                 *ngFor="let medInst of this.mediacalInstitutionsToList; let i = index">
+                                <div class="col-2">
+                                    <div class="row align-items-center">
+                                        <div class="col ptc">{{medInst.nmMedicalInstitution.name}}</div>
                                     </div>
                                 </div>
-                                <div class="col-8">
-                                    <div class="row py-2" *ngFor="let x of el.investigators">
-                                        <div class="col border-specs ptc">{{x.firstName}}</div>
-                                        <div class="col border-specs ptc">{{x.lastName}}</div>
-                                        <div class="col border-specs ptc">{{x.title}}</div>
-                                        <div class="col border-specs ptc">
-                                            <span *ngIf="x.main===true">Principal</span>
+
+                                <div class="col-10">
+                                    <div class="row text-center align-items-center"
+                                         *ngFor="let subdiv of medInst.subdivisionsList">
+                                        <div class="col-4">
+                                            <div class="row align-items-center">
+                                                <div class="col ptc">{{subdiv.nmSubdivision.name}}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-8">
+                                            <div class="row text-center align-items-center"
+                                                 *ngFor="let investigat of subdiv.investigatorsList">
+                                                <div class="col-3 ptc">{{investigat.nmInvestigator.firstName}}</div>
+                                                <div class="col-3 ptc">{{investigat.nmInvestigator.lastName}}</div>
+                                                <div class="col-4 ptc">{{investigat.nmInvestigator.title}}</div>
+                                                <div class="col-2 border-specs ptc">
+                                                    <span *ngIf="investigat.isMain===true">Principal</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
+
             </div>
         </div>
         <hr>

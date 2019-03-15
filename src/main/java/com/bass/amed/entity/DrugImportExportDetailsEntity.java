@@ -28,7 +28,7 @@ public class DrugImportExportDetailsEntity
     @Column(name = "subst_active_quantity_unit_code")
     private String authorizedQuantityUnitCode;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "import_export_id")
     private Set<DrugImportExportDeclarationsEntity> declarations = new HashSet<>();
 }

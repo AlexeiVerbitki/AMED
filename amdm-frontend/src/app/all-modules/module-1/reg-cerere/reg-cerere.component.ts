@@ -64,7 +64,8 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'idnp': [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+')]],
             'company': [null, Validators.required],
             'initiator': [''],
-            'assignedUser': ['']
+            'assignedUser': [''],
+            'regSubject': ['', Validators.required],
         });
     }
 

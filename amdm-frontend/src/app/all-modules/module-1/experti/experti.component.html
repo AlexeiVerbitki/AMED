@@ -127,7 +127,7 @@
 						<th scope="col">Data expirării mostrelor</th>
 						<th scope="col" *ngIf="expertForm.get('type').value && (expertForm.get('type').value.code=='MERG' || expertForm.get('type').value.code=='MERS')">Cod medicament</th>
 						<th scope="col">Aprobat</th>
-						<th scope="col" *ngIf="expertForm.get('type').value && (expertForm.get('type').value.code=='MERG' || expertForm.get('type').value.code=='MERS')">Actiuni</th>
+						<th scope="col">Actiuni</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -141,7 +141,7 @@
 						<td>{{ division.samplesExpirationDate | date: 'dd/MM/yyyy' }}</td>
 						<td *ngIf="expertForm.get('type').value && (expertForm.get('type').value.code=='MERG' || expertForm.get('type').value.code=='MERS')">{{ division.code }}</td>
 						<td>  <mat-checkbox #checkboxApproved  [checked]="division.approved" [disabled]="oaAttached" (change)="checkApproved(division,checkboxApproved)"></mat-checkbox></td>
-						<td *ngIf="expertForm.get('type').value && (expertForm.get('type').value.code=='MERG' || expertForm.get('type').value.code=='MERS')">
+						<td>
 							<button  type="button" class="btn btn-mdb-color btn-sm waves-light"
 							        (click)="editDivision(division,i)" mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
 							</button>

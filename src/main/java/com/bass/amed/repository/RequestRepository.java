@@ -94,7 +94,6 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     Optional<RegistrationRequestsEntity> findGDPRequestById(@Param("id") Integer id);
 
 
-
     @Query("SELECT p FROM RegistrationRequestsEntity p " +
             "LEFT JOIN FETCH p.drugCheckDecisions " +
             "LEFT JOIN FETCH p.requestHistories " +
@@ -264,5 +263,8 @@ public interface RequestRepository extends JpaRepository<RegistrationRequestsEnt
     @Modifying
     @Query("UPDATE RegistrationRequestsEntity p SET p.labIncluded = :include WHERE p.id= :requestId")
     void laboratorAnalysis(@Param("requestId") Integer requestId, @Param("include") Boolean include);
+
+    @Query(value = "SELECT request_number FROM registration_requests RR WHERE RR.request_number LIKE 'Rg01-%'", nativeQuery = true)
+    List<String> retrieveInLetters();
 }
 

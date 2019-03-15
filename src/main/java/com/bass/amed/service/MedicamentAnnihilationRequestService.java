@@ -88,7 +88,7 @@ public class MedicamentAnnihilationRequestService
 
         if (rrE.getOutputDocumentId() != null)
         {
-//            rrE.getMedicamentAnnihilation().setAttachedLNDocument(outputDocumentsRepository.findById(rrE.getOutputDocumentId()).get().getAttached());
+            rrE.getMedicamentAnnihilation().setAttachedLNDocument(outputDocumentsRepository.findById(rrE.getOutputDocumentId()).get().getAttached());
         }
 
         return rrE;

@@ -73,7 +73,7 @@ public class TasksController
 
 
     @GetMapping(value = "/request-step-by-code-and-step")
-    public ResponseEntity<RegistrationRequestStepsEntity> getRegistrationRequestStepreByCodeAndStep(@RequestParam(value = "code") String code,
+    public ResponseEntity<RegistrationRequestStepsEntity> getRegistrationRequestStepByCodeAndStep(@RequestParam(value = "code") String code,
                                                                                                 @RequestParam(value = "step") String step) throws CustomException
     {
         LOGGER.debug("Get process step by code and step" + code + step);

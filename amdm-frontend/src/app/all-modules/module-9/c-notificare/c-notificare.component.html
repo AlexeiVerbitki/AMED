@@ -92,7 +92,7 @@
                                    [items]="allNotificationTypesList"
                                    placeholder="Tip notificare" formControlName="notificationType" required="true">
                             <ng-template ng-option-tmp ng-label-tmp let-item="item">
-                                {{item?.name}}
+                                {{item.name}}
                             </ng-template>
                         </ng-select>
                     </div>
@@ -110,19 +110,19 @@
                 <hr>
             </div>
 
-            <div class="row" *ngIf="f2.value.notificationType?.code === 'DDGSC'">
-                <div class="col-md-12">
-                    <div class="md-form-modified">
-                        <mat-form-field class="w-100">
-                            <input matInput [matDatepicker]="picker1"
-                                   placeholder="Data deschiderii globale a studiului clinic"
-                                   formControlName="startDateInternational">
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker1></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="row" *ngIf="f2.value.notificationType?.code === 'DDGSC'">-->
+                <!--<div class="col-md-12">-->
+                    <!--<div class="md-form-modified">-->
+                        <!--<mat-form-field class="w-100">-->
+                            <!--<input matInput [matDatepicker]="picker1"-->
+                                   <!--placeholder="Data deschiderii globale a studiului clinic"-->
+                                   <!--formControlName="startDateInternational">-->
+                            <!--<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>-->
+                            <!--<mat-datepicker touchUi #picker1></mat-datepicker>-->
+                        <!--</mat-form-field>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <div class="row" *ngIf="f2.value.notificationType?.code === 'DDLSC'">
                 <div class="col-md-12">
@@ -372,9 +372,9 @@
                             </div>
                             <div class="col-6" *ngIf="showReportType">
                                 <div class="md-form">
-                                    <input id="reporter3" mdbInputDirective type="text" class="form-control"
+                                    <input id="reporterType" mdbInputDirective type="text" class="form-control"
                                            formControlName="reportType">
-                                    <label for="reporter3">Follow up nr.</label>
+                                    <label for="reporterType">Follow up nr.</label>
                                 </div>
                             </div>
                         </div>
@@ -411,13 +411,27 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="md-form-selected">
-                            <ng-select id="Causality" name="Causality" [items]="casualityValues" placeholder="Causality"
-                                       formControlName="casualityValue">
-                            </ng-select>
-                        </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="casualityPerReporter" mdbInputDirective type="text" class="form-control" formControlName="casualityPerReporter">
+                            <label for="casualityPerReporter">Causality as per reporter</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="md-form">
+                            <input id="casualityPerMfr" mdbInputDirective type="text" class="form-control" formControlName="casualityPerMfr">
+                            <label for="casualityPerMfr">Causality as per Mfr</label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                </div>
+
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="md-form">

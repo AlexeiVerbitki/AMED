@@ -1,6 +1,7 @@
 package com.bass.amed.service;
 
 import com.bass.amed.JobSchedulerComponent;
+import com.bass.amed.common.Constants;
 import com.bass.amed.dto.ScheduledModuleResponse;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrailFilterDTO;
 import com.bass.amed.dto.clinicaltrial.ClinicalTrialDTO;
@@ -28,10 +29,6 @@ public class ClinicalTrailsService {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     @Autowired
-    private CtMedINstInvestigatorRepository medINstInvestigatorRepository;
-    @Autowired
-    private CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
-    @Autowired
     private DocumentTypeRepository documentTypeRepository;
     @Autowired
     RegistrationRequestStepRepository registrationRequestStepRepository;
@@ -55,16 +52,16 @@ public class ClinicalTrailsService {
 
     public void schedulePayOrderCT(int reqId, String reqNumber) {
         String mailBody = "Evaluarea primara pentru cerere nr: " + reqNumber + " este depasita.";
-        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(5, "/wait-payment-order-issue-ct", "/wait-payment-order-issue-ct", reqId, reqNumber, null,  mailBody);
+        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(5, "/wait-payment-order-issue-ct", "/wait-payment-order-issue-ct", reqId, reqNumber, null, mailBody);
     }
 
     public void unschedulePayOrderCT(int reqId) {
-        jobSchedulerComponent.jobUnschedule( "/wait-payment-order-issue-ct", reqId);
+        jobSchedulerComponent.jobUnschedule("/wait-payment-order-issue-ct", reqId);
     }
 
     public void scheduleClientDetailsDataCT(int reqId, String reqNumber) {
         String mailBody = "Astepatrea dosarului pentru cerere nr: " + reqNumber + " este depasita.";
-        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(60, "/wait-client-details-data-ct", "/wait-client-details-data-ct", reqId, reqNumber, null,  mailBody);
+        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(60, "/wait-client-details-data-ct", "/wait-client-details-data-ct", reqId, reqNumber, null, mailBody);
     }
 
     public void unscheduleClientDetailsDataCT(int reqId) {
@@ -73,7 +70,7 @@ public class ClinicalTrailsService {
 
     public void scheduleFinisLimitCT(int reqId, String reqNumber) {
         String mailBody = "Termen limita pentru inregistrare studiului clinic cu cerere nr: " + reqNumber + " este depasita.";
-        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(30, "/limit-finish-ct", "/limit-finish-ct", reqId, reqNumber, null,  mailBody);
+        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(30, "/limit-finish-ct", "/limit-finish-ct", reqId, reqNumber, null, mailBody);
     }
 
     public void unscheduleFinisLimitCT(int reqId) {
@@ -82,29 +79,29 @@ public class ClinicalTrailsService {
 
     public void schedulePayOrderAmendCT(int reqId, String reqNumber) {
         String mailBody = "Evaluarea primara pentru cerere nr: " + reqNumber + " este depasita.";
-        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(10, "/wait-payment-order-issue-amend-ct", "/wait-payment-order-issue-amend-ct", reqId, reqNumber, null,  mailBody);
+        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(10, "/wait-payment-order-issue-amend-ct", "/wait-payment-order-issue-amend-ct", reqId, reqNumber, null, mailBody);
     }
 
     public void unschedulePayOrderAmendCT(int reqId) {
-        jobSchedulerComponent.jobUnschedule( "/wait-payment-order-issue-amend-ct", reqId);
+        jobSchedulerComponent.jobUnschedule("/wait-payment-order-issue-amend-ct", reqId);
     }
 
     public void scheduleClientDetailsDataAmendCT(int reqId, String reqNumber) {
         String mailBody = "Astepatrea dosarului pentru cerere nr: " + reqNumber + " este depasita.";
-        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(60, "/wait-client-details-data-amend-ct", "/wait-client-details-data-amend-ct", reqId, reqNumber, null,  mailBody);
+        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(60, "/wait-client-details-data-amend-ct", "/wait-client-details-data-amend-ct", reqId, reqNumber, null, mailBody);
     }
 
     public void unscheduleClientDetailsDataAmendCT(int reqId) {
-        jobSchedulerComponent.jobUnschedule( "/wait-client-details-data-amend-ct", reqId);
+        jobSchedulerComponent.jobUnschedule("/wait-client-details-data-amend-ct", reqId);
     }
 
     public void scheduleFinisLimitAmendmentCT(int reqId, String reqNumber) {
         String mailBody = "Termen limita pentru inregistrare amendamentului la studiului clinic cu cerere nr: " + reqNumber + " este depasita.";
-        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(30, "/limit-finish-amendment-ct", "/limit-finish-amendment-ct", reqId, reqNumber, null,  mailBody);
+        ResponseEntity<ScheduledModuleResponse> result = jobSchedulerComponent.jobSchedule(30, "/limit-finish-amendment-ct", "/limit-finish-amendment-ct", reqId, reqNumber, null, mailBody);
     }
 
     public void unscheduleFinisLimitAmendmentCT(int reqId) {
-        jobSchedulerComponent.jobUnschedule( "/limit-finish-amendment-ct", reqId);
+        jobSchedulerComponent.jobUnschedule("/limit-finish-amendment-ct", reqId);
     }
 
     public List<ClinicalTrialDTO> retrieveClinicalTrailsByFilter(ClinicalTrailFilterDTO filter) throws CustomException {
@@ -204,42 +201,20 @@ public class ClinicalTrailsService {
             clinicTrialAmendEntity.getReferenceProduct().setActiveSubstances(actRefProdSubstSet);
 
             //medInstitutions && investigators
-            List<CtMedInstInvestigatorEntity> ctMedInstInvestigatorsList = em.createQuery("select mi from CtMedInstInvestigatorEntity mi where mi.clinicalTrialsEntity = :ctEtntity", CtMedInstInvestigatorEntity.class)
-                    .setParameter("ctEtntity", clinicalTrialsEntity).getResultList();
-            Set<CtMedInstInvestigatorEntity> ctMedInstInvestigatorsSet = new HashSet(ctMedInstInvestigatorsList);
-            List<CtAmendMedInstInvestigatorEntity> ctAmendMedInstInvestigatorsList = em.createQuery("select mi from CtAmendMedInstInvestigatorEntity mi where mi.clinicalTrialsAmendEntity = :ctAmendEtntity", CtAmendMedInstInvestigatorEntity.class)
-                    .setParameter("ctAmendEtntity", clinicTrialAmendEntity).getResultList();
-            Set<CtAmendMedInstInvestigatorEntity> ctAmendMedInstInvestigatorsSet = new HashSet<>(ctAmendMedInstInvestigatorsList);
-            ClinicTrialAmendEntity persistedEntity = em.createQuery("select ctAm from ClinicTrialAmendEntity ctAm where ctAm.id = :id", ClinicTrialAmendEntity.class).setParameter("id", clinicTrialAmendEntity.getId()).getSingleResult();
-            List<CtAmendMedInstInvestigatorEntity> amendmentMedInstInvestResult = handelMediclInstitutions(ctAmendMedInstInvestigatorsSet, ctMedInstInvestigatorsSet, persistedEntity);
+            clinicalTrialsEntity.getMedicalInstitutions().forEach(medInst -> {
+                CtAmendMedicalInstitutionEntity amendMedicalInstitutionEntity = new CtAmendMedicalInstitutionEntity();
+                amendMedicalInstitutionEntity.asign(medInst, false);
+                clinicTrialAmendEntity.getMedicalInstitutions().add(amendMedicalInstitutionEntity);
+            });
 
-            boolean isMedInstModified = amendmentMedInstInvestResult.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny().isPresent();
-            if (!isMedInstModified) {
-                for (CtAmendMedInstInvestigatorEntity entity : amendmentMedInstInvestResult) {
-                    entity.getEmbededId().setStatus('U');
-                    em.merge(entity);
+            clinicalTrialsEntity.getMedicalInstitutions().clear();
+            clinicTrialAmendEntity.getMedicalInstitutions().forEach(amdmMedInst -> {
+                if (amdmMedInst.getIsNew()) {
+                    CtMedicalInstitutionEntity ctMedicalInstitutionEntity = new CtMedicalInstitutionEntity();
+                    ctMedicalInstitutionEntity.asign(amdmMedInst);
+                    clinicalTrialsEntity.getMedicalInstitutions().add(ctMedicalInstitutionEntity);
                 }
-            } else {
-                ClinicalTrialsEntity persistentClinicalTrialsEntity =
-                        em.createQuery("select ct from ClinicalTrialsEntity ct where ct.id = :id", ClinicalTrialsEntity.class).setParameter("id", clinicalTrialsEntity.getId()).getSingleResult();
-                for (CtAmendMedInstInvestigatorEntity entity : ctAmendMedInstInvestigatorsSet) {
-                    em.remove(entity);
-                }
-                for (CtMedInstInvestigatorEntity entity : ctMedInstInvestigatorsList) {
-                    em.remove(entity);
-                }
-
-                for (CtAmendMedInstInvestigatorEntity entity : amendmentMedInstInvestResult) {
-                    if (entity.getEmbededId().getStatus() == 'N') {
-                        CtMedInstInvestigatorEntity newMedInstInvestigator = new CtMedInstInvestigatorEntity(clinicalTrialsEntity.getId(), entity.getMedicalInstitutionsEntity().getId(), entity.getInvestigatorsEntity().getId(), entity.getMainInvestigator());
-                        newMedInstInvestigator.setClinicalTrialsEntity(persistentClinicalTrialsEntity);
-                        newMedInstInvestigator.setMedicalInstitutionsEntity(entity.getMedicalInstitutionsEntity());
-                        newMedInstInvestigator.setInvestigatorsEntity(entity.getInvestigatorsEntity());
-                        em.persist(newMedInstInvestigator);
-                    }
-                    em.persist(entity);
-                }
-            }
+            });
 
             //Modify clinicalTrialEntity
             clinicalTrialsEntity.setPhase(clinicTrialAmendEntity.getPhaseTo());
@@ -264,13 +239,11 @@ public class ClinicalTrailsService {
                 persistEntity.setDateTime(new Timestamp(new Date().getTime()));
                 ScrUserEntity userEntity = srcUserRepository.findOneWithAuthoritiesByUsername(SecurityUtils.getCurrentUser().orElse(null)).orElse(null);
                 persistEntity.setUser(userEntity);
-                if (persistEntity.getCategoryName() != null)
-                {
+                if (persistEntity.getCategoryName() != null) {
                     persistEntity.setCategory(auditCategoryRepository.findByName(persistEntity.getCategoryName()).orElse(null));
                 }
 
-                if (persistEntity.getSubCategoryName() != null)
-                {
+                if (persistEntity.getSubCategoryName() != null) {
                     persistEntity.setSubcategory(auditSubcategoryRepository.findByName(persistEntity.getSubCategoryName()).orElse(null));
                 }
                 em.persist(persistEntity);
@@ -318,51 +291,6 @@ public class ClinicalTrailsService {
                 importMed.getActiveSubstances().add(medActiveSubst);
             }
         });
-    }
-
-    private List<CtAmendMedInstInvestigatorEntity> handelMediclInstitutions(Set<CtAmendMedInstInvestigatorEntity> set1, Set<CtMedInstInvestigatorEntity> set2, ClinicTrialAmendEntity ctAmendment) {
-        List<CtAmendMedInstInvestigatorEntity> transformedMedInst = new ArrayList<>();
-        if (!medicalInstitutionsSetsEquals(set1, set2)) {
-            set2.forEach(cteMedInst -> {
-                CtAmendMedInstInvestigatorEntity amendEntity = new CtAmendMedInstInvestigatorEntity(ctAmendment, cteMedInst.getMedicalInstitutionsEntity(), cteMedInst.getInvestigatorsEntity(), 'R', cteMedInst.getMainInvestigator());
-                transformedMedInst.add(amendEntity);
-            });
-
-            set1.forEach(cteMedInst -> {
-                CtAmendMedInstInvestigatorEntity amendEntity = new CtAmendMedInstInvestigatorEntity(ctAmendment, cteMedInst.getMedicalInstitutionsEntity(), cteMedInst.getInvestigatorsEntity(), 'N', cteMedInst.getMainInvestigator());
-                transformedMedInst.add(amendEntity);
-            });
-
-            return transformedMedInst;
-        }
-
-        set1.forEach(cteMedInst -> {
-            cteMedInst.getEmbededId().setStatus('U');
-            transformedMedInst.add(cteMedInst);
-        });
-
-        return transformedMedInst;
-    }
-
-    private static boolean medicalInstitutionsSetsEquals(Set<CtAmendMedInstInvestigatorEntity> set1, Set<CtMedInstInvestigatorEntity> set2) {
-        if (set1 == null || set2 == null) {
-            return false;
-        }
-        if (set1.size() != set2.size()) {
-            return false;
-        }
-
-
-        int equalEntity = 0;
-        for (CtAmendMedInstInvestigatorEntity item1 : set1) {
-            for (CtMedInstInvestigatorEntity item2 : set2) {
-                if (item1.meaningfulyEquals(item2)) {
-                    equalEntity++;
-                }
-            }
-        }
-
-        return set1.size() == equalEntity;
     }
 
     private Set<CtMedAmendActiveSubstEntity> handleActiveSubstances(Set<CtMedAmendActiveSubstEntity> amendMedActSubst, Set<NotRegMedActiveSubstEntity> cteMedActSubst, Integer amendmentMedId) {
@@ -468,34 +396,32 @@ public class ClinicalTrailsService {
             persistActiveSubstances(em, clinicalTrialsEntity.getMedicament().getActiveSubstances(), medcament);
             persistActiveSubstances(em, clinicalTrialsEntity.getReferenceProduct().getActiveSubstances(), referenceProd);
 
+            //medInstitutions
+            clinicalTrialsEntity.getMedicalInstitutions().forEach(medInst -> {
+                CtAmendMedicalInstitutionEntity amendMedicalInstitutionEntity = new CtAmendMedicalInstitutionEntity();
+                amendMedicalInstitutionEntity.asign(medInst, true);
+                clinicTrialAmendEntity.getMedicalInstitutions().add(amendMedicalInstitutionEntity);
+            });
 
             //populate ct amendments list
             clinicalTrialsEntity.getClinicTrialAmendEntities().add(clinicTrialAmendEntity);
 
-            //medInstitutions && investigators
-            Set<CtMedInstInvestigatorEntity> requestTypesStepEntityList2 = medINstInvestigatorRepository.findCtMedInstInvestigatorById(clinicalTrialsEntity.getId());
-            Set<CtAmendMedInstInvestigatorEntity> ctAmendMedInstInvestigatorRepositories = new HashSet<>();
-            for (CtMedInstInvestigatorEntity ctMedInstInvestigatorEntity : requestTypesStepEntityList2) {
-                //Integer ctAmendId = clinicTrialAmendEntity.getId();
-                CtMedicalInstitutionEntity ctMedInst = ctMedInstInvestigatorEntity.getMedicalInstitutionsEntity();
-                CtInvestigatorEntity ctInvestigator = ctMedInstInvestigatorEntity.getInvestigatorsEntity();
-                Boolean mainInverstig = ctMedInstInvestigatorEntity.getMainInvestigator();
-                CtAmendMedInstInvestigatorEntity medInstInvestigator = new CtAmendMedInstInvestigatorEntity(clinicTrialAmendEntity, ctMedInst, ctInvestigator, 'U', mainInverstig);
-                em.merge(medInstInvestigator);
-                ctAmendMedInstInvestigatorRepositories.add(medInstInvestigator);
+            //set scheduler
+            if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.EVALUATE)) {
+                schedulePayOrderAmendCT(requests.getId(), requests.getRequestNumber());
+            } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.ANALIZE)) {
+                unschedulePayOrderAmendCT(requests.getId());
+                scheduleClientDetailsDataAmendCT(requests.getId(), requests.getRequestNumber());
+            } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.FINISH)) {
+                unscheduleFinisLimitAmendmentCT(requests.getId());
+            } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.CANCEL)) {
+                unscheduleFinisLimitAmendmentCT(requests.getId());
             }
-
 
             em.getTransaction().commit();
 
-
-            ClinicTrialAmendEntity entity = clinicTrialAmendRepository.findByRegistrationRequestId(requests.getId());
-            System.out.println();
-
-
-//            clinicalTrialsEntity.getClinicTrialAmendEntities().add(clinicTrialAmendEntity);
-
-//            em.getTransaction().commit();
+//            ClinicTrialAmendEntity entity = clinicTrialAmendRepository.findByRegistrationRequestId(requests.getId());
+//            System.out.println();
         } catch (Exception e) {
             if (em != null) {
                 em.getTransaction().rollback();
@@ -514,83 +440,6 @@ public class ClinicalTrailsService {
             ctMedAmendActiveSubstEntity.setStatus('U');
             em.persist(ctMedAmendActiveSubstEntity);
         }
-    }
-
-//    public void loadClinicalTrialsAmendmentEntity(RegistrationRequestsEntity requests) throws CustomException {
-//        EntityManager em = null;
-//        try {
-//            em = entityManagerFactory.createEntityManager();
-//            em.getTransaction().begin();
-//
-//
-//        } catch (Exception e) {
-//            if (em != null) {
-//                em.getTransaction().rollback();
-//            }
-//            throw new CustomException(e.getMessage(), e);
-//        } finally {
-//            em.close();
-//        }
-//
-//    }
-
-    public void handeMedicalInstitutions(RegistrationRequestsEntity requests) throws CustomException {
-        Set<CtMedInstInvestigatorEntity> requestTypesStepEntityList2 = medINstInvestigatorRepository.findCtMedInstInvestigatorById(requests.getClinicalTrails().getId());
-
-        Set<CtMedInstInvestigatorEntity> ctMedInstInvestigatorEntities = new HashSet<>();
-        requests.getClinicalTrails().getMedicalInstitutions().forEach(medInst -> {
-            medInst.getInvestigators().forEach(investig -> {
-                CtMedInstInvestigatorEntity entity = new CtMedInstInvestigatorEntity(requests.getClinicalTrails().getId(), medInst.getId(), investig.getId(), Boolean.TRUE);
-                entity.setInvestigatorsEntity(investig);
-                entity.setMedicalInstitutionsEntity(medInst);
-                entity.setClinicalTrialsEntity(requests.getClinicalTrails());
-                entity.setMainInvestigator(investig.getMain());
-                ctMedInstInvestigatorEntities.add(entity);
-            });
-        });
-
-        medINstInvestigatorRepository.deleteAll(requestTypesStepEntityList2);
-        medINstInvestigatorRepository.saveAll(ctMedInstInvestigatorEntities);
-    }
-
-    public void handeMedicalInstitutionsForAmendments(RegistrationRequestsEntity requests) throws CustomException {
-        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
-                entity.getRegistrationRequestId().equals(requests.getId())
-        ).findFirst().orElse(null);
-
-        Set<CtAmendMedInstInvestigatorEntity> amendmentMedInstInvestResult = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
-
-        Set<CtAmendMedInstInvestigatorEntity> ctMedInstInvestigatorEntities = new HashSet<>();
-        clinicTrialAmendEntity.getMedicalInstitutionsTo().forEach(medInst -> {
-            medInst.getInvestigators().forEach(investig -> {
-                CtAmendMedInstInvestigatorEntity entity = new CtAmendMedInstInvestigatorEntity(requests.getClinicalTrails().getId(), medInst.getId(), investig.getId(), Boolean.TRUE, 'U');
-                entity.setInvestigatorsEntity(investig);
-                entity.setMedicalInstitutionsEntity(medInst);
-                entity.setClinicalTrialsAmendEntity(clinicTrialAmendEntity);
-                entity.setMainInvestigator(investig.getMain());
-                ctMedInstInvestigatorEntities.add(entity);
-            });
-        });
-
-        ctAmendMedInstInvestigatorRepository.deleteAll(amendmentMedInstInvestResult);
-        ctAmendMedInstInvestigatorRepository.saveAll(ctMedInstInvestigatorEntities);
-    }
-
-    public void getCtMedInstInvestigator(RegistrationRequestsEntity requests) {
-        ClinicalTrialsEntity ct = requests.getClinicalTrails();
-        Set<CtMedInstInvestigatorEntity> ctMedInstInvestigatorEntitiesOld = medINstInvestigatorRepository.findCtMedInstInvestigatorById(ct.getId());
-
-        Set<CtMedicalInstitutionEntity> ctMedicalInstitutionEntities = new HashSet<>();
-
-        ctMedInstInvestigatorEntitiesOld.forEach(ctMedInstInvestigatorEntity -> {
-            CtMedicalInstitutionEntity medInst = ctMedInstInvestigatorEntity.getMedicalInstitutionsEntity();
-            CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
-            ctInvestigatorEntity.asign(ctMedInstInvestigatorEntity.getInvestigatorsEntity());
-            ctInvestigatorEntity.setMain(ctMedInstInvestigatorEntity.getMainInvestigator());
-            medInst.getInvestigators().add(ctInvestigatorEntity);
-            ctMedicalInstitutionEntities.add(medInst);
-        });
-        ct.setMedicalInstitutions(ctMedicalInstitutionEntities);
     }
 
     public void addDDClinicalTrailsDocument(@RequestBody RegistrationRequestsEntity request) {
@@ -649,33 +498,9 @@ public class ClinicalTrailsService {
         }
     }
 
-    public String getDocumentNumber()
-    {
+    public String getDocumentNumber() {
         ClinicalTrialCodeSequenceEntity ctSeqNr = new ClinicalTrialCodeSequenceEntity();
         ctSeqNumberRepository.save(ctSeqNr);
-        return "Rg13-"+ Utils.intToString(6, ctSeqNr.getId());
+        return "Rg13-" + Utils.intToString(6, ctSeqNr.getId());
     }
-
-//    public RegistrationRequestsEntity saveClinicalTrailRequest(RegistrationRequestsEntity enity) throws CustomException {
-//        handeMedicalInstitutions(enity);
-//        EntityManager em = null;
-//        try {
-//            em = entityManagerFactory.createEntityManager();
-//            em.getTransaction().begin();
-//
-//            em.merge(enity);
-////            enity.getDocuments().forEach(doc -> System.out.println(doc.getId()));
-//            em.flush();
-//            em.getTransaction().commit();
-//            return enity;
-//        } catch (Exception e) {
-//            if (em != null) {
-//                em.getTransaction().rollback();
-//            }
-//            throw new CustomException(e.getMessage(), e);
-//        } finally {
-//            em.close();
-//        }
-//    }
-
 }

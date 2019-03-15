@@ -88,7 +88,7 @@ public class MedicamentController
     public ResponseEntity<List<MedicamentEntity>> getMedicamentByCode(String code)
     {
         logger.debug("Retrieve medicament by code");
-        MedicamentEntity m = medicamentRepository.findByCode(code);
+        MedicamentEntity m = medicamentRepository.findByCodeAndStatus(code,"F");
 
         return new ResponseEntity<>(medicamentRepository.findByRegistrationNumber(m.getRegistrationNumber()).stream().filter(r -> r.getStatus().equals("F")).collect(Collectors.toList()), HttpStatus.OK);
     }

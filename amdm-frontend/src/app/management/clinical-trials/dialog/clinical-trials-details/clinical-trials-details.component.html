@@ -77,18 +77,18 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
-                <div class="md-form-modified">
-                    <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker1"
-                               placeholder="Data deschidere studiul clinic international"
-                               formControlName="startDateInternational">
-                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker1></mat-datepicker>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="col-md-3">
+            <!--<div class="col-md-3">-->
+            <!--<div class="md-form-modified">-->
+            <!--<mat-form-field class="w-100">-->
+            <!--<input matInput [matDatepicker]="picker1"-->
+            <!--placeholder="Data deschidere studiul clinic international"-->
+            <!--formControlName="startDateInternational">-->
+            <!--<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>-->
+            <!--<mat-datepicker touchUi #picker1></mat-datepicker>-->
+            <!--</mat-form-field>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2"
@@ -99,17 +99,17 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
-                        <input matInput [matDatepicker]="picker3" placeholder="Data deschidere studiul clinic nationa"
+                        <input matInput [matDatepicker]="picker3" placeholder="Data deschidere studiul clinic national"
                                formControlName="startDateNational">
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker3></mat-datepicker>
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker4" placeholder="Data inchiderii studiul clinic national"
@@ -140,14 +140,14 @@
                 <div class="md-form">
                     <input type="text" id="treatment" class="form-control" mdbInputDirective
                            formControlName="treatment">
-                    <label for="treatment">Tratament</label>
+                    <label for="treatment">Tip studiu</label>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="md-form">
                     <input type="text" id="provenance" class="form-control" mdbInputDirective
                            formControlName="provenance">
-                    <label for="provenance">Provenienta</label>
+                    <label for="provenance">Categorie studiu</label>
                 </div>
             </div>
         </div>
@@ -189,8 +189,7 @@
                 <!-- Title -->
                 <div class="row">
                     <div class="col-12">
-                        <div class="card-header-title white-text center">Instituţii medicale / Locul desfăşurării
-                            studiului
+                        <div class="card-header-title white-text center">Unitatea medicală pentru desfășurarea studiului
                         </div>
                     </div>
                 </div>
@@ -199,31 +198,31 @@
         <div class="card-body card-body-cascade">
             <div class="container-fluid">
                 <div class="row text-center align-items-center">
-                    <div class="col-4 bg-sidebar white-text">
-                        <div class="ptc">Instituţii medicale / Locul desfăşurării studiului</div>
+                    <div class="col-5 bg-sidebar white-text">
+                        <div class="ptc">Unitatea medicală pentru desfășurarea studiului</div>
                         <div class="row grey darken-3 white-text">
-                            <div class="col-6">
+                            <div class="col-5">
                                 <div class="ptc">Denumire</div>
                             </div>
-                            <div class="col-6">
-                                <div class="ptc">Adresa</div>
+                            <div class="col-7">
+                                <div class="ptc">Subdiviziune</div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-8 bg-sidebar white-text">
+                    <div class="col-7 bg-sidebar white-text">
                         <div class="ptc">Lista de investigatori</div>
                         <div class="row text-center">
-                            <div class="col grey darken-3 white-text">
+                            <div class="col-4 grey darken-3 white-text">
                                 <div class="ptc">Nume</div>
                             </div>
-                            <div class="col grey darken-3 white-text">
-                                <div class="ptc">Prenume</div>
+                            <div class="col-2 grey darken-3 white-text">
+                                <div class="ptc ml-15">Prenume</div>
+                            </div>
+                            <div class="col-4 grey darken-3 white-text">
+                                <div class="ptc ml-15r">Titlul</div>
                             </div>
                             <div class="col grey darken-3 white-text">
-                                <div class="ptc">Titlul</div>
-                            </div>
-                            <div class="col grey darken-3 white-text">
-                                <div class="ptc">Status</div>
+                                <div class="ptc ml-5p">Status</div>
                             </div>
                         </div>
                     </div>
@@ -231,27 +230,40 @@
 
                 <div class="row text-center align-items-center">
                     <div class="col">
-                        <div class="row border-row py-2 border-bottom" *ngFor="let el of f.value.medicalInstitutions; let i = index">
-                            <div class="col-4">
+                        <div class="row text-center align-items-center border"
+                             *ngFor="let medInst of f.value.medicalInstitutions; let i = index">
+                            <div class="col-2">
                                 <div class="row align-items-center">
-                                    <div class="col-6 border-specs ptc">{{el.name}}</div>
-                                    <div class="col-6 border-specs ptc">{{el.address}}</div>
+                                    <div class="col ptc">{{medInst.nmMedicalInstitution.name}}</div>
                                 </div>
                             </div>
-                            <div class="col-8">
-                                <div class="row align-items-center py-2" *ngFor="let x of el.investigators">
-                                    <div class="col border-specs ptc">{{x.firstName}}</div>
-                                    <div class="col border-specs ptc">{{x.lastName}}</div>
-                                    <div class="col border-specs ptc">{{x.title}}</div>
-                                    <div class="col border-specs ptc">
-                                        <span *ngIf="x.main===true">Principal</span>
+
+                            <div class="col-10">
+                                <div class="row text-center align-items-center"
+                                     *ngFor="let subdiv of medInst.subdivisionsList">
+                                    <div class="col-4">
+                                        <div class="row align-items-center">
+                                            <div class="col ptc">{{subdiv.nmSubdivision.name}}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-8">
+                                        <div class="row text-center align-items-center"
+                                             *ngFor="let investigat of subdiv.investigatorsList">
+                                            <div class="col-3 ptc">{{investigat.nmInvestigator.firstName}}</div>
+                                            <div class="col-3 ptc">{{investigat.nmInvestigator.lastName}}</div>
+                                            <div class="col-4 ptc">{{investigat.nmInvestigator.title}}</div>
+                                            <div class="col-2 border-specs ptc">
+                                                <span *ngIf="investigat.isMain===true">Principal</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             </div>
 
         </div>
@@ -453,7 +465,8 @@
                 <tbody>
                 <tr *ngFor="let notiff of f.value.clinicTrialNotificationEntities;let i = index">
                     <td scope="row">
-                        <a title="Detalii notificare" (click)="openNotifDetails(notiff.registrationRequestId)" class="text-center">
+                        <a title="Detalii notificare" (click)="openNotifDetails(notiff.registrationRequestId)"
+                           class="text-center">
                             {{ notiff?.notifCode}}
                         </a>
                     </td>

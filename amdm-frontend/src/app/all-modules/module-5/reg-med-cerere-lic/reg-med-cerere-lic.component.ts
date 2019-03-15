@@ -413,7 +413,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             panelClass: 'materialLicense',
             data: {
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

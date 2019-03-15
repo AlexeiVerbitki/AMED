@@ -80,7 +80,12 @@ export class MedicamentsLabComponent implements OnInit, AfterViewInit {
         this.subscriptions.push(
             this.requestService.getMedicamentsForLab().subscribe(data => {
                     this.dataSource.data = data;
-                    this.dataSource.data.forEach(t => t.manufacture = t.manufactures.find(x => x.producatorProdusFinit == true));
+                    this.dataSource.data.forEach(t => {
+                        const man = t.manufactures.filter(x => x.producatorProdusFinit == true);
+                        t.manufacture = '';
+                        man.forEach(m => t.manufacture = t.manufacture + m.manufacture.description + ' ' + m.manufacture.address + '; ');
+                    });
+                    //this.dataSource.data.forEach(t => t.manufacture = t.manufactures.find(x => x.producatorProdusFinit == true));
                     this.dataSource.data.forEach(t => {
                         t.included = true;
                     });

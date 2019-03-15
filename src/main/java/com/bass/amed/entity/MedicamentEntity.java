@@ -18,7 +18,7 @@ public class MedicamentEntity
     @Column(name = "id", nullable = false)
     private Integer id;
     @Basic
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 150)
     private String name;
     @Basic
     @Column(name = "commercial_name")

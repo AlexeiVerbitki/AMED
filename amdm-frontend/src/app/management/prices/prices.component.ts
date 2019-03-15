@@ -101,17 +101,14 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(
             this.priceService.getAllMedicamentTypes().subscribe(data => {
                     this.medTypes = data;
-                },
-                error => console.log(error)
+                }
             )
         );
 
         this.subscriptions.push(
             this.priceService.getPriceTypes('1').subscribe(priceTypes => {
                     this.priceTypes = priceTypes;
-                    console.log('getPriceTypes', this.priceTypes);
                 },
-                error => console.log(error)
             ));
 
         this.subscriptions.push(this.taskService.getRequestNames().subscribe(data => {
@@ -221,9 +218,7 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
             this.priceService.getPricesByFilter(dto
             ).subscribe(pricesRequests => {
                     this.dataSource.data = pricesRequests.body;
-                    console.log('pricesRequests', this.dataSource.data);
-                },
-                error => console.log(error)
+                }
             ));
     }
 
@@ -257,7 +252,6 @@ export class PricesComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed', result);
 
             if (result) {
                 this.dataSource.data[index] = result;

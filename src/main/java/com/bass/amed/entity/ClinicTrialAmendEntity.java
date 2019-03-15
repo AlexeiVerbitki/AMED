@@ -104,27 +104,13 @@ public class ClinicTrialAmendEntity {
     @Column(name = "med_comission_date")
     private Timestamp comissionDate;
 
-//    @Basic
-//    @Column(name = "appr_order_nr")
-//    private String apprOrderNr;
-//    @Basic
-//    @Column(name = "appr_order_date")
-//    private Timestamp apprOrderDate;
-
     @Basic
     @Column(name = "status", nullable = true, length = 1)
     private String status;
 
-    @Transient
-    private Set<CtMedicalInstitutionEntity> medicalInstitutionsFrom = new HashSet<>();
-
-    @Transient
-    private Set<CtMedicalInstitutionEntity> medicalInstitutionsTo = new HashSet<>();
-
-
-//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH}, orphanRemoval = true)
-//    @JoinColumn(name = "clinical_trail_amend_id")
-//    private Set<CtAmendMedInstInvestigatorEntity> amendMedInstInvestigators = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "ct_amend_id")
+    private Set<CtAmendMedicalInstitutionEntity> medicalInstitutions = new HashSet<>();
 
     public void assignTo(ClinicalTrialsEntity entity) {
         this.clinicalTrialsEntityId = entity.getId();

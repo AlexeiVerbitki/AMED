@@ -31,7 +31,7 @@ public class SchedulerController
 
         try
         {
-//            xchangeUpdateService.execute();
+            xchangeUpdateService.execute();
         }
         catch (Exception e)
         {

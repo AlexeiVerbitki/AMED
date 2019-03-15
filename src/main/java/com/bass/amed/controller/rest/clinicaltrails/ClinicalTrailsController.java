@@ -33,8 +33,6 @@ public class ClinicalTrailsController {
     @Autowired
     ClinicTrialAmendRepository clinicTrialAmendRepository;
     @Autowired
-    CtAmendMedInstInvestigatorRepository ctAmendMedInstInvestigatorRepository;
-    @Autowired
     ClinicalTrailNotificationTypeRepository clinicalTrailNotificationTypeRepository;
     @Autowired
     DocumentsRepository documentsRepository;
@@ -45,9 +43,8 @@ public class ClinicalTrailsController {
     public ResponseEntity<RegistrationRequestsEntity> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
 
         if (requests.getClinicalTrails() == null) {
-            throw new CustomException("Request was not found");
+            throw new CustomException("Request was not found ");
         }
-        clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
         List<DocumentsEntity> docs = documentsRepository.findAllByRegistrationRequestId(requests.getId());
         requests.setDocuments(new HashSet<>(docs));
@@ -61,7 +58,6 @@ public class ClinicalTrailsController {
             throw new CustomException("Request was not found");
         }
         clinicalTrailsService.addDDClinicalTrailsDocument(requests);
-        clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
         if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.EVALUATE)) {
             clinicalTrailsService.schedulePayOrderCT(requests.getId(), requests.getRequestNumber());
@@ -86,7 +82,6 @@ public class ClinicalTrailsController {
         }
 
         RegistrationRequestsEntity registrationRequestsEntity = regOptional.get();
-        clinicalTrailsService.getCtMedInstInvestigator(registrationRequestsEntity);
 
         return new ResponseEntity<>(registrationRequestsEntity, HttpStatus.OK);
     }
@@ -95,16 +90,6 @@ public class ClinicalTrailsController {
     @Transactional
     public ResponseEntity<Integer> seveNetxtClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         clinicalTrailsService.registerNewClinicalTrailAmendment(requests);
-        if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.EVALUATE)) {
-            clinicalTrailsService.schedulePayOrderAmendCT(requests.getId(), requests.getRequestNumber());
-        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.ANALIZE)) {
-            clinicalTrailsService.unschedulePayOrderAmendCT(requests.getId());
-            clinicalTrailsService.scheduleClientDetailsDataAmendCT(requests.getId(), requests.getRequestNumber());
-        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.FINISH)) {
-            clinicalTrailsService.unscheduleFinisLimitAmendmentCT(requests.getId());
-        } else if (requests.getCurrentStep().equals(Constants.ClinicTrailStep.CANCEL)) {
-            clinicalTrailsService.unscheduleFinisLimitAmendmentCT(requests.getId());
-        }
         return new ResponseEntity<>(requests.getId(), HttpStatus.CREATED);
     }
 
@@ -121,51 +106,12 @@ public class ClinicalTrailsController {
                 entity.getRegistrationRequestId().equals(registrationRequestsEntity.getId())
         ).findFirst().orElse(null);
 
-        if (clinicTrialAmendEntity != null) {
-            Set<CtAmendMedInstInvestigatorEntity> requestTypesStepEntityList = ctAmendMedInstInvestigatorRepository.findCtMedInstInvestigatorById(clinicTrialAmendEntity.getId());
-
-            requestTypesStepEntityList.forEach(medInstInvestigator -> {
-                if ('U' == medInstInvestigator.getEmbededId().getStatus() || 'N' == medInstInvestigator.getEmbededId().getStatus()) {
-                    CtMedicalInstitutionEntity medInst = medInstInvestigator.getMedicalInstitutionsEntity();
-                    CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
-                    ctInvestigatorEntity.asign(medInstInvestigator.getInvestigatorsEntity());
-                    ctInvestigatorEntity.setMain(medInstInvestigator.getMainInvestigator());
-                    medInst.getInvestigators().add(ctInvestigatorEntity);
-
-                    clinicTrialAmendEntity.getMedicalInstitutionsTo().add(medInst);
-                }
-            });
-
-            boolean isMedInstModified = requestTypesStepEntityList.stream().filter(medInst -> 'N' == medInst.getEmbededId().getStatus() || 'R' == medInst.getEmbededId().getStatus()).findAny().isPresent();
-            Map<CtMedicalInstitutionEntity, CtMedicalInstitutionEntity> medicalInstitutionEntitiesMap = new HashMap();
-            if (isMedInstModified) {
-                requestTypesStepEntityList.forEach(entity -> {
-                    if (!medicalInstitutionEntitiesMap.containsKey(entity.getMedicalInstitutionsEntity()) && ('U' == entity.getEmbededId().getStatus() || 'R' == entity.getEmbededId().getStatus())) {
-                        CtMedicalInstitutionEntity newMedInst = new CtMedicalInstitutionEntity();
-                        newMedInst.asign(entity.getMedicalInstitutionsEntity());
-                        medicalInstitutionEntitiesMap.put(entity.getMedicalInstitutionsEntity(), newMedInst);
-                    }
-
-                    if ('U' == entity.getEmbededId().getStatus() || 'R' == entity.getEmbededId().getStatus()) {
-                        CtInvestigatorEntity ctInvestigatorEntity = new CtInvestigatorEntity();
-                        ctInvestigatorEntity.asign(entity.getInvestigatorsEntity());
-                        ctInvestigatorEntity.setMain(entity.getMainInvestigator());
-                        medicalInstitutionEntitiesMap.get(entity.getMedicalInstitutionsEntity()).getInvestigators().add(ctInvestigatorEntity);
-                    }
-                });
-                clinicTrialAmendEntity.getMedicalInstitutionsFrom().addAll(medicalInstitutionEntitiesMap.values());
-            }
-
-            System.out.println();
-        }
-
         return new ResponseEntity<>(registrationRequestsEntity, HttpStatus.OK);
     }
 
     @PostMapping(value = "/finish-amendment-request")
     public ResponseEntity<Integer> finishClinicalTrailAmendmentRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
         clinicalTrailsService.finishNewClinicalTrailAmendment(requests);
-        clinicalTrailsService.getCtMedInstInvestigator(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.OK);
     }
 
@@ -175,11 +121,6 @@ public class ClinicalTrailsController {
         if (requests.getClinicalTrails() == null) {
             throw new CustomException("Request was not found");
         }
-
-//        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
-//                entity.getRegistrationRequestId().equals(requests.getId())
-//        ).findFirst().orElse(null);
-        clinicalTrailsService.handeMedicalInstitutionsForAmendments(requests);
 
         requestRepository.save(requests);
         List<DocumentsEntity> docs = documentsRepository.findAllByRegistrationRequestId(requests.getId());
@@ -194,13 +135,6 @@ public class ClinicalTrailsController {
         }
 
         clinicalTrailsService.addDDClinicalTrailsDocument(requests);
-        clinicalTrailsService.handeMedicalInstitutionsForAmendments(requests);
-
-//        ClinicTrialAmendEntity clinicTrialAmendEntity = requests.getClinicalTrails().getClinicTrialAmendEntities().stream().filter(entity ->
-//                entity.getRegistrationRequestId().equals(requests.getId())
-//        ).findFirst().orElse(null);
-
-        //clinicalTrailsService.handeMedicalInstitutions(requests);
         requestRepository.save(requests);
         return new ResponseEntity<>(requests.getId(), HttpStatus.OK);
     }
@@ -254,7 +188,6 @@ public class ClinicalTrailsController {
         LOGGER.debug("Get registration request by clinical trial id: ", id.toString());
 
         Optional<RegistrationRequestsEntity> registrationRequestsEntity2 = requestRepository.findRegRequestByCtId(id);
-        clinicalTrailsService.getCtMedInstInvestigator(registrationRequestsEntity2.get());
 
         return new ResponseEntity<>(registrationRequestsEntity2.get(), HttpStatus.OK);
     }

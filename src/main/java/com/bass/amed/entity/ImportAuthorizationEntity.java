@@ -262,7 +262,6 @@ public class ImportAuthorizationEntity {
 	}
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-	//@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "import_authorization_id")
 	public Set<ImportAuthorizationDetailsEntity> getImportAuthorizationDetailsEntityList() {
 		return importAuthorizationDetailsEntityList;

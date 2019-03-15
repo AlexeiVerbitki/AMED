@@ -77,7 +77,7 @@ export class EcAgentListComponent implements OnInit, OnDestroy, AfterViewInit {
             width: '1000px',
             panelClass: 'materialLicense',
             data: {},
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {
@@ -117,7 +117,7 @@ export class EcAgentListComponent implements OnInit, OnDestroy, AfterViewInit {
             data: {
                 idno: element.idno
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

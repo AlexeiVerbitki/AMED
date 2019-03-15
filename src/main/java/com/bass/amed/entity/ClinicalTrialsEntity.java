@@ -3,10 +3,8 @@ package com.bass.amed.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -86,7 +84,8 @@ public class ClinicalTrialsEntity
     @Column(name = "med_comission_date")
     private Timestamp comissionDate;
 
-    @Transient
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "ct_id")
     private Set<CtMedicalInstitutionEntity> medicalInstitutions = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)

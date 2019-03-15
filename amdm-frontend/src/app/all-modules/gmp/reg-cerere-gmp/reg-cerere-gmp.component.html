@@ -132,6 +132,19 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+	                    <textarea type="text" id="reqSubject" class="md-textarea form-control" mdbInputDirective rows="1"
+	                              formControlName="regSubject"></textarea>
+					<label for="reqSubject">Subiectul cererii<span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && !rForm.get('regSubject').valid">
+					<small class="text-muted"><strong class="text-danger">Subiectul cererii trebuie introdus</strong>
+					</small>
+				</div>
+			</div>
+		</div>
 
 
 		<h5 class="text-center font-weight-bold">Date despre compania selectată </h5>

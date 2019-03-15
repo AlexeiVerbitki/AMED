@@ -11,7 +11,6 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {ReportRegisterMode} from '../../../shared/enum/report-register-mode.enum';
 import {ReportLevel} from '../../../shared/enum/report-level.enum';
 import {ReportType} from '../../../shared/enum/report-type.enum';
-import {Casuality} from '../../../shared/enum/report-casuality.enum';
 import {ReportGender} from '../../../shared/enum/report-gender.enum';
 import {ReportTypeSaesusar} from '../../../shared/enum/report-type-saesusar.enum';
 import {ReportResponseType} from '../../../shared/enum/report-response-type.enum';
@@ -38,8 +37,6 @@ export class CNotificareComponent implements OnInit, OnDestroy {
     reportType = ReportType;
     reportTypeValues: any[] = ReportType.values();
     showReportType = false;
-    casuality = Casuality;
-    casualityValues: any[] = Casuality.values();
     reportGender = ReportGender;
     reportGenderValues: any[] = ReportGender.values();
     reportTypeSaesusar = ReportTypeSaesusar;
@@ -85,7 +82,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
             'notifCode': ['', Validators.required],
             'notificationType': ['', Validators.required],
             'notificationTitle': ['', Validators.required],
-            'startDateInternational': [''],
+            // 'startDateInternational': [''],
             'startDateNational': [''],
             'endDateNational': [''],
             'endDateInternational': [''],
@@ -131,8 +128,6 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 'studyId': [],
                 'patientId': [],
                 'centerId': [],
-                'casualityValue': [],
-                'casuality': [],
                 'actionTakenDrug': [],
                 'companyRemarks': [],
                 'patientInitials': [],
@@ -163,7 +158,8 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 'dateManufactReceived': [],
                 'reportSourceValue': [],
                 'reportSource': [],
-
+                'casualityPerReporter': [],
+                'casualityPerMfr': []
             })
         });
 
@@ -179,7 +175,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
     subscribeToEvents() {
         this.subscriptions.push(
             this.addNotificationTypesForm.get('notificationType').valueChanges.subscribe(value => {
-                this.addNotificationTypesForm.get('startDateInternational').setValidators([]);
+                // this.addNotificationTypesForm.get('startDateInternational').setValidators([]);
                 this.addNotificationTypesForm.get('startDateNational').setValidators([]);
                 this.addNotificationTypesForm.get('endDateNational').setValidators([]);
                 this.addNotificationTypesForm.get('endDateInternational').setValidators([]);
@@ -187,15 +183,16 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 this.addNotificationTypesForm.get('reportDsurEntity').reset();
                 this.addNotificationTypesForm.get('reportSarLlrEntity').reset();
                 this.addNotificationTypesForm.get('reportSaeSusarEntity').reset();
-                this.addNotificationTypesForm.get('startDateInternational').reset();
+                // this.addNotificationTypesForm.get('startDateInternational').reset();
                 this.addNotificationTypesForm.get('startDateNational').reset();
                 this.addNotificationTypesForm.get('endDateNational').reset();
                 this.addNotificationTypesForm.get('endDateInternational').reset();
 
                 console.log('notificationTypeChange', value);
-                if (value && value.code == 'DDGSC') {
-                    this.addNotificationTypesForm.get('startDateInternational').setValidators([Validators.required]);
-                } else if (value && value.code == 'DDLSC') {
+                // if (value && value.code == 'DDGSC') {
+                //     this.addNotificationTypesForm.get('startDateInternational').setValidators([Validators.required]);
+                // } else
+                if (value && value.code == 'DDLSC') {
                     this.addNotificationTypesForm.get('startDateNational').setValidators([Validators.required]);
                 } else if (value && value.code == 'DIGSC') {
                     this.addNotificationTypesForm.get('endDateNational').setValidators([Validators.required]);
@@ -203,7 +200,7 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                     this.addNotificationTypesForm.get('endDateInternational').setValidators([Validators.required]);
                 } else if (value && value.code == 'DSUR') {
                     this.addNotificationTypesForm.get('reportDsurEntity.drugName')
-                        .setValue(this.clinicTrailNotifForm.value.clinicalTrails.medicament.name + ' ' + this.clinicTrailNotifForm.value.clinicalTrails.medicament.dose);
+                        .setValue(this.clinicTrailNotifForm.value.clinicalTrails.medicament.name + ' / ' + this.clinicTrailNotifForm.value.clinicalTrails.medicament.dose);
                 }
             })
         );
@@ -247,14 +244,14 @@ export class CNotificareComponent implements OnInit, OnDestroy {
                 }
             })
         );
-        this.subscriptions.push(
-            this.addNotificationTypesForm.get('reportSaeSusarEntity.casualityValue').valueChanges.subscribe(value => {
-                if (value) {
-                    this.addNotificationTypesForm.get('reportSaeSusarEntity.casuality').setValue(this.casuality[value]);
-                    // console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
-                }
-            })
-        );
+        // this.subscriptions.push(
+        //     this.addNotificationTypesForm.get('reportSaeSusarEntity.casualityValue').valueChanges.subscribe(value => {
+        //         if (value) {
+        //             this.addNotificationTypesForm.get('reportSaeSusarEntity.casuality').setValue(this.casuality[value]);
+        //             // console.log('this.addNotificationTypesForm', this.addNotificationTypesForm);
+        //         }
+        //     })
+        // );
         this.subscriptions.push(
             this.addNotificationTypesForm.get('reportSaeSusarEntity.sexValue').valueChanges.subscribe(value => {
                 if (value) {
@@ -398,9 +395,10 @@ export class CNotificareComponent implements OnInit, OnDestroy {
         }
         findAmendment.status = 'F';
 
-        if (collectedDataForm.notificationType.code == 'DDGSC') {
-            formModel.clinicalTrails.startDateInternational = collectedDataForm.startDateInternational;
-        } else if (collectedDataForm.notificationType.code == 'DDLSC') {
+        // if (collectedDataForm.notificationType.code == 'DDGSC') {
+        //     formModel.clinicalTrails.startDateInternational = collectedDataForm.startDateInternational;
+        // } else
+        if (collectedDataForm.notificationType.code == 'DDLSC') {
             formModel.clinicalTrails.startDateNational = collectedDataForm.startDateNational;
         } else if (collectedDataForm.notificationType.code == 'DIGSC') {
             formModel.clinicalTrails.endDateInternational = collectedDataForm.endDateInternational;

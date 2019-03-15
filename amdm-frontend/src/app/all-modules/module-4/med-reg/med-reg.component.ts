@@ -586,8 +586,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
             this.errorHandlerService.showError('Medicamentul contine date invalide');
             return;
         }
-
-        // if (this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').valid) {}
+	       
         if (!this.invalidPrice) {
         }
         this.unitOfImportTable.push({

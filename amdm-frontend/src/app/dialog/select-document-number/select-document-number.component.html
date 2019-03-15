@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="md-form">
-					<input id="docNr" mdbInputDirective class="form-control" formControlName="docNr">
+					<input id="docNr" mdbInputDirective class="form-control" formControlName="docNr" type="text">
 					<label for="docNr">Numar document<span class="text-danger">*</span></label>
 				</div>
 				<div *ngIf="formSubmitted && eForm.get('docNr').invalid">

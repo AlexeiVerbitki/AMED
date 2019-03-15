@@ -395,4 +395,8 @@ export class AdministrationService {
     synchronizeRolesWithAuthorities(rolesWithRights: any): Observable<string> {
         return this.http.post('/api/administration/sync-roles-with-authorities', rolesWithRights, {observe: 'body', responseType: 'text'});
     }
+
+    getMedInstSubdivisionsByMedInstId(id: string): Observable<any> {
+        return this.http.get('/api/administration/get-med-inst-subdivisions-by-id', {params: {id: id}});
+    }
 }

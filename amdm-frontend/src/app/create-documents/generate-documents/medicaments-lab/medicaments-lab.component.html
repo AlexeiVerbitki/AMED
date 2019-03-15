@@ -3,7 +3,7 @@
     <!-- Title -->
     <div class="row">
       <div class="col-6">
-        <div class="card-header-title white-text">Medicamente ce urmeaza a fi incluse in actul de primire-predare pentru analiza laborator</div>
+        <div class="card-header-title white-text">Medicamente ce urmeaza a fi incluse in actul de predare-primire pentru analiza laborator</div>
       </div>
       <div class="col-6">
         <div class="text-right fap text-white">
@@ -69,7 +69,7 @@
 
       <ng-container matColumnDef="manufacture">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-sidebar white-text"> Producator produs finit</th>
-        <td mat-cell *matCellDef="let element"> {{element.manufacture.manufacture.description}} {{element.manufacture.manufacture.address}}  </td>
+        <td mat-cell *matCellDef="let element"> {{element.manufacture}}  </td>
       </ng-container>
 
       <ng-container matColumnDef="includedLab">

@@ -423,7 +423,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
-        modelToSubmit.endDate = new Date();
+        modelToSubmit.endDate = null;
         modelToSubmit.startDate = this.rForm.get('startDate').value;
         modelToSubmit.registrationRequestMandatedContacts = [this.rForm.get('responsiblePerson').value];
         const subsidiaryIds = this.gdpInspection.subsidiaries.map(s => s = {

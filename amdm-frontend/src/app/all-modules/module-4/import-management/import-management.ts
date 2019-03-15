@@ -194,8 +194,7 @@ export class ImportManagement implements OnInit, OnDestroy {
             console.log('params', params2)
             this.subscriptions.push(this.requestService.getImportRequest(params2.id).subscribe(requestData => {
                 console.log('this.requestService.getImportRequest(params[\'id\'])', requestData);
-                this.requestData = requestData;
-                    // this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.importAuthorizationEntity.authorizationsNumber, "false").subscribe(data => {
+                this.requestData = requestData;                    
                     this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.invoiceEntity.id, "false").subscribe(data => {
                         this.invoiceDetails = data;
                         console.log('this.invoiceDetails', this.invoiceDetails);
@@ -881,7 +880,7 @@ export class ImportManagement implements OnInit, OnDestroy {
             } else invoiceEntity.customsPointsEntity = null;
             if (invoiceDetailsEntity.length > 0) {
                 invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
-            } else invoiceEntity.invoiceDetailsEntitySet = null;
+            } else invoiceEntity.invoiceDetailsEntitySet = [];
 
             modelToSubmit = this.requestData;
             modelToSubmit.invoiceEntity = invoiceEntity;

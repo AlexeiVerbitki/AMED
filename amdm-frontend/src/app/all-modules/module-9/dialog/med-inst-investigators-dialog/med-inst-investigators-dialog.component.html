@@ -1,52 +1,125 @@
 <mat-dialog-content class="mat-typography">
-    <form [formGroup]="medInvForm" class="my-5">
-        <div class="col-12">
-            <div class="md-form">
-                <input type="text" id="instMed" class="form-control" mdbInputDirective formControlName="instMed">
-                <label for="instMed" class="disabled">Instituţii medicale / Locul desfăşurării studiului</label>
+    <form [formGroup]="medInvForm" #f="ngForm">
+        <div class="row">
+            <div class="col-12">
+                <div class="md-form">
+                    <input type="text" id="instMed" class="form-control" mdbInputDirective formControlName="instMed">
+                    <label for="instMed" class="disabled">Unitatea medicală pentru desfășurarea studiului</label>
+                </div>
             </div>
         </div>
-        <div class="position-button">
-            <button type="button" class="btn btn-indigo waves-light btn-sm" mdbWavesEffect (click)="addInvestigators()">
-                <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
-            </button>
-        </div>
-        <hr>
-    </form>
 
-    <h3 class="text-center font-weight-bold">Lista de investigatori</h3>
-    <div class="container" *ngFor="let inv of collectedInvestigators; let i = index">
         <div class="row">
             <div class="col">
                 <div class="md-form-modified">
-                    <ng-select id="allInvestigators" name="allInvestigators"
-                               [items]="investigatorsList"
-                               placeholder="Investigator"
-                               [(ngModel)]="this.collectedInvestigators[i]"
-                               [clearable]=false
-                               dropdownPosition=top
-                               required="true">
+                    <ng-select [items]="subdivisionsList"
+                               bindLabel="name"
+                               formControlName="subdivision"
+                               placeholder="Subdiviziunea unitatii medicale">
                         <ng-template ng-option-tmp ng-label-tmp let-item="item">
-                            {{item.firstName + ' ' + item.lastName + ' ' + item.title}}
+                            {{item.name}}
                         </ng-template>
                     </ng-select>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="md-form-modified mt-slide">
-                    <mat-radio-button [(checked)]=this.collectedInvestigators[i].main (change)="setTrue(i)">Principal</mat-radio-button>
-                </div>
-            </div>
-            <div class="position-button mt-2">
-                <button type="button" class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
-                        (click)="removeInvestigator(i)"><i class="fa fa-minus fa-2x" aria-hidden="true"></i>
+
+            <div class="position-button">
+                <button type="button" class="btn btn-indigo waves-light btn-sm" mdbWavesEffect
+                        [disabled]="isDisabledAddSubdivision" (click)="addSubdivision()">
+                    <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
-    </div>
+        <hr>
+
+        <!--<div class="row text-center align-items-center">-->
+            <!--<div class="col">-->
+                <!--<div class="row border-row py-2 align-items-center"-->
+                     <!--*ngFor="let el of collectedDataList; let i = index">-->
+
+                    <!--<div class="col-12">-->
+                        <!--<div class="row align-items-center">-->
+                            <!--<div class="col-6 border-specs ptc">{{el.name}}</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="card-body card-body-cascade">
+            <div class="container-fluid">
+                <div class="row text-center align-items-center">
+                    <div class="col-4 bg-sidebar white-text">
+                        <div class="ptc">Diviziuni</div>
+                        <div class="row grey darken-3 white-text">
+                            <div class="col-12">
+                                <div class="ptc">Subdiviziunea</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8 bg-sidebar white-text">
+                        <div class="ptc">Investigatori</div>
+                        <div class="row text-center align-items-center">
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Nume</div>
+                            </div>
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Prenume</div>
+                            </div>
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Titlul</div>
+                            </div>
+                            <div class="col grey darken-3 white-text">
+                                <div class="ptc">Status</div>
+                            </div>
+                            <div class="col-3 grey darken-3 white-text">
+                                <div class="ptc">Actiuni</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row text-center align-items-center">
+                    <div class="col">
+                        <div class="row border-row py-2 align-items-center border-bottom"
+                             *ngFor="let el of collectedDataList; let i = index">
+                            <div class="col-4 text-center">
+                                <div class="row align-items-center">
+                                    <div class="col border-specs ptc">{{el.nmSubdivision.name}}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row align-items-center py-2" *ngFor="let x of el.investigatorsList">
+                                    <div class="col border-specs ptc">{{x.nmInvestigator.firstName}}</div>
+                                    <div class="col border-specs ptc">{{x.nmInvestigator.lastName}}</div>
+                                    <div class="col border-specs ptc">{{x.nmInvestigator.title}}</div>
+                                    <div class="col border-specs ptc">
+                                        <span *ngIf="x.isMain===true">Principal</span>
+                                        <span *ngIf="x.isMain!==true"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 border-specs ptc">
+                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                        (click)="deleteSubdivision(i, el)"
+                                        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="collectedDataList.length === 0" class="text-center text-muted mt-3">Nu sunt inregistrari!
+                </div>
+            </div>
+        </div>
+    </form>
 
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-    <button class="btn btn-dark-green-color btn-sm waves-light" (click)="submit()">Adauga</button>
+    <button class="btn btn-dark-green-color btn-sm waves-light" [disabled]="collectedDataList.length == 0"
+            (click)="submit()">Adauga
+    </button>
     <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
 </mat-dialog-actions>

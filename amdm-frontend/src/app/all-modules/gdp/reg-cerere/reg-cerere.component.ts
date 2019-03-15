@@ -188,7 +188,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
-        modelToSubmit.endDate = new Date();
+        modelToSubmit.endDate = null;
         modelToSubmit.registrationRequestMandatedContacts = [{
             mandatedLastname: this.rForm.get('mandatedLastname').value,
             mandatedFirstname: this.rForm.get('mandatedFirstname').value,

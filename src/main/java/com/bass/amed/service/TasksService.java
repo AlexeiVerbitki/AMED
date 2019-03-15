@@ -3,13 +3,14 @@ package com.bass.amed.service;
 import com.bass.amed.dto.TasksDTO;
 import com.bass.amed.projection.TaskDetailsProjectionDTO;
 import com.bass.amed.repository.RequestTypeRepository;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,19 +34,12 @@ public class TasksService {
                     " LEFT JOIN nm_economic_agents COMP on COMP.id=RREQ.company_id " +
                     " LEFT JOIN registration_request_mandated_contact MANCONT on MANCONT.registration_request_id=RREQ.id " +
                     " LEFT JOIN registration_request_steps STEP on (STEP.request_type_id=RREQ.type_id and STEP.code=RREQ.current_step) " +
-                    " WHERE 1=1";
+                    " WHERE 1=1" ;
     private static final Logger LOGGER = LoggerFactory.getLogger(TasksService.class);
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     @Autowired
     RequestTypeRepository requestTypeRepository;
-
-
-    private final static String AUTHORIZATION_QUERY =
-            "SELECT * " +
-                    "FROM import_authorization" +
-                    "WHERE" +
-                    "  authorized is not null";
 
     public List<TaskDetailsProjectionDTO> retreiveTaskByFilter(TasksDTO filter) {
         EntityManager em = null;
@@ -118,24 +112,6 @@ public class TasksService {
         }
 
         stringBuilder.append(" ORDER BY RREQ.id desc");
-        return stringBuilder.toString();
-    }
-
-    private String createAuthorizationQuery(String authorizationsNumber,
-                                            String applicant,
-                                            String expirationDate,
-                                            String summ,
-                                            String currency )
-    {
-
-
-        StringBuilder stringBuilder = new StringBuilder(AUTHORIZATION_QUERY);
-
-        if (!authorizationsNumber.equals(""))
-        {
-            stringBuilder.append(" AND authorization_number like %" + authorizationsNumber + "%");
-
-        }
         return stringBuilder.toString();
     }
 

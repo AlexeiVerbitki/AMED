@@ -64,10 +64,21 @@
 					<input id="recipient" mdbInputDirective type="text" class="form-control" [maxLength]="30" formControlName="recipient">
 					<label for="recipient">{{solicitant ? 'Solicitant' : 'Destinatar'}}</label>
 				</div>
-				<!--				<div *ngIf="formSubmitted && rForm.get('recipient').invalid">-->
-				<!--					<small class="text-muted"><strong class="text-danger">{{solicitant}}ul trebuie introdus</strong></small>-->
-				<!--				</div>-->
 			</div>
+			<div class="col-md-4" *ngIf="solicitant">
+					<div class="md-form-modified-select">
+						<ng-select id="inLetter"
+						           name="inLetter"
+						           [items]="listOfInLetters"
+						           bindLabel="requestNumber"
+						           placeholder="Numar scrisoare de intrare"
+						           formControlName="letterNumber"
+						           [required]="false"
+						           [multiple]="false">
+						</ng-select>
+					</div>
+			</div>
+
 			<div class="col-md-4" *ngIf="execTerm">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
@@ -90,7 +101,7 @@
 		</div>
 		<div class="text-center">
 			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">
-				{{isOutLetter ? 'Înregistrează' : 'Spre executare'}}
+				{{isInLetter ? 'Finisare' : 'Spre executare'}}
 			</button>
 		</div>
 	</form>

@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 @Data
 @Entity
-@Table(name = "ct_report_sae_susar", schema = "amed", catalog = "")
+@Table(name = "ct_report_sae_susar", schema = "amed")
 public class CtReportSaeSusarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,10 +53,6 @@ public class CtReportSaeSusarEntity {
     @Basic
     @Column(name = "center_id")
     private String centerId;
-
-    @Basic
-    @Column(name = "casuality")
-    private Byte casuality;
 
     @Basic
     @Column(name = "action_taken_drug")
@@ -161,4 +157,12 @@ public class CtReportSaeSusarEntity {
     @Basic
     @Column(name = "this_report_date")
     private Timestamp thisReportDate;
+
+    @Basic
+    @Column(name = "causality_per_reporter")
+    private String casualityPerReporter;
+
+    @Basic
+    @Column(name = "causality_per_mfr")
+    private String casualityPerMfr;
 }

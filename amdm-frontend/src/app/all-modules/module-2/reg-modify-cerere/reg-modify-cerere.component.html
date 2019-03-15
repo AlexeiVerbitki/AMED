@@ -1,65 +1,65 @@
 <div class="container-fluid sky z-depth-2">
-  <form [formGroup]='rForm'>
-    <div class="row">
-      <div class="col-lg-6"> 
-        <div class="md-form">
-          <input id="nrCererii" mdbInputDirective type="text" class="form-control"
-                 formControlName="requestNumber" [attr.disabled]="true">
-          <label for="nrCererii">Nr. cererii</label>
-        </div>
-      </div>
+	<form [formGroup]='rForm'>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="md-form">
+					<input id="nrCererii" mdbInputDirective type="text" class="form-control"
+					       formControlName="requestNumber" [attr.disabled]="true">
+					<label for="nrCererii">Nr. cererii</label>
+				</div>
+			</div>
 
-      <div class="col-lg-6">
-        <div class="md-form-modified">
-          <mat-form-field class="w-100">
-            <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker touchUi #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
-    <hr>
-    <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="md-form-modified">
-          <ng-select [items]="companii | async"
-                     bindLabel="name"
-                     placeholder="Compania solicitant"
-                     formControlName="company"
-                     [loading]="loadingCompany"
-                     [typeahead]="companyInputs"
-                     required="true">
-            <ng-template ng-option-tmp let-item="item">
-              {{item?.name}} <br />
-              <small class="form-text text-muted">{{item?.idno}}</small>
-            </ng-template>
-          </ng-select>
-          <div *ngIf="formSubmitted && rForm.get('company').invalid">
-            <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
-          </div>
-        </div>
-      </div>
-	</div>
-    <div class="row">
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
-                 formControlName="mandatedFirstname">
-          <label for="persResDepCereriiFirstname">Nume persoana responsabilă <span class="text-danger">*</span></label>
+			<div class="col-lg-6">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
+						<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form-modified">
+					<ng-select [items]="companii | async"
+					           bindLabel="name"
+					           placeholder="Compania solicitant"
+					           formControlName="company"
+					           [loading]="loadingCompany"
+					           [typeahead]="companyInputs"
+					           required="true">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.name}} <br/>
+							<small class="form-text text-muted">{{item.idno}}</small>
+						</ng-template>
+					</ng-select>
+					<div *ngIf="formSubmitted && rForm.get('company').invalid">
+						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
+					       formControlName="mandatedFirstname">
+					<label for="persResDepCereriiFirstname">Nume persoana responsabilă <span class="text-danger">*</span></label>
 
-        </div>
-        <div *ngIf="formSubmitted && !rForm.get('mandatedFirstname').valid">
-          <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie introdus</strong>
-          </small>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="md-form">
-          <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
-                 formControlName="mandatedLastname">
-          <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && !rForm.get('mandatedFirstname').valid">
+					<small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie introdus</strong>
+					</small>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="md-form">
+					<input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
+					       formControlName="mandatedLastname">
+					<label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
 
 				</div>
 				<div *ngIf="formSubmitted && !rForm.get('mandatedLastname').valid">
@@ -122,6 +122,19 @@
 						<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
 						<mat-datepicker touchUi #picker3></mat-datepicker>
 					</mat-form-field>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="md-form">
+	                    <textarea type="text" id="reqSubject" class="md-textarea form-control" mdbInputDirective rows="1"
+	                              formControlName="regSubject"></textarea>
+					<label for="reqSubject">Subiectul cererii<span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && !rForm.get('regSubject').valid">
+					<small class="text-muted"><strong class="text-danger">Subiectul cererii trebuie introdus</strong>
+					</small>
 				</div>
 			</div>
 		</div>

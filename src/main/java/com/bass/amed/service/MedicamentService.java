@@ -89,14 +89,9 @@ public class MedicamentService
             em.getTransaction().begin();
 
             Query          query     = em.createNativeQuery(queryString).setHint(QueryHints.HINT_FETCH_SIZE, 200).setHint(QueryHints.HINT_READONLY, true);
-            long           startTime = System.nanoTime();
+
             List<Object[]> result    = query.getResultList();
-            long           endTime   = System.nanoTime();
-            long           duration  = (endTime - startTime) / 1_000_000;   // 1_000
-            System.out.println("sql duration: " + duration);
 
-
-            long streamStartTime = System.nanoTime();
             result.forEach(record -> {
                 DrugsNomenclator drugsNomenclator = new DrugsNomenclator();
                 drugsNomenclator.setId((Integer)record[0]);
@@ -123,9 +118,6 @@ public class MedicamentService
 
                 drugsNomenclators.add(drugsNomenclator);
             });
-            long streamEndTime  = System.nanoTime();
-            long streamDuration = (streamEndTime - streamStartTime) / 1_000_000; // / 1_000
-            System.out.println("Stream duration: " + streamDuration);
 
             em.getTransaction().commit();
         }

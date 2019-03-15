@@ -66,6 +66,7 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
             'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
+            'regSubject': ['', Validators.required],
             'type':
                 fb.group({
                     'code': ['INMP', Validators.required]

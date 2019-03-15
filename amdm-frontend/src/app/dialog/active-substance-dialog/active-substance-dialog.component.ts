@@ -48,7 +48,6 @@ export class ActiveSubstanceDialogComponent implements OnInit {
 
         if (this.dataDialog) {
             this.aForm.get('activeSubstanceQuantity').setValue(this.dataDialog.quantity);
-            // console.log('manufactures', this.dataDialog.manufactures);
             this.manufacturesTable = this.dataDialog.manufactures;
         }
 
@@ -63,7 +62,6 @@ export class ActiveSubstanceDialogComponent implements OnInit {
                     this.loadingActiveSubst = false;
                 },
                 error => {
-                    console.log(error);
                     this.loadingActiveSubst = false;
                 }
             )
@@ -75,8 +73,7 @@ export class ActiveSubstanceDialogComponent implements OnInit {
                     if (this.dataDialog) {
                         this.aForm.get('activeSubstanceUnit').setValue(this.activeSubstanceUnitsOfMeasurement.find(r => r.id === this.dataDialog.unitsOfMeasurement.id));
                     }
-                },
-                error => console.log(error)
+                }
             )
         );
 

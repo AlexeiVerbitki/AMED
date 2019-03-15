@@ -7,3 +7,11 @@
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     padding-bottom: 2px;
 }
+
+.ml-25 {
+    margin-left: -25px;
+}
+
+.ml-20 {
+    margin-left: -20px;
+}

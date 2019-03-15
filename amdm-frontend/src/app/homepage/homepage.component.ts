@@ -57,7 +57,6 @@ export class HomepageComponent implements OnInit, AfterViewInit, OnDestroy {
     getRequestsInWork() {
         this.loadingService.show();
         this.subscriptions.push(this.homepageService.getUnfinishedTasks().subscribe(unfinishedTasks => {
-                // console.log('unfinishedTasks', unfinishedTasks);
                 this.dataSource.data = unfinishedTasks as [any];
                 this.dataSource.data.forEach(task => {
                     if (task.critical) {

@@ -33,7 +33,6 @@ export class PriceReqEditModalComponent implements OnInit {
 
       this.priceReqEntity.get('orderApprovDate').setValue(new Date(data.request.orderApprovDate));
       this.priceReqEntity.get('expirationDate').setValue(new Date(data.request.expirationDate));
-      console.log('request', this.priceReqEntity.value);
   }
 
     medChanged() {

@@ -1,8 +1,7 @@
 <h2 mat-dialog-title align="center">Substante active pentru {{selectedSubstance?.commercialName}}</h2>
 <div>
     <form [formGroup]='rForm'>
-        <div class="row" *ngIf="!viewMode">
-
+        <div class="row" *ngIf="!declarationMode">
 
             <div class="col-md-4">
                 <div class="md-form-modified">
@@ -67,9 +66,52 @@
                 </div>
             </div>
         </div>
+        <div class="row" *ngIf="declarationMode">
+            <div class="col-md-3">
+                <div class="md-form">
+                    <input id="commercialQuantity" mdbInputDirective type="number" class="form-control"
+                           formControlName="commercialQuantity">
+                    <label for="commercialQuantity">Cantitate comerciala
+                    </label>
+                </div>
+                <div *ngIf="rFormDeclarationSubbmitted && (rForm.get('commercialQuantity').invalid || commercialQuantityInvalid)">
+                    <small class="text-muted"><strong class="text-danger">Cantitatea pentru autorizare trebuie introdusa sau este mai mare decat cea admisibila.</strong></small>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="md-form">
+                    <input id="commercialQuantityUM" mdbInputDirective type="text" class="form-control"
+                           formControlName="commercialQuantityUM">
+                    <label for="commercialQuantityUM"> </label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker" placeholder="Data declararii"
+                               formControlName="declarationDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="rFormDeclarationSubbmitted && (rForm.get('declarationDate').invalid)">
+                    <small class="text-muted"><strong class="text-danger">Data declaratiei trebuie introdusa.</strong></small>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="md-form">
+                    <button *ngIf="declarationMode" type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                            (click)="declareQuantity()"
+                            mdbWavesEffect ><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></button>
+                </div>
+            </div>
 
 
-        <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!viewMode">
+        </div>
+
+
+        <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!declarationMode">
             <div class="container-fluid">
 
                 <div class="row">
@@ -86,7 +128,7 @@
 
         </div>
 
-        <div class="card-body card-body-cascade" *ngIf="!viewMode">
+        <div class="card-body card-body-cascade" *ngIf="!declarationMode">
             <table class="table table-widths text-center">
                 <thead class="bg-sidebar white-text">
                 <tr>
@@ -131,9 +173,9 @@
                      <th scope="col">Denumire</th>
                      <th scope="col">Cod</th>
                      <th scope="col">Cantitate autorizata</th>
-                        <th *ngIf="viewMode" scope="col">Cantitate ramasa</th>
+                        <th *ngIf="declarationMode" scope="col">Cantitate ramasa</th>
                      <th scope="col">Unitate de masura</th>
-                    <th scope="col">Actiuni</th>
+                    <th scope="col" *ngIf="!declarationMode">Actiuni</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -141,16 +183,71 @@
                       <td>{{ susbstance.substanceName }}</td>
                       <td>{{ susbstance.substanceCode }}</td>
                      <td >{{ susbstance.authorizedQuantity }}</td>
-                    <td *ngIf="viewMode">{{ susbstance.authorizedQuantityRemaining }}</td>
+                    <td *ngIf="declarationMode">{{ susbstance.authorizedQuantityRemaining }}</td>
                      <td>{{ susbstance.authorizedQuantityUnitDesc }}</td>
-                    <td>
+                    <td *ngIf="!declarationMode">
                         <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
                                 (click)="removeSubstance(i)"
-                                mdbWavesEffect [disabled]="viewMode"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
-                        <button *ngIf="viewMode" type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
-                                (click)="declare(susbstance)"
-                                mdbWavesEffect ><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></button>
+                                mdbWavesEffect [disabled]="declarationMode"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                       <!-- <button *ngIf="declarationMode" type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="openActiveSubstanceDeclarations(susbstance)"
+                                mdbWavesEffect ><i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i></button>-->
                     </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+        <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="declarationMode">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card-header-title white-text">Istoric declaratii</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card-body card-body-cascade" *ngIf="declarationMode">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Cantitate</th>
+                    <th scope="col">Data declaratiei</th>
+                    <th scope="col">Substanta activa</th>
+                    <th scope="col">Cantitate substanta activa</th>
+                    <th scope="col">Unitate de masura</th>
+                   <!-- <th scope="col">Actiuni</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let hist of historyViewDetails;let i = index">
+                    <td>{{ hist.quantity }}</td>
+                    <td >{{ hist.declarationDate | date: 'dd/MM/yyyy' }}</td>
+                    <td>
+                        <ul *ngFor="let name of hist.substanceName" class="list-unstyled">
+                            <li>{{ name}}  </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul *ngFor="let quantity of hist.quantitySubstance" class="list-unstyled">
+                            <li>{{ quantity}}  </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul *ngFor="let um of hist.umActiveName" class="list-unstyled">
+                            <li>{{ um}}  </li>
+                        </ul>
+                    </td>
+                  <!--  <td>
+                        <button type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="openActiveSubstanceDeclarations(hist)"
+                                mdbWavesEffect ><i class="fa fa-info-circle fa-lg" aria-hidden="true"></i></button>
+                    </td>-->
                 </tr>
                 </tbody>
             </table>
@@ -162,7 +259,7 @@
 <div class="text-center">
     <div mat-dialog-actions>
         <div class="w-100">
-            <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()" *ngIf="!viewMode">Salvare</button>
+            <button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="ok()">Salvare</button>
             <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
         </div>
     </div>

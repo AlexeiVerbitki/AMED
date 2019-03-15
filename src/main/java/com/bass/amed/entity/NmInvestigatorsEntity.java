@@ -4,49 +4,48 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "nm_investigators", schema = "amed", catalog = "")
+@Table(name = "nm_investigators")
 public class NmInvestigatorsEntity {
-    private Integer id;
-    private String firstName;
-    private String lastName;
-    private String title;
-
     @Id
     @Column(name = "id")
+    private Integer id;
+
+    @Basic
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Basic
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Basic
+    @Column(name = "title")
+    private String title;
+
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    @Basic
-    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
-
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    @Basic
-    @Column(name = "title")
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -56,10 +55,7 @@ public class NmInvestigatorsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NmInvestigatorsEntity that = (NmInvestigatorsEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(firstName, that.firstName) &&
-                Objects.equals(lastName, that.lastName) &&
-                Objects.equals(title, that.title);
+        return Objects.equals(id, that.id);
     }
 
     @Override

@@ -272,7 +272,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                                     this.outputDocuments.push({
                                         name: 'Solicitare desfasurare analize de laborator',
                                         docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                                        status: 'Urmeaza a fi inclus in actul de primire-predare',
+                                        status: 'Urmeaza a fi inclus in actul de predare-primire',
                                         date: new Date()
                                     });
                                 } else if (data.labIncluded == 1 && data.labNumber) {
@@ -284,9 +284,9 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                                     const rl = this.documents.find(r => r.docType.category == 'RL');
                                     let statusDoc = '';
                                     if (rl) {
-                                        statusDoc = 'Inclus in actul de primire-predare. Raspuns primit.';
+                                        statusDoc = 'Inclus in actul de predare-primire. Raspuns primit.';
                                     } else {
-                                        statusDoc = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                                        statusDoc = 'Inclus in actul de predare-primire. Asteptare raspuns.';
                                     }
                                     this.outputDocuments.push({
                                         name: 'Solicitare desfasurare analize de laborator',
@@ -657,12 +657,12 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 if (entry.number) {
                     const rl = this.documents.find(r => r.docType.category == 'RL');
                     if (rl) {
-                        entry.status = 'Inclus in actul de primire-predare. Raspuns primit.';
+                        entry.status = 'Inclus in actul de predare-primire. Raspuns primit.';
                     } else {
-                        entry.status = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                        entry.status = 'Inclus in actul de predare-primire. Asteptare raspuns.';
                     }
                 } else {
-                    entry.status = 'Urmeaza a fi inclus in actul de primire-predare';
+                    entry.status = 'Urmeaza a fi inclus in actul de predare-primire';
                 }
             }
         }
@@ -1111,7 +1111,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                         this.outputDocuments.push({
                             name: 'Solicitare desfasurare analize de laborator',
                             docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                            status: 'Urmeaza a fi inclus in actul de primire-predare',
+                            status: 'Urmeaza a fi inclus in actul de predare-primire',
                             date: new Date()
                         });
                         this.standarts = result.standards;
@@ -1191,7 +1191,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
-        dialogConfig2.data = division;
+        dialogConfig2.data = {division : division, disabledMainFields : true};
 
         const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
 

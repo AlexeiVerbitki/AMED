@@ -1,3 +1,6 @@
 .mt-slide {
   margin-top: 22px;
 }
+.mat-dialog-content {
+  height: 450px !important;
+}

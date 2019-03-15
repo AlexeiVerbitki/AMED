@@ -59,7 +59,6 @@ export class SearchMedicamentsDialogComponent implements OnInit, AfterViewInit, 
     this.subscriptions.push(
         this.medicamentService.getMedicamentsByFilter(dto
         ).subscribe(request => {
-          console.log(request.body);
               this.dataSource.data = request.body;
             },
             error => console.log(error)

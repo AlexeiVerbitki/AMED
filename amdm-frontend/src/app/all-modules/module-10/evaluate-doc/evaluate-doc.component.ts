@@ -3,7 +3,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 
 import {FormBuilder, FormGroup} from '@angular/forms';
 
-import {MatDialog} from '@angular/material';
+import {MatDialog, MatDialogConfig} from '@angular/material';
 import {Observable, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -37,7 +37,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
 
     canBeDeactivated = false;
     private subscriptions: Subscription[] = [];
-    isRg01: boolean;
+    isRg02: boolean;
     isExecutionTermVisible = false;
 
     isReadOnlyMode = false;
@@ -65,6 +65,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
             'problemDescription': {disabled: true, value: ''},
             'registrationRequestsEntity': {'requestHistories': {}, 'documents': []},
             'documentHistoryEntity': [],
+            'letterNumber': null
         });
     }
 
@@ -79,6 +80,7 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
                         this.recipientList = data.recipientList;
                         const pipe = new DatePipe('ro-MD');
                         this.eForm.get('id').setValue(data.id);
+                        this.eForm.get('letterNumber').setValue(data.letterNumber);
                         this.eForm.get('requestNumber').setValue(data.registrationRequestsEntity.requestNumber);
                         this.eForm.get('startDate').setValue(new Date(data.registrationRequestsEntity.startDate));
                         this.eForm.get('recipient').setValue(data.recipient);
@@ -96,16 +98,17 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
                         this.history = data.documentHistoryEntity.map(entity => new Date(entity.addDate) + ' - ' + entity.assignee +
                             ': ' + entity.actionDescription).join('\r\n');
 
-                        this.isRg01 = data.registrationRequestsEntity.requestNumber.startsWith('Rg01') ? true : false;
+                        this.isRg02 = data.registrationRequestsEntity.requestNumber.startsWith('Rg02') ? true : false;
                         this.isExecutionTermVisible = data.registrationRequestsEntity.requestNumber.startsWith('Rg03') ||
+                            data.registrationRequestsEntity.requestNumber.startsWith('Rg01') ||
                             data.registrationRequestsEntity.requestNumber.startsWith('Rg04') ||
                             data.registrationRequestsEntity.requestNumber.startsWith('Rg05');
+
                         this.isReadOnlyMode = data.registrationRequestsEntity.currentStep.startsWith('F') ? true : false;
                         this.initiator = data.registrationRequestsEntity.initiator;
-                        // this.isExecutor =
                     })
                 );
-            }, error1 => console.log('error  ', error1)
+            }
             )
         );
         this.subscriptions.push(
@@ -114,12 +117,10 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
                         this.administrationService.getAllDocTypes().subscribe(data => {
                                 this.docTypes = data;
                                 this.docTypes = this.docTypes.filter(r => step.availableDocTypes.includes(r.category));
-                            },
-                            error => console.log(error)
+                            }
                         )
                     );
-                },
-                error => console.log(error)
+                }
             )
         );
     }
@@ -169,15 +170,16 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
     }
 
     addPersonAssign(): void {
-        const dialogRef = this.dialog.open(PersAsignModalComponent, {
-            data: {
-                initiator: this.eForm.get('registrationRequestsEntity').value.initiator,
-                executors: this.eForm.get('executors').value,
-            },
-            hasBackdrop: true,
-            width: '650px',
-            panelClass: 'custom-dialog-container'
-        });
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.data = {initiator: this.eForm.get('registrationRequestsEntity').value.initiator, executors: this.eForm.get('executors').value};
+        dialogConfig.disableClose = false;
+        dialogConfig.autoFocus = true;
+        dialogConfig.hasBackdrop = true;
+        dialogConfig.panelClass = 'custom-dialog-container';
+        dialogConfig.width = '650px';
+
+        const dialogRef = this.dialog.open(PersAsignModalComponent, dialogConfig);
 
         dialogRef.afterClosed().subscribe(response => {
             if (response && response.username != '') {
@@ -264,7 +266,6 @@ export class EvaluateDocComponent implements OnInit, AfterViewInit, OnDestroy, C
             }, error => this.loadingService.hide())
         );
 
-        console.log(modelToCommit);
     }
 
     cancel(): void {

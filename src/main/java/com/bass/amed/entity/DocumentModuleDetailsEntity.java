@@ -34,6 +34,8 @@ public class DocumentModuleDetailsEntity
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "document_module_id")
     private Set<DocumentModuleHistoryEntity>    documentHistoryEntity = new HashSet<>();
-
+    @Basic
+    @Column(name = "letter_number", length = 20)
+    private String                              letterNumber;
 
 }

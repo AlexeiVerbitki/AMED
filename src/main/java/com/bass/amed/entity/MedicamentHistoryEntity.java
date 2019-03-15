@@ -61,14 +61,6 @@ public class MedicamentHistoryEntity
     private String administeringModeFrom;
     @Basic@Column(name = "status", nullable = true, length = 1)
     private String status;
-    @Basic@Column(name = "volume_to")
-    private String volumeTo;
-    @Basic@Column(name = "volume_from")
-    private String volumeFrom;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "volume_unit_measurement_id_to")
-    private NmUnitsOfMeasurementEntity volumeQuantityMeasurementTo;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})@JoinColumn(name = "volume_unit_measurement_id_from")
-    private NmUnitsOfMeasurementEntity volumeQuantityMeasurementFrom;
     @Basic@Column(name = "terms_of_validity_to")
     private Integer termsOfValidityTo;
     @Basic@Column(name = "terms_of_validity_from")
@@ -77,8 +69,6 @@ public class MedicamentHistoryEntity
     private Set<MedicamentActiveSubstancesHistoryEntity> activeSubstancesHistory = new HashSet<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)@JoinColumn(name = "medicament_history_id")
     private Set<MedicamentAuxiliarySubstancesHistoryEntity> auxiliarySubstancesHistory = new HashSet<>();
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)@JoinColumn(name = "medicament_history_id")
-    private Set<MedicamentInstructionsHistoryEntity> instructionsHistory = new HashSet<>();
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})@JoinColumn(name = "medicament_history_id")
     private Set<MedicamentDivisionHistoryEntity> divisionHistory = new HashSet<>();
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})@JoinColumn(name = "expert_id")
@@ -154,8 +144,6 @@ public class MedicamentHistoryEntity
         this.primarePackageTo = entity.getPrimarePackage();
         this.administeringModeTo = entity.getAdministeringMode();
         this.status = entity.getStatus();
-        this.volumeTo = entity.getVolume();
-        this.volumeQuantityMeasurementTo = entity.getVolumeQuantityMeasurement();
         this.termsOfValidityTo = entity.getTermsOfValidity();
         this.registrationDate = entity.getRegistrationDate();
         this.originaleTo = entity.getOriginale();

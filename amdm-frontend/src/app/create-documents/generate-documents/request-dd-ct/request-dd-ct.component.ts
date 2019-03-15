@@ -35,14 +35,12 @@ export class RequestDdCtComponent implements OnInit {
             this.requestService.getRequestsForDDCt().subscribe(data => {
                     this.dataSource.data = data;
                     this.dataSource.data.forEach(t => t.included = true);
-                },
-                error => console.log(error)
+                }
             )
         );
     }
 
     generateDocument() {
-        // console.log('this.dataSource', this.dataSource);
         if (this.dataSource.data.length == 0) {
             this.errorHandlerService.showError('Nu a fost selectata nici o cerere.');
             return;
@@ -69,7 +67,6 @@ export class RequestDdCtComponent implements OnInit {
                     x.ddNumber = result.docNr;
                     ctList.push(x);
                 }
-                // console.log('ctList', ctList);
                 const observable: Observable<any> = this.documentService.generateDDCt(ctList);
 
                 this.subscriptions.push(observable.subscribe(data => {
@@ -78,8 +75,7 @@ export class RequestDdCtComponent implements OnInit {
                         window.open(fileURL);
                         this.loadRequestForDD();
                         this.loadDDCts.emit(true);
-                        // console.log(data);
-                    }, error => console.log(error))
+                    })
                 );
 
             }

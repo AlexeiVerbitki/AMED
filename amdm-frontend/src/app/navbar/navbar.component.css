@@ -11,3 +11,16 @@
     --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace
 }
+
+.btn-sm-p {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+}
+
+.mt-65 {
+    margin-top: .65rem!important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

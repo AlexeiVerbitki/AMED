@@ -170,7 +170,7 @@ public class PriceController {
     @RequestMapping("/med-current-price")
     public ResponseEntity<NmPricesEntity> getMedCurrentPrice(@RequestParam(value = "id", required = true) Integer id) {
         logger.debug("getMedCurrentPrice");
-        NmPricesEntity priceCNP = nmPricesRepository.findOneByMedicamentIdAndStatus(id, "V");
+        NmPricesEntity priceCNP = nmPricesRepository.findFirstByMedicamentIdAndStatusOrderByExpirationDateDesc(id, "V");
         return new ResponseEntity<>(priceCNP, HttpStatus.OK);
     }
 

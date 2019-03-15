@@ -90,6 +90,10 @@ export class DrugDecisionsService {
         return this.http.get('/api/drug-decisions/generate-registration-request-number', {});
     }
 
+    generateDeclarationNumber(): Observable<any> {
+        return this.http.get('/api/drug-decisions/generate-declaration-number', {});
+    }
+
     calculateAvailableQuantityForSubstance(substanceId: any, type: any, requestId: any): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('substanceId', substanceId);

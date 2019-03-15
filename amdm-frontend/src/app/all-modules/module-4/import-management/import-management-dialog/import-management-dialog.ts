@@ -352,7 +352,6 @@ export class ImportManagementDialog implements OnInit {
                     /*===========================================IF MEDICAMENT ID EXISTS*/
                     if (val.medicament) {
 
-                        
 
                         this.subscriptions.push(this.requestService.getInvoiceQuota(val.medicament.id, this.importData.authorizationsNumber, "true").subscribe(data => {
                             console.log('getInvoiceQuota()', data);

@@ -82,16 +82,14 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     refProdActiveSubstances: any[] = [];
     isValidRefProduct = false;
     mandatedContactName: string;
-    private readonly SEARCH_STRING_LENGTH: number = 2;
-    private subscriptions: Subscription[] = [];
-
     manufacturersPlacebo: Observable<any[]>;
     loadingManufacturerPlacebo = false;
     manufacturerInputsPlacebo = new Subject<string>();
-
     farmFormsPlacebo: Observable<any[]>;
     loadingFarmFormsPlacebo = false;
     farmFormsInputsPlacebo = new Subject<string>();
+    private readonly SEARCH_STRING_LENGTH: number = 2;
+    private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -449,18 +447,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             );
     }
 
-    // initMeasureUnits() {
-    //     this.loadingMeasureUnits = true;
-    //     this.subscriptions.push(
-    //         this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
-    //             this.measureUnits = data;
-    //             this.measureUnitsRfPr = data;
-    //             this.measureUnitsPlacebo = data;
-    //             this.loadingMeasureUnits = false;
-    //         }, error => console.log(error))
-    //     );
-    // }
-
     loadManufacturers() {
         this.manufacturers =
             this.manufacturerInputs.pipe(
@@ -482,7 +468,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             );
     }
 
-
     loadDocTypes(data) {
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode(data.type.id, data.currentStep).subscribe(step => {
@@ -500,8 +485,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                         )
                     );
                 },
-                error => console.log(error)
-            )
+                error => console.log(error))
         );
     }
 
@@ -532,7 +516,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                             this.evaluateClinicalTrailForm.get('clinicalTrails').setValue(data.clinicalTrails);
 
                             this.evaluateClinicalTrailForm.get('clinicalTrails.medicalInstitutions').setValue(
-                                data.medicalInstitution == null ? [] : data.clinicalTrails.medicalInstitutions);
+                                data.medicalInstitutions == null ? [] : data.clinicalTrails.medicalInstitutions);
                             this.evaluateClinicalTrailForm.get('clinicalTrails.treatment').setValue(
                                 data.clinicalTrails.treatment == null ? this.treatmentList[0] : data.clinicalTrails.treatment);
                             if (data.clinicalTrails.provenance == null) {
@@ -544,7 +528,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                                     this.evaluateClinicalTrailForm.get('clinicalTrails.trialPopInternat').disable() :
                                     this.evaluateClinicalTrailForm.get('clinicalTrails.trialPopInternat').enable();
                             }
-
 
                             if (data.clinicalTrails.medicament !== null) {
                                 this.medicamentForm.setValue(data.clinicalTrails.medicament);
@@ -565,6 +548,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                             }
 
                             if (data.clinicalTrails.medicalInstitutions !== null) {
+                                console.log('mediacalInstitutionsList', data.clinicalTrails.medicalInstitutions);
                                 this.mediacalInstitutionsList = data.clinicalTrails.medicalInstitutions;
                             }
 
@@ -589,10 +573,11 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.subscriptions.push(
             this.administrationService.getAllMedicalInstitutions().subscribe(data => {
                 this.allMediacalInstitutionsList = data;
+                console.log('allMediacalInstitutionsList', data);
 
                 if (this.mediacalInstitutionsList !== undefined && this.mediacalInstitutionsList !== null && this.mediacalInstitutionsList.length > 0) {
                     const missing = this.allMediacalInstitutionsList.filter(item =>
-                        !this.mediacalInstitutionsList.some(other => item.id === other.id));
+                        !this.mediacalInstitutionsList.some(other => item.id === other.nmMedicalInstitution.id));
                     this.allMediacalInstitutionsList = missing;
                 }
             }, error => console.log(error))
@@ -601,18 +586,17 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
     addMedicalInstitution() {
         // console.log( 'this.addMediacalInstitutionForm',  this.addMediacalInstitutionForm);
-
         const dialogConfig2 = new MatDialogConfig();
 
-        dialogConfig2.disableClose = false;
+        dialogConfig2.disableClose = true;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
-        dialogConfig2.height = '600px';
-        dialogConfig2.width = '650px';
+        // dialogConfig2.height = '600px';
+        dialogConfig2.width = '800px';
 
         dialogConfig2.data = {
-            medicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value.name,
+            nmMedicalInstitution: this.addMediacalInstitutionForm.get('medicalInstitution').value,
             investigatorsList: this.allInvestigatorsList
         };
 
@@ -624,12 +608,12 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 if (result == null || result == undefined || result.success === false) {
                     return;
                 }
-
-                const medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
-                medInst.investigators = result.investigators;
-                console.log('result.investigators', result.investigators);
-                this.mediacalInstitutionsList.push(medInst);
-                const intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
+                const medInst = result.medicalInstitution.nmMedicalInstitution;
+                console.log('medInst', medInst);
+                this.mediacalInstitutionsList.push(result.medicalInstitution);
+                console.log('this.mediacalInstitutionsList', this.mediacalInstitutionsList);
+                const intdexToDelete = this.allMediacalInstitutionsList.indexOf(medInst);
+                console.log('intdexToDelete', intdexToDelete);
                 this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
                 this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
                 this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
@@ -638,45 +622,13 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         );
     }
 
-    deleteMedicalInstitution(i) {
-        // console.log('i', i);
-        // console.log('this.mediacalInstitutionsList', this.mediacalInstitutionsList);
-        // console.log('this.allMediacalInstitutionsList', this.allMediacalInstitutionsList);
+    deleteMedicalInstitution(index: number, medInst: any): void {
+        // console.log('index', index);
+        // console.log('medInst', medInst);
 
-        this.allMediacalInstitutionsList.push(this.mediacalInstitutionsList[i]);
-        this.mediacalInstitutionsList.splice(i, 1);
+        this.allMediacalInstitutionsList.push(medInst);
+        this.mediacalInstitutionsList.splice(index, 1);
         this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
-    }
-
-    editMedicalInstitution(i) {
-        const dialogConfig2 = new MatDialogConfig();
-
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.height = '600px';
-        dialogConfig2.width = '650px';
-
-        // console.log('medInst', this.addMediacalInstitutionForm.get('medicalInstitution').value);
-        console.log('this.mediacalInstitutionsList[i]', this.mediacalInstitutionsList[i]);
-        dialogConfig2.data = {
-            medicalInstitution: this.mediacalInstitutionsList[i].name,
-            investigatorsList: this.allInvestigatorsList,
-            collectedInvestigators: this.mediacalInstitutionsList[i].investigators
-        };
-
-        const dialogRef = this.dialog.open(MedInstInvestigatorsDialogComponent, dialogConfig2);
-
-        this.subscriptions.push(
-            dialogRef.afterClosed().subscribe(result => {
-                console.log('result', result);
-                if (result == null || result == undefined || result.success === false) {
-                    return;
-                }
-                this.mediacalInstitutionsList[i].investigators = result.investigators;
-            })
-        );
     }
 
     loadInvestigatorsList() {
@@ -691,22 +643,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             )
         );
     }
-
-    addInvestigator() {
-        this.investigatorsList.push(this.addInvestigatorForm.get('investigator').value);
-        const intdexToDelete = this.allInvestigatorsList.indexOf(this.addInvestigatorForm.get('investigator').value);
-        this.allInvestigatorsList.splice(intdexToDelete, 1);
-        this.allInvestigatorsList = this.allInvestigatorsList.splice(0);
-        this.addInvestigatorForm.get('investigator').setValue('');
-    }
-
-    deleteInvestigator(investigator) {
-        const intdexToDelete = this.investigatorsList.indexOf(investigator);
-        this.investigatorsList.splice(intdexToDelete, 1);
-        this.allInvestigatorsList.push(investigator);
-        this.allInvestigatorsList = this.allInvestigatorsList.splice(0);
-    }
-
 
     onTreatmentChange(mrChange: MatRadioChange) {
         this.evaluateClinicalTrailForm.get('clinicalTrails.treatment').setValue(this.treatmentList[mrChange.value - 1]);
@@ -727,7 +663,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     }
 
     save() {
-        this.loadingService.show();
+        // this.loadingService.show();
         const formModel = this.evaluateClinicalTrailForm.getRawValue();
         formModel.currentStep = 'E';
         formModel.documents = this.docs;
@@ -746,6 +682,8 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         formModel.assignedUser = this.authService.getUserName();
         console.log('Save data', formModel);
+        // return;
+
         this.subscriptions.push(
             this.requestService.saveClinicalTrailRequest(formModel).subscribe(data => {
                 this.loadingService.hide();
@@ -755,7 +693,6 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 console.log(error);
             })
         );
-
     }
 
     dysplayInvalidControl(form: FormGroup) {
@@ -790,7 +727,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         if (this.mediacalInstitutionsList.length == 0) {
             this.dysplayInvalidControl(this.addMediacalInstitutionForm);
-            this.errorHandlerService.showError('Unitatea medicală pentru desfășurarea studiului nu a fost aleasa');
+            this.errorHandlerService.showError('Unitatea medicală pentru desfășurarea studiului nu a fost adaugată');
             return;
         }
 
@@ -880,7 +817,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
         const dialogConfig2 = new MatDialogConfig();
 
-        dialogConfig2.disableClose = false;
+        dialogConfig2.disableClose = true;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 
@@ -908,7 +845,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
     addRefProdActiveSubstanceDialog() {
         const dialogConfig2 = new MatDialogConfig();
 
-        dialogConfig2.disableClose = false;
+        dialogConfig2.disableClose = true;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
 

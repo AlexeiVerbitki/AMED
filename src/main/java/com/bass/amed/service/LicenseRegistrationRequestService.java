@@ -379,6 +379,15 @@ public class LicenseRegistrationRequestService
 
             r.setEndDate(request.getEndDate());
 
+
+            //Update documents
+            Set<DocumentsEntity> dSet = request.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
+
+            if (!dSet.isEmpty())
+            {
+                r.getDocuments().addAll(dSet);
+            }
+
             if (request.getType().getCode().equals("LICEL") && request.getLicense().getStatus().equals("F"))
             {
                 Date releaseDate = new Date();

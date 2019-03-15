@@ -32,8 +32,10 @@
 			<div class="col">
 				<div class="md-form-modified">
 					<ng-select id="regType" name="regType" [items]="reqTypes" bindLabel="description"
-					           placeholder="Inregistrare" formControlName="type"
-					           (ngModelChange)="typeWasChanged()"
+					           placeholder="Inregistrare"
+					           (ngModelChange)="typeWasChanged($event);"
+					           [(ngModel)]="oldType"
+					           formControlName="type"
 					           required="true">
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('type').invalid">
@@ -121,7 +123,7 @@
 						<button *ngIf="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')" type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
 						        (click)="removeDivision(i,division)" mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 						</button>
-						<button *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')" type="button" class="btn btn-mdb-color btn-sm waves-light"
+						<button type="button" class="btn btn-mdb-color btn-sm waves-light"
 						        (click)="editDivision(division,i)" mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
 						</button>
 					</td>
@@ -351,6 +353,10 @@
 					           (ngModelChange)="fillAutorizationHolderDetails()"
 					           [loading]="loadingManufacture"
 					           formControlName="authorizationHolder">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.description}} <br/>
+							<small class="form-text text-muted">{{item.address}}</small>
+						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.authorizationHolder').invalid">
 						<small class="text-muted"><strong class="text-danger">Deţinătorul certificatului de inregistrare trebuie selectat</strong></small>

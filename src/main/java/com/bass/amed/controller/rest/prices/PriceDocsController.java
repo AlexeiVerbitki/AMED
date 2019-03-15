@@ -10,6 +10,7 @@ import com.bass.amed.exception.CustomException;
 import com.bass.amed.repository.*;
 import com.bass.amed.repository.prices.*;
 import com.bass.amed.service.PriceEvaluationService;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/api/price-docs")
 public class PriceDocsController {
@@ -208,10 +210,14 @@ public class PriceDocsController {
     public ResponseEntity<byte[]> viewEvaluationSheet(@RequestBody FisaDeEvaluare fisaDeEvaluare) throws CustomException
     {
         byte[] bytes = null;
-
-        Integer medicamentId = fisaDeEvaluare.getMedicamentClaimedPriceList().get(0).getId();
-        List<PrevYearAvgPriceDTO> previousYearsPrices = prevYearsPriceAVGInvoiceDetailsRepository.getPreviousYearsImportPriceAVG(medicamentId);
-
+        List<PrevYearAvgPriceDTO> previousYearsPrices = null;
+        try {
+            Integer medicamentId = fisaDeEvaluare.getMedicamentClaimedPriceList().get(0).getId();
+            previousYearsPrices = prevYearsPriceAVGInvoiceDetailsRepository.getPreviousYearsImportPriceAVG(medicamentId);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            previousYearsPrices = new ArrayList<>();
+        }
 
         Map<String, Object> parameters = new HashMap<>();
         TreeMap<Integer, Double> fisaDeEv15Map = new TreeMap<>();// getFisaDeEvaluare15Map();

@@ -31,7 +31,6 @@ export class AddReceiptDialogComponent implements OnInit {
     }
 
     ngOnInit() {
-        // console.log('this.dataDialog', this.dataDialog);
         if (this.dataDialog) {
             this.title = 'Inregistrare incasari';
             this.aForm.get('number').setValue(this.dataDialog.number);

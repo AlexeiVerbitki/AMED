@@ -292,7 +292,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy {
             req.initiator = this.rForm.get('initiator').value;
             req.assignedUser = user;
             req.startDate = this.startRecDate;
-            req.endDate = new Date();
+            req.endDate = null;
             if (!req.requestHistories) {
                 req.requestHistories = [];
             }

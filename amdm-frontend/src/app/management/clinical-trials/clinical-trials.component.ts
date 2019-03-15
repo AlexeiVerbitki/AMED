@@ -89,7 +89,7 @@ export class ClinicalTrialsComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     createHeaderColumns(): any[] {
-        return ['Codul studiului', 'Numar Eudra', 'Tratament', 'Provenienta', 'Numarul comisiei', 'Data comisiei', 'Sponsor'];
+        return ['Codul studiului', 'Numar Eudra', 'Tip studiu', 'Categorie studiu', 'Numarul comisiei', 'Data comisiei', 'Sponsor'];
     }
 
     populateDataForXLSXDocument(arr: any[][]): any[] {

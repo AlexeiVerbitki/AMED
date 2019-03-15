@@ -99,8 +99,6 @@ export class ReceiptsComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         const dialogRef = this.dialog.open(AddReceiptDialogComponent, dialogConfig2);
         dialogRef.afterClosed().subscribe(result => {
-            // console.log('result', result);
-            // console.log('payOrder', payOrder);
             if (result && result.response) {
                 // this.loadingService.show();
                 this.subscriptions.push(
@@ -113,46 +111,15 @@ export class ReceiptsComponent implements OnInit, OnDestroy, AfterViewInit {
                                 }
                             );
                             request.calculatedDepth = request.calculatedDepth - addResult.body.amount;
-                            // console.log('addedReceipt', request);
                             this.loadingService.hide();
                         },
                         error => {
-                            console.log(error);
                             this.loadingService.hide();
                         }
                     ));
             }
         });
     }
-
-    // editReceipt(receipt: any) {
-    //     const dialogConfig2 = new MatDialogConfig();
-    //
-    //     dialogConfig2.disableClose = false;
-    //     dialogConfig2.autoFocus = true;
-    //     dialogConfig2.hasBackdrop = true;
-    //
-    //     dialogConfig2.width = '600px';
-    //     dialogConfig2.data = receipt;
-    //
-    //     const dialogRef = this.dialog.open(AddReceiptDialogComponent, dialogConfig2);
-    //     dialogRef.afterClosed().subscribe(result => {
-    //         if (result && result.response) {
-    //             this.loadingService.show();
-    //             this.subscriptions.push(
-    //                 this.administrationService.editReceipt(result).subscribe(request => {
-    //                         this.dataSource.data = [];
-    //                         this.dataSource.data = [...this.dataSource.data, request.body];
-    //                         this.loadingService.hide();
-    //                     },
-    //                     error => {
-    //                         console.log(error);
-    //                         this.loadingService.hide();
-    //                     }
-    //                 ));
-    //         }
-    //     });
-    // }
 
     removeReceipt(receiptIndex: number, payOrder: any, request: any) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -162,9 +129,6 @@ export class ReceiptsComponent implements OnInit, OnDestroy, AfterViewInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.loadingService.show();
-                // console.log('request', request);
-                // console.log('payOrder', payOrder);
-                // console.log('receiptIndex', receiptIndex);
                 const receipt = payOrder.receipDetailsMap[receiptIndex];
                 this.subscriptions.push(
                     this.administrationService.removeReceipt(receipt.payedId).subscribe(remResult => {
@@ -173,7 +137,6 @@ export class ReceiptsComponent implements OnInit, OnDestroy, AfterViewInit {
                             payOrder.receipDetailsMap.splice(receiptIndex, 1);
                         },
                         error => {
-                            console.log(error);
                             this.loadingService.hide();
                         }
                     ));
@@ -189,13 +152,11 @@ export class ReceiptsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     testBakend() {
         const receiptFormValue = this.rForm.value;
-        // console.log('taskFormValue', receiptFormValue);
         const searchCriteria = {
             requestCode: receiptFormValue.requestCode ? receiptFormValue.requestCode.registerCode : '',
             requestNumber: receiptFormValue.requestNumber ? receiptFormValue.requestNumber : '',
             comanyId: receiptFormValue.company ? receiptFormValue.company.id : ''
         };
-        // console.log('searchCriteria', searchCriteria);
         this.subscriptions.push(
             this.receiptManagemetService.getUnfinishedTasks(searchCriteria).subscribe(request => {
                     // console.log('request', request);

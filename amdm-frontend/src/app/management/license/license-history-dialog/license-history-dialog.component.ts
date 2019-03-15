@@ -48,7 +48,7 @@ export class LicenseHistoryDialogComponent implements OnInit, OnDestroy {
                 licenseId: this.dataDialog.licenseId,
                 reqId: reqId,
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

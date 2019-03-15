@@ -85,7 +85,11 @@ export class MedicamentsOaComponent implements OnInit, AfterViewInit {
         this.subscriptions.push(
             this.requestService.getMedicamentsForOA().subscribe(data => {
                     this.dataSource.data = data;
-                    this.dataSource.data.forEach(t => t.manufacture = t.manufactures.find(x => x.producatorProdusFinit == true));
+                    this.dataSource.data.forEach(t => {
+                        const man = t.manufactures.filter(x => x.producatorProdusFinit == true);
+                        t.manufacture = '';
+                        man.forEach(m => t.manufacture = t.manufacture + m.manufacture.description + ' ' + m.manufacture.address + '; ');
+                    });
                     this.dataSource.data.forEach(t => {
                         t.included = true;
                         t.divisionStr = this.getConcatenatedDivision(t);

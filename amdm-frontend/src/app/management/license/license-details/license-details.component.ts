@@ -103,7 +103,7 @@ export class LicenseDetailsComponent implements OnInit, OnDestroy {
             data: {
                 licenseId: this.dataDialog.licenseId,
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

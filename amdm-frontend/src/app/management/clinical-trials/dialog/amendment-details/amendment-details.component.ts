@@ -20,6 +20,7 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
     modifications: any[] = [];
     mediacalInstitutionsFromList: any[] = [];
     mediacalInstitutionsToList: any[] = [];
+    areMedInstModified = false;
     isMedModified = false;
     isRefProdModified = false;
     isPlaceboModified = false;
@@ -112,13 +113,13 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             this.requestService.getClinicalTrailAmendmentRequest(this.dataDialog.id).subscribe(data => {
-                console.log('data', data);
+                // console.log('data', data);
                 this.ctAmendForm.get('documents').setValue(data.documents);
 
                 const currentAmendment = data.clinicalTrails.clinicTrialAmendEntities.find(amendment => this.dataDialog.id == amendment.registrationRequestId);
                 this.ctAmendForm.get('note').setValue(currentAmendment.note);
 
-                console.log('currentAmendment', currentAmendment);
+                // console.log('currentAmendment', currentAmendment);
                 if (currentAmendment.sponsorFrom !== currentAmendment.sponsorTo) {
                     this.modifications.push({
                         field: 'Sponsorul',
@@ -135,14 +136,14 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                 }
                 if (currentAmendment.treatmentFrom.id !== currentAmendment.treatmentTo.id) {
                     this.modifications.push({
-                        field: 'Tratament',
+                        field: 'Tip studiu',
                         oldValue: currentAmendment.treatmentFrom.description,
                         newValue: currentAmendment.treatmentTo.description
                     });
                 }
                 if (currentAmendment.provenanceFrom.id !== currentAmendment.provenanceTo.id) {
                     this.modifications.push({
-                        field: 'Provenienta',
+                        field: 'Categorie studiu',
                         oldValue: currentAmendment.provenanceFrom.description,
                         newValue: currentAmendment.provenanceTo.description
                     });
@@ -168,17 +169,16 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                         newValue: currentAmendment.titleTo
                     });
                 }
-                if (currentAmendment.medicalInstitutionsFrom && currentAmendment.medicalInstitutionsFrom.length != 0) {
-                    console.log('medicalInstitutionsFrom', currentAmendment.medicalInstitutionsFrom);
-                    this.mediacalInstitutionsFromList = currentAmendment.medicalInstitutionsFrom;
-                    this.mediacalInstitutionsToList = currentAmendment.medicalInstitutionsTo;
+
+                // console.log('this.areMedInstModified', this.areMedicalInstitutionsModified(currentAmendment.medicalInstitutions));
+                if (this.areMedicalInstitutionsModified(currentAmendment.medicalInstitutions)) {
+                    //console.log('this.areMedInstModified', this.areMedInstModified);
+                    this.areMedInstModified = true;
                 }
+
                 if (this.isMedicamentModified(currentAmendment.medicament)) {
                     this.isMedModified = true;
                     this.medicamentForm.setValue(currentAmendment.medicament);
-                    //this.medicamentForm.manufactureFrom = currentAmendment.medicament.manufactureFrom.description;
-                    // console.log('medicamnet modified');
-                    // console.log('this.medicamentForm', this.medicamentForm);
                 } else {
                     // console.log('medicamnet not modified');
                 }
@@ -202,6 +202,43 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
         );
     }
 
+    areMedicalInstitutionsModified(medicalInstitutions: [any]): boolean {
+        if (medicalInstitutions && medicalInstitutions.length > 0) {
+            this.mediacalInstitutionsFromList = medicalInstitutions.filter(instFrom => !instFrom.isNew);
+            this.mediacalInstitutionsToList = medicalInstitutions.filter(instFrom => instFrom.isNew);
+
+            if (this.mediacalInstitutionsFromList.length == this.mediacalInstitutionsToList.length) {
+                for (const medInstFrom of this.mediacalInstitutionsFromList) {
+                    const otherMedInst = this.mediacalInstitutionsToList.find(medInstTo => medInstTo.nmMedicalInstitution.id == medInstFrom.nmMedicalInstitution.id);
+                    if (otherMedInst && medInstFrom.subdivisionsList.length == otherMedInst.subdivisionsList.length) {
+                        for (const medInstSubdivFrom of  medInstFrom.subdivisionsList) {
+                            const otherMedInstSubdiv =
+                                otherMedInst.subdivisionsList.find(medInstSubdivTo => medInstSubdivTo.nmSubdivision.id == medInstSubdivFrom.nmSubdivision.id);
+                            if (otherMedInstSubdiv && medInstSubdivFrom.investigatorsList.length == otherMedInstSubdiv.investigatorsList.length) {
+
+                                for (const medInstSubdivInvestigFrom of  medInstSubdivFrom.investigatorsList) {
+                                    const otherMedInstSubdivInvestig = otherMedInstSubdiv.investigatorsList
+                                        .find(medInstSubdivInvestigTo => medInstSubdivInvestigTo.nmInvestigator.id == medInstSubdivInvestigFrom.nmInvestigator.id);
+                                    if (!(otherMedInstSubdivInvestig && otherMedInstSubdivInvestig.nmInvestigator.id == medInstSubdivInvestigFrom.nmInvestigator.id
+                                        && otherMedInstSubdivInvestig.isMain == medInstSubdivInvestigFrom.isMain)) {
+                                        return true;
+                                    }
+                                }
+                            } else {
+                                return true;
+                            }
+                        }
+                    } else {
+                        return true;
+                    }
+                }
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     isMedicamentModified(medicament: any) {
         if (medicament.activeSubstances.some(as => as.status == 'N' || as.status == 'R')) {
             this.medActiveSubstancesFromList = medicament.activeSubstances.filter(as => as.status == 'U' || as.status == 'R');
@@ -214,7 +251,7 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
     }
 
     isReferenceProductModified(refProd: any) {
-        console.log('refProd', refProd);
+        // console.log('refProd', refProd);
         if (refProd.activeSubstances.some(as => as.status == 'N' || as.status == 'R')) {
             this.refProdActiveSubstancesFromList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'R');
             this.refProdActiveSubstancesToList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'N');

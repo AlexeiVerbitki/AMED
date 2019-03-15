@@ -148,7 +148,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
                 data.medicaments = [];
                 data.medicaments = data.filter(t => t.status == 'F');
                 this.initiateMedicamentDetails(data);
-                this.loadAllQuickSearches(data);
+                //this.loadAllQuickSearches(data);
                 this.outDocuments = [];
                 this.medicamentsDetails = data.medicaments;
                 this.notSetForm = true;
@@ -206,7 +206,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
             t.status = 'O';
         });
         this.initialData.medicamentHistory.auxiliarySubstancesHistory = Object.assign([], data.medicaments[0].auxiliarySubstances);
-        this.initialData.medicamentHistory.auxiliarySubstancesHistory.forEach(t => {t.status = 'O';   t.compositionNumberTo = t.compositionNumber;});
+        this.initialData.medicamentHistory.auxiliarySubstancesHistory.forEach(t => {t.status = 'O';   t.compositionNumberTo = t.compositionNumber; });
         this.divisions = [];
         for (const entry of data.medicaments) {
             if ((entry.division || entry.volume) && (entry.status == 'F' || entry.status == 'P')) {
@@ -470,12 +470,12 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
                 if (entry.number) {
                     const rl = this.documents.find(r => r.docType.category == 'RL');
                     if (rl) {
-                        entry.status = 'Inclus in actul de primire-predare. Raspuns primit.';
+                        entry.status = 'Inclus in actul de predare-primire. Raspuns primit.';
                     } else {
-                        entry.status = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                        entry.status = 'Inclus in actul de predare-primire. Asteptare raspuns.';
                     }
                 } else {
-                    entry.status = 'Urmeaza a fi inclus in actul de primire-predare';
+                    entry.status = 'Urmeaza a fi inclus in actul de predare-primire';
                 }
             }
         }
@@ -489,7 +489,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
             this.administrationService.getAllPharamceuticalFormTypes().subscribe(data => {
                     this.pharmaceuticalFormTypes = data;
                     if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].pharmaceuticalFormTo) {
-                        this.eForm.get('medicament.pharmaceuticalFormType').setValue(this.pharmaceuticalFormTypes.find(r => r.id === dataDB.medicamentHistory[0].pharmaceuticalFormTo.type.id));
+                        this.eForm.get('medicament.pharmaceuticalFormType').setValue(this.pharmaceuticalFormTypes.find(r =>
+                            r.id === dataDB.medicamentHistory[0].pharmaceuticalFormTo.type.id));
                     }
                 },
                 error => console.log(error)
@@ -499,7 +500,8 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
             this.administrationService.getAllInternationalNames().subscribe(data => {
                     this.internationalNames = data;
                     if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].internationalMedicamentNameTo) {
-                        this.eForm.get('medicament.internationalMedicamentNameTo').setValue(this.internationalNames.find(r => r.id === dataDB.medicamentHistory[0].internationalMedicamentNameTo.id));
+                        this.eForm.get('medicament.internationalMedicamentNameTo').setValue(this.internationalNames.find(r =>
+                            r.id === dataDB.medicamentHistory[0].internationalMedicamentNameTo.id));
                     }
                 },
                 error => console.log(error)
@@ -526,7 +528,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
         this.loadingManufacture = true;
         this.subscriptions.push(
             this.administrationService.getAllManufactures().subscribe(data => {
-                    this.manufactureAuthorizations = data.filter(r => r.authorizationHolder == 1);
+                    this.manufactureAuthorizations = data;
                     if (dataDB.medicamentHistory && dataDB.medicamentHistory.length != 0 && dataDB.medicamentHistory[0].authorizationHolderTo) {
                         this.eForm.get('medicament.authorizationHolderTo').setValue(this.manufactureAuthorizations.find(r => r.id === dataDB.medicamentHistory[0].authorizationHolderTo.id));
                     }
@@ -548,7 +550,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
                                     this.outDocuments.push({
                                         name: 'Solicitare desfasurare analize de laborator',
                                         docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                                        status: 'Urmeaza a fi inclus in actul de primire-predare',
+                                        status: 'Urmeaza a fi inclus in actul de predare-primire',
                                         date: new Date()
                                     });
                                 } else if (dataDB.labIncluded == 1 && dataDB.labNumber) {
@@ -560,9 +562,9 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
                                     const rl = this.documents.find(r => r.docType.category == 'RL');
                                     let statusDoc = '';
                                     if (rl) {
-                                        statusDoc = 'Inclus in actul de primire-predare. Raspuns primit.';
+                                        statusDoc = 'Inclus in actul de predare-primire. Raspuns primit.';
                                     } else {
-                                        statusDoc = 'Inclus in actul de primire-predare. Asteptare raspuns.';
+                                        statusDoc = 'Inclus in actul de predare-primire. Asteptare raspuns.';
                                     }
                                     this.outDocuments.push({
                                         name: 'Solicitare desfasurare analize de laborator',
@@ -977,7 +979,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
                         this.outDocuments.push({
                             name: 'Solicitare desfasurare analize de laborator',
                             docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                            status: 'Urmeaza a fi inclus in actul de primire-predare',
+                            status: 'Urmeaza a fi inclus in actul de predare-primire',
                             date: new Date()
                         });
                         this.standarts = result.standards;
@@ -1223,9 +1225,6 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
     }
 
     checkProducatorProdusFinit(manufacture: any, value: any) {
-        for (const m of this.manufacturesTable) {
-            m.producatorProdusFinitTo = false;
-        }
         manufacture.producatorProdusFinitTo = value.checked;
         this.payment.manufactureModified();
     }
@@ -1442,7 +1441,7 @@ export class EvaluarePrimaraModifyComponent implements OnInit, OnDestroy {
         dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
-        dialogConfig2.data = division;
+        dialogConfig2.data = {division : division, disabledMainFields : false};
 
         const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
 

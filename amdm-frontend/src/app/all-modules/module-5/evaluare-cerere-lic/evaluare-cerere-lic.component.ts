@@ -625,7 +625,7 @@ export class EvaluareCerereLicComponent implements OnInit, OnDestroy {
             data: {
                 //NoData
             },
-            hasBackdrop: false
+            hasBackdrop: true
         });
 
         dialogRef2.afterClosed().subscribe(result => {

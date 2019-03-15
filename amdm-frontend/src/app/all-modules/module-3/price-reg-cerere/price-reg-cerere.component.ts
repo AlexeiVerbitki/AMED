@@ -137,7 +137,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         modelToSubmit.initiator = useranameDB;
         modelToSubmit.assignedUser = useranameDB;
         modelToSubmit.documents = this.documents;
-        modelToSubmit.endDate = new Date();
+        modelToSubmit.endDate = null;
         modelToSubmit.dossierNr = this.rForm.get('folderNumber').value;
         modelToSubmit.registrationRequestMandatedContacts = [{
             mandatedLastname : this.rForm.get('mandatedLastname').value,

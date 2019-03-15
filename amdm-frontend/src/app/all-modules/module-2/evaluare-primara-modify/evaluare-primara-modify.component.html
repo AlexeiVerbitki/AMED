@@ -361,6 +361,10 @@
 					           (ngModelChange)="fillAutorizationHolderDetails()"
 					           [loading]="loadingManufacture"
 					           formControlName="authorizationHolderTo">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.description}} <br/>
+							<small class="form-text text-muted">{{item.address}}</small>
+						</ng-template>
 					</ng-select>
 					<div *ngIf="formSubmitted && eForm.get('medicament.authorizationHolderTo').invalid">
 						<small class="text-muted"><strong class="text-danger">Deţinătorul certificatului de inregistrare trebuie selectat</strong></small>

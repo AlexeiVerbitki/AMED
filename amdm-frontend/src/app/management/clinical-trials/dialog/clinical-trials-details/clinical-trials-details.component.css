@@ -14,3 +14,16 @@ table td a {
     margin-top: 8px;
     margin-bottom: 5px !important;
   }
+
+  .ml-15 {
+      margin-left: -15px;
+  }
+
+  .ml-15r {
+      margin-left: 15px;
+  }
+
+  .ml-5p {
+      margin-left: 5px;
+  }
+

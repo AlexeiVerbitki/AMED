@@ -21,7 +21,7 @@ export class PersAsignModalComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.usersToFilter = this.dataDialog.executors.map(e => e.name).slice();
-        this.usersToFilter.push(this.authService.getUserName());
+        // this.usersToFilter.push(this.authService.getUserName());
         this.usersToFilter.push(this.dataDialog.initiator);
 
         this.subscriptions.push(this.administrationService.getAllValidUsers().subscribe(data => {
