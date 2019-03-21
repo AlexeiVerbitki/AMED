@@ -1,15 +1,15 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subject, Subscription} from "rxjs";
+import {Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
-import {LoaderService} from "../../../shared/service/loader.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material";
-import {DrugDecisionsService} from "../../../shared/service/drugs/drugdecisions.service";
-import {ConfirmationDialogComponent} from "../../../dialog/confirmation-dialog.component";
-import {AddDeclarationDialogComponent} from "../add-declaration-dialog/add-declaration-dialog.component";
-import {DecimalPipe} from "@angular/common";
+import {LoaderService} from '../../../shared/service/loader.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
+import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {AddDeclarationDialogComponent} from '../add-declaration-dialog/add-declaration-dialog.component';
+import {DecimalPipe} from '@angular/common';
 
 @Component({
     selector: 'app-add-active-substance-dialog',
@@ -39,7 +39,7 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
 
     otherSelectedSubstanceDetails: any[] = [];
 
-    commercialQuantityInvalid : boolean;
+    commercialQuantityInvalid: boolean;
 
     selectedSubstance: any;
     authorizationType: any;
@@ -89,12 +89,12 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
             'availableQuantity': {disabled: true, value: []},
             'substance': [null, Validators.required],
             'availableQuantityUM': {disabled: true, value: null},
-            'commercialQuantity': [null, this.declarationMode? Validators.required : null],
+            'commercialQuantity': [null, this.declarationMode ? Validators.required : null],
             'commercialQuantityUM': {
                 disabled: true,
                 value: this.declarationMode ? this.selectedSubstance.packagingQuantityUnitDesc : null
             },
-            'declarationDate': [null, this.declarationMode? Validators.required : null],
+            'declarationDate': [null, this.declarationMode ? Validators.required : null],
         });
     }
 
@@ -104,11 +104,11 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
             this.selectedSubstancesTable.forEach(sst => {
                 sst.declarations.forEach(df => {
                     this.historyDeclarations.push(df);
-                })
+                });
 
             });
 
-            let tmpList: any [] = [];
+            const tmpList: any [] = [];
 
             this.selectedSubstancesTable.forEach(hd => {
                 hd.declarations.forEach(po => {
@@ -124,18 +124,18 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
                 });
             });
 
-            let gcList: any [] = [];
+            const gcList: any [] = [];
 
             tmpList.forEach(pp => {
-               if (!gcList.includes(pp.groupKey)){
+               if (!gcList.includes(pp.groupKey)) {
                    gcList.push(pp.groupKey);
                }
             });
 
             gcList.forEach(oi => {
-                let nameSeparated: any [] = [], quantitySeparated: any [] = [], umSeparated: any [] = [];
+                const nameSeparated: any [] = [], quantitySeparated: any [] = [], umSeparated: any [] = [];
 
-                let dt : any[] = tmpList.filter(kk => kk.groupKey === oi);
+                const dt: any[] = tmpList.filter(kk => kk.groupKey === oi);
                 dt.forEach(ty => {
                     nameSeparated.push(ty.substanceName);
                     umSeparated.push(ty.umActiveName);
@@ -254,7 +254,7 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let initialAuthQuantity = this.rForm.value.authorizedQuantity;
+        const initialAuthQuantity = this.rForm.value.authorizedQuantity;
         if (this.rForm.get('authorizedQuantity').value && this.rForm.get('availableQuantity').value) {
 
             if (this.rForm.get('unitOfMeasurement').value.unitCode && this.rForm.get('substance').value.unitOfMeasureCode != this.rForm.get('unitOfMeasurement').value.unitCode) {
@@ -327,7 +327,7 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
                         if (oss.details) {
                             resultOther += oss.details.filter(a => a.authorizedDrugSubstance.id === val.id).map(o => o.authorizedQuantity).reduce((x, y) => x + y, 0);
                         }
-                    })
+                    });
 
                     if (data - result - resultOther > 0) {
                         this.rForm.get('availableQuantity').setValue(data - result - resultOther);
@@ -363,11 +363,11 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
         }
 
         //check if remaining is OK
-        let comQuantityTotal = this.selectedSubstance.packagingQuantity;
-        let comQuantityDeclared = this.rForm.get('commercialQuantity').value;
+        const comQuantityTotal = this.selectedSubstance.packagingQuantity;
+        const comQuantityDeclared = this.rForm.get('commercialQuantity').value;
 
-        let substanceData = this.selectedSubstancesTable[0];
-        let substActiveQuantityToBeUsed = parseFloat(this.numberPipe.transform((substanceData.authorizedQuantity * comQuantityDeclared) / comQuantityTotal, '1.4-4'));
+        const substanceData = this.selectedSubstancesTable[0];
+        const substActiveQuantityToBeUsed = parseFloat(this.numberPipe.transform((substanceData.authorizedQuantity * comQuantityDeclared) / comQuantityTotal, '1.4-4'));
 
         if (substActiveQuantityToBeUsed > substanceData.authorizedQuantityRemaining) {
             this.commercialQuantityInvalid = true;
@@ -380,14 +380,14 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
                     const generatedSeq = data[0];
 
 
-                    let declarationDate = this.rForm.get('declarationDate').value;
+                    const declarationDate = this.rForm.get('declarationDate').value;
 
                     this.selectedSubstancesTable.forEach(sst => {
-                        let substActivTotal = sst.authorizedQuantity;
-                        let substActiveQuantityUsed = parseFloat(this.numberPipe.transform((substActivTotal * comQuantityDeclared) / comQuantityTotal, '1.4-4'));
+                        const substActivTotal = sst.authorizedQuantity;
+                        const substActiveQuantityUsed = parseFloat(this.numberPipe.transform((substActivTotal * comQuantityDeclared) / comQuantityTotal, '1.4-4'));
                         sst.authorizedQuantityRemaining = parseFloat(this.numberPipe.transform(sst.authorizedQuantityRemaining - substActiveQuantityUsed, '1.4-4'));
 
-                        let declaration = {
+                        const declaration = {
                             groupKey: generatedSeq,
                             substActiveQuantityUsed: substActiveQuantityUsed,
                             quantity: comQuantityDeclared,
@@ -415,7 +415,7 @@ export class AddActiveSubstanceDialogComponent implements OnInit, OnDestroy {
 
 
     private completeHistoryViewData(generatedSeq, comQuantityDeclared, declarationDate) {
-        let nameSeparated: any [] = [], quantitySeparated: any [] = [], umSeparated: any [] = [];
+        const nameSeparated: any [] = [], quantitySeparated: any [] = [], umSeparated: any [] = [];
         this.selectedSubstancesTable.forEach(hd => {
             nameSeparated.push(hd.substanceName);
             umSeparated.push(hd.authorizedQuantityUnitDesc);

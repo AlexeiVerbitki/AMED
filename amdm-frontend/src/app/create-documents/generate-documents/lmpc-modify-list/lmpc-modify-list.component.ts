@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {LoaderService} from '../../../shared/service/loader.service';
@@ -11,7 +11,7 @@ import {DocumentService} from '../../../shared/service/document.service';
     templateUrl: './lmpc-modify-list.component.html',
     styleUrls: ['./lmpc-modify-list.component.css']
 })
-export class LmpcModifyListComponent implements OnInit, OnDestroy {
+export class LmpcModifyListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private subscriptions: Subscription[] = [];
     dataSource = new MatTableDataSource<any>();

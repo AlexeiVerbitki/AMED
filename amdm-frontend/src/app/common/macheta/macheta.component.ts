@@ -105,9 +105,13 @@ export class MachetaComponent implements OnInit, OnDestroy {
 
     viewFile(macheta: any) {
         this.subscriptions.push(this.uploadService.loadFile(macheta.path).subscribe(data => {
-                const file = new Blob([data], {type: macheta.typeDoc });
-                const fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
+                if (!macheta.typeDoc || macheta.typeDoc.length == 0) {
+                    saveAs(new Blob([data]), macheta.name);
+                } else {
+                    const file = new Blob([data], {type: macheta.typeDoc});
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                }
             },
             error => {
                 console.log(error);

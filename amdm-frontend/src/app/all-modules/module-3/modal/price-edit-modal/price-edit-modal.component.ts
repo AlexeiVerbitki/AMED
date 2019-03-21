@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {PriceReferenceType} from '../../price-constants';
 import {Country} from '../../../../models/country';
@@ -12,7 +12,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
   templateUrl: './price-edit-modal.component.html',
   styleUrls: ['./price-edit-modal.component.css']
 })
-export class PriceEditModalComponent implements OnInit {
+export class PriceEditModalComponent implements OnInit,OnDestroy {
   title = '';
   countries: Country[] = [];
   currencies: Currency[];

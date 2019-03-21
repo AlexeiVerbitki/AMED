@@ -8,12 +8,12 @@ import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/ope
 import * as XLSX from 'xlsx';
 import {DatePipe} from '@angular/common';
 import {Angular5Csv} from 'angular5-csv/Angular5-csv';
-import {TaskService} from "../../../shared/service/task.service";
-import {AdministrationService} from "../../../shared/service/administration.service";
-import {LoaderService} from "../../../shared/service/loader.service";
-import {NavbarTitleService} from "../../../shared/service/navbar-title.service";
-import {RequestService} from "../../../shared/service/request.service";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
+import {TaskService} from '../../../shared/service/task.service';
+import {AdministrationService} from '../../../shared/service/administration.service';
+import {LoaderService} from '../../../shared/service/loader.service';
+import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
+import {RequestService} from '../../../shared/service/request.service';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 @Component({
     selector: 'app-authorizations-table',
@@ -32,7 +32,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
     loadingCompany = false;
     companyInputs = new Subject<string>();
 
-    displayedColumns: any[] = ['authorizationsNumber', 'importer', 'expirationDate', 'summ', 'currency',/* 'medicament'*/  ];
+    displayedColumns: any[] = ['authorizationsNumber', 'importer', 'expirationDate', 'summ', 'currency', /* 'medicament'*/  ];
     dataSource = new MatTableDataSource<any>();
     row: any;
     visibility = false;
@@ -47,7 +47,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                 private loadingService: LoaderService,
                 private requestService: RequestService,
                 private navbarTitleService: NavbarTitleService,
-                private successOrErrorHandlerService: SuccessOrErrorHandlerService,) {
+                private successOrErrorHandlerService: SuccessOrErrorHandlerService, ) {
         this.taskForm = fb.group({
             'requestCode': [null],
             'medicament': [null],
@@ -85,12 +85,12 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             {description: 'Medicamente neinregistrate', medType: '2'},
             {description: 'Materia prima', medType: '3'},
             {description: 'Ambalajul', medType: '4'},
-        ]
+        ];
 
         this.status = [
             {description: 'Valabilă', authorized: '1'},
             {description: 'Expirată', authorized: '0'}
-        ]
+        ];
 
         this.taskForm.get('requestCode').valueChanges.subscribe(val1 => {
             console.log('val1', val1);
@@ -138,7 +138,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                 if (val == null && this.taskForm.get('status').disabled) {
                     this.taskForm.get('status').enable();
                 }
-                console.log('this.taskForm.get(\'status\')', this.taskForm.get('status').value)
+                console.log('this.taskForm.get(\'status\')', this.taskForm.get('status').value);
             }));
         }
 
@@ -152,7 +152,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
                 if (val == null && this.taskForm.get('expirationDate').disabled) {
                     this.taskForm.get('expirationDate').enable();
                 }
-                console.log('this.taskForm.get(\'expirationDate\')', this.taskForm.get('expirationDate').value)
+                console.log('this.taskForm.get(\'expirationDate\')', this.taskForm.get('expirationDate').value);
             }));
         }
 
@@ -211,7 +211,7 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
             expirationDate: taskFormValue.expirationDate ? taskFormValue.expirationDate : null,
             lessThanToday: (taskFormValue.status && taskFormValue.status.authorized == '0' ) ?  new Date() : null,
             moreThanToday: (taskFormValue.status && taskFormValue.status.authorized == '1' ) ?  new Date() : null,
-        }
+        };
 
 
         console.log('searchCriteria', searchCriteria);
@@ -238,14 +238,14 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
 
 
         this.subscriptions.push(this.requestService.getRequestByImportId(rowDetails.id).subscribe(requestId => {
-            console.log("this.requestService.getImportRequest(rowDetails.id)", requestId)
+            console.log('this.requestService.getImportRequest(rowDetails.id)', requestId);
 
             const urlToNavigate = 'dashboard/module/import-authorization/view-authorization/';
-            console.log('urlToNavigate', urlToNavigate)
+            console.log('urlToNavigate', urlToNavigate);
             this.route.navigate([urlToNavigate, rowDetails.id]);
 
         }, error => {
-            console.log("this.requestService.getImportRequest(rowDetails.id) errro");
+            console.log('this.requestService.getImportRequest(rowDetails.id) errro');
         }));
     }
 
@@ -318,9 +318,9 @@ export class AuthorizationsTable implements OnInit, AfterViewInit, OnDestroy {
         this.dataSource.filteredData.forEach(fd => {
             const row: any = {};
             // console.log('fd', fd);
-            row.authorizationsNumber = fd.authorizationsNumber == 'Numarul ipseste' ? '-------------------': fd.authorizationsNumber;
+            row.authorizationsNumber = fd.authorizationsNumber == 'Numarul ipseste' ? '-------------------' : fd.authorizationsNumber;
             row.importer = fd.importer  ? fd.importer : '---------------';
-            row.expirationDate = fd.expirationDate ? dtPipe.transform(new Date(fd.expirationDate), 'dd/MM/yyyy'): '---------------';
+            row.expirationDate = fd.expirationDate ? dtPipe.transform(new Date(fd.expirationDate), 'dd/MM/yyyy') : '---------------';
             row.summ = fd.summ ? fd.summ : '------';
             row.currency = fd.currency ? fd.currency : '------';
             displayData.push(row);

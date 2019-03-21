@@ -12,7 +12,7 @@ import {MatDialog} from '@angular/material';
 import {AddDeclarationDialogComponent} from '../add-declaration-dialog/add-declaration-dialog.component';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {DecimalPipe} from '@angular/common';
-import {AddActiveSubstanceDialogComponent} from "../add-active-substance-dialog/add-active-substance-dialog.component";
+import {AddActiveSubstanceDialogComponent} from '../add-active-substance-dialog/add-active-substance-dialog.component';
 
 @Component({
     selector: 'app-declaration-import-export',
@@ -116,7 +116,7 @@ export class DeclarationImportExportComponent implements OnInit, OnDestroy {
                 dt.authorizedQuantityUnitDesc = this.allSubstanceUnits.find(asu => asu.code === dt.authorizedQuantityUnitCode).description;
                 const authorizedQuantityRemaining = dt.authorizedQuantity - dt.declarations.map(dcl => dcl.substActiveQuantityUsed).reduce((a, b) => a + b, 0);
                 dt.authorizedQuantityRemaining = this.numberPipe.transform(authorizedQuantityRemaining, '1.4-4');
-            })
+            });
            sf.packagingQuantityUnitDesc = this.allSubstanceUnits.find(asu => asu.code === sf.requestQuantityUnitCode).description;
         });
 

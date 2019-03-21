@@ -1,4 +1,14 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewChildren} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {Subscription} from 'rxjs';
 import {RequestService} from '../../../shared/service/request.service';
@@ -15,7 +25,7 @@ import {SelectIssueDateDialogComponent} from '../../../dialog/select-issue-date-
   templateUrl: './oa-list.component.html',
   styleUrls: ['./oa-list.component.css']
 })
-export class OaListComponent implements OnInit {
+export class OaListComponent implements OnInit, AfterViewInit {
 
   displayedColumns: any[] = ['number', 'date', 'dateOfIssue', 'name', 'status', 'actions'];
   dataSource = new MatTableDataSource<any>();

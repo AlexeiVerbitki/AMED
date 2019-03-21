@@ -1,6 +1,6 @@
 import {Cerere} from './../../../../models/cerere';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -29,7 +29,7 @@ export interface PeriodicElement {
     templateUrl: './import-management-dialog.html',
     styleUrls: ['./import-management-dialog.css']
 })
-export class ImportManagementDialog implements OnInit {
+export class ImportManagementDialog implements OnInit, OnDestroy {
 
 
     cereri: Cerere[] = [];

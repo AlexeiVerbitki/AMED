@@ -198,9 +198,13 @@ export class MedicamentModificationsDialogComponent implements OnInit {
 
     viewFile(instruction: any) {
         this.subscriptions.push(this.uploadService.loadFile(instruction.path).subscribe(data => {
-                const file = new Blob([data], {type: instruction.typeDoc});
-                const fileURL = URL.createObjectURL(file);
-                window.open(fileURL);
+                if (!instruction.typeDoc || instruction.typeDoc.length == 0) {
+                    saveAs(new Blob([data]), instruction.name);
+                } else {
+                    const file = new Blob([data], {type: instruction.typeDoc});
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                }
             },
             error => {
                 console.log(error);
@@ -211,7 +215,8 @@ export class MedicamentModificationsDialogComponent implements OnInit {
 
     manufacturesStr(substance: any) {
         if (substance && substance.manufactures) {
-            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '') + ' ' + s.manufacture.address + 'NRQW').toString();
+            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' '
+                + (s.manufacture.country ? s.manufacture.country.description : '') + ' ' + s.manufacture.address + 'NRQW').toString();
             s = s.replace(/NRQW/gi, ';');
             return s.replace(';,', '; ');
         }

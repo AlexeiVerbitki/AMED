@@ -46,6 +46,10 @@ public class InvoiceEntity {
 	@Column(name = "specification")
 	private String specification;
 
+    @Basic
+    @Column(name = "authorizations_number")
+    private String authorizationsNumber;
+
 //	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
 //	@JoinColumn(name = "medicament_id")
 //	private MedicamentEntity medicament;

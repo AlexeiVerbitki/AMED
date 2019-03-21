@@ -3,7 +3,6 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {MatDialog} from '@angular/material';
-import {saveAs} from 'file-saver';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Document} from '../../../models/document';

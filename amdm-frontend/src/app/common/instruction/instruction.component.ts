@@ -104,9 +104,13 @@ export class InstructionComponent implements OnInit, OnDestroy {
 
     viewFile(instruction: any) {
             this.subscriptions.push(this.uploadService.loadFile(instruction.path).subscribe(data => {
-                    const file = new Blob([data], {type: instruction.typeDoc});
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL);
+                    if (!instruction.typeDoc || instruction.typeDoc.length == 0) {
+                        saveAs(new Blob([data]), instruction.name);
+                    } else {
+                        const file = new Blob([data], {type: instruction.typeDoc});
+                        const fileURL = URL.createObjectURL(file);
+                        window.open(fileURL);
+                    }
                 },
                 error => {
                     console.log(error);

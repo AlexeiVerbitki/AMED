@@ -20,7 +20,7 @@ import {DrugDocumentsService} from '../../../shared/service/drugs/drugdocuments.
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {CpcdAuthLangComponent} from '../cpcd-auth-lang/cpcd-auth-lang.component';
-import {AddActiveSubstanceDialogComponent} from "../add-active-substance-dialog/add-active-substance-dialog.component";
+import {AddActiveSubstanceDialogComponent} from '../add-active-substance-dialog/add-active-substance-dialog.component';
 
 @Component({
     selector: 'app-cerere-import-export',
@@ -77,7 +77,7 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
                 private navbarTitleService: NavbarTitleService,
                 private drugDecisionsService: DrugDecisionsService,
                 public dialogLanguage: MatDialog,
-                public dialogActiveSubstance: MatDialog,) {
+                public dialogActiveSubstance: MatDialog, ) {
 
         this.cerereImpExpForm = fb.group({
             'id': [],
@@ -195,7 +195,7 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
                                     dt.substanceName = dt.authorizedDrugSubstance.substanceName;
                                     dt.substanceCode = dt.authorizedDrugSubstance.substanceCode;
                                     dt.authorizedQuantityUnitDesc = this.allSubstanceUnits.find(asu => asu.code === dt.authorizedQuantityUnitCode).description;
-                                })
+                                });
 
                             });
 

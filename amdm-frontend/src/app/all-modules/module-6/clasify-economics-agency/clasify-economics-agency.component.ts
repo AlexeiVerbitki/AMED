@@ -1,6 +1,6 @@
 import {Subscription} from 'rxjs';
 import {FormControl} from '@angular/forms';
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {NomenclatorService} from '../../../shared/service/nomenclator.service';
@@ -11,7 +11,7 @@ import {LoaderService} from '../../../shared/service/loader.service';
     templateUrl: './clasify-economics-agency.component.html',
     styleUrls: ['../nomenclator.component.css']
 })
-export class ClasifyEconomicsAgencyComponent implements OnInit, OnDestroy {
+export class ClasifyEconomicsAgencyComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     @ViewChild(MatPaginator) paginator: MatPaginator;

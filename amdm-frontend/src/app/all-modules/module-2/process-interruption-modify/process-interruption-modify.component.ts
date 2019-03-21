@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
@@ -22,7 +22,7 @@ import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
     templateUrl: './process-interruption-modify.component.html',
     styleUrls: ['./process-interruption-modify.component.css']
 })
-export class ProcessInterruptionModifyComponent implements OnInit {
+export class ProcessInterruptionModifyComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription[] = [];
     iForm: FormGroup;
     documents: Document [] = [];

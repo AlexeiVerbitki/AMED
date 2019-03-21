@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {NomenclatorService} from '../../../shared/service/nomenclator.service';
 import {Subscription} from 'rxjs';
@@ -10,7 +10,7 @@ import {saveAs} from 'file-saver';
   templateUrl: './nomenclator-modal.component.html',
   styleUrls: ['./nomenclator-modal.component.css']
 })
-export class NomenclatorModalComponent implements OnInit {
+export class NomenclatorModalComponent implements OnInit, OnDestroy {
 
   row: any = {};
   private subscriptions: Subscription[] = [];

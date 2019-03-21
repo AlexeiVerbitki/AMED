@@ -14,8 +14,8 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {ImportManagementDialog} from './import-management-dialog/import-management-dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {errorHandler} from "@angular/platform-browser/src/browser";
-import {SuccessOrErrorHandlerService} from "../../../shared/service/success-or-error-handler.service";
+import {errorHandler} from '@angular/platform-browser/src/browser';
+import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 
 export interface PeriodicElement {
     name: string;
@@ -191,11 +191,9 @@ export class ImportManagement implements OnInit, OnDestroy {
         this.authorizationSumm = 0;
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params2 => {
-            console.log('params', params2)
             this.subscriptions.push(this.requestService.getImportRequest(params2.id).subscribe(requestData => {
-                console.log('this.requestService.getImportRequest(params[\'id\'])', requestData);
                 this.requestData = requestData;                    
-                    this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.invoiceEntity.id, "false").subscribe(data => {
+                    this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.invoiceEntity.id, 'false').subscribe(data => {
                         this.invoiceDetails = data;
                         console.log('this.invoiceDetails', this.invoiceDetails);
                     }));
@@ -231,8 +229,6 @@ export class ImportManagement implements OnInit, OnDestroy {
                 }
                 this.docs = requestData.documents;
                     this.importData = this.requestData;
-                    console.log('this.importData',this.importData)
-
                     this.customsPointsList = this.requestData.importAuthorizationEntity.nmCustomsPointsList;
 
                     this.importDetailsList = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
@@ -851,6 +847,7 @@ export class ImportManagement implements OnInit, OnDestroy {
             let invoiceEntity: any = {};
             if (this.importData && this.importData.invoiceEntity) {
                 invoiceEntity = this.importData.invoiceEntity;
+                invoiceEntity.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
             }
 
             // this.invoiceDetails.forEach
@@ -859,28 +856,29 @@ export class ImportManagement implements OnInit, OnDestroy {
 
             if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value) {
                 invoiceEntity.invoiceNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceNumber').value;
-            } else invoiceEntity.invoiceNumber = null;
+            } else { invoiceEntity.invoiceNumber = null; }
             if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value) {
                 invoiceEntity.invoiceDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceDate').value);
-            } else invoiceEntity.invoiceDate = null;
+            } else { invoiceEntity.invoiceDate = null; }
             if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value) {
                 invoiceEntity.basisForInvoice = this.evaluateImportForm.get('importAuthorizationEntity.invoiceBasis').value;
-            } else invoiceEntity.basisForInvoice = null;
+            } else { invoiceEntity.basisForInvoice = null; }
             if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value) {
                 invoiceEntity.customsDeclarationDate = new Date(this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsDate').value);
-            } else invoiceEntity.customsDeclarationDate = null;
+            } else { invoiceEntity.customsDeclarationDate = null; }
             if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value) {
                 invoiceEntity.customsDeclarationNumber = this.evaluateImportForm.get('importAuthorizationEntity.invoiceCustomsNumber').value;
-            } else invoiceEntity.customsDeclarationNumber = null;
+            } else { invoiceEntity.customsDeclarationNumber = null; }
             if (this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value) {
                 invoiceEntity.specification = this.evaluateImportForm.get('importAuthorizationEntity.invoiceSpecificatie').value;
-            } else invoiceEntity.specification = null;
+            } else { invoiceEntity.specification = null; }
             if (this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value) {
                 invoiceEntity.customsPointsEntity = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
-            } else invoiceEntity.customsPointsEntity = null;
+            } else { invoiceEntity.customsPointsEntity = null; }
             if (invoiceDetailsEntity.length > 0) {
                 invoiceEntity.invoiceDetailsEntitySet = invoiceDetailsEntity;
-            } else invoiceEntity.invoiceDetailsEntitySet = [];
+
+            } else { invoiceEntity.invoiceDetailsEntitySet = []; }
 
             modelToSubmit = this.requestData;
             modelToSubmit.invoiceEntity = invoiceEntity;
@@ -937,6 +935,7 @@ export class ImportManagement implements OnInit, OnDestroy {
             let invoiceEntity: any = {};
             if (this.importData && this.importData.invoiceEntity) {
                 invoiceEntity = this.importData.invoiceEntity;
+                invoiceEntity.authorizationsNumber = this.importData.importAuthorizationEntity.authorizationsNumber;
             }
 
             // this.invoiceDetails.forEach

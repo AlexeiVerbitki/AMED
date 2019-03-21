@@ -129,7 +129,7 @@ export class AuditComponent implements OnInit, OnDestroy, AfterViewInit {
             const dt: any [] = data;
             dt.forEach(d => {
                 if (d.action) {
-                    d.action = this.actions.find(f => f.name == d.action).description;                    
+                    d.action = this.actions.find(f => f.name == d.action).description;
                 }
 
             });

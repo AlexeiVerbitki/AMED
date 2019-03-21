@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, } from '@angular/core';
+import {AfterViewInit, Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
@@ -18,7 +18,7 @@ import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-e
     styleUrls: ['./price-reg-med.component.css'],
     providers: [PriceService]
 })
-export class PriceRegMedComponent implements OnInit, OnDestroy {
+export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public folderNumber: number;
     commonDocuments: Document[] = [];

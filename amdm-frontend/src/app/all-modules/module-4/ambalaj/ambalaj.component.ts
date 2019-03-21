@@ -1,6 +1,6 @@
 import {Cerere} from './../../../models/cerere';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -29,7 +29,7 @@ export interface PeriodicElement {
     templateUrl: './ambalaj.component.html',
     styleUrls: ['./ambalaj.component.css']
 })
-export class AmbalajComponent implements OnInit {
+export class AmbalajComponent implements OnInit,OnDestroy {
     cereri: Cerere[] = [];
     // importer: any[];
     evaluateImportForm: FormGroup;

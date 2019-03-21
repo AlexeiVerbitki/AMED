@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {AdministrationService} from '../../shared/service/administration.service';
 import {ModalDirective} from 'angular-bootstrap-md';
@@ -13,7 +13,7 @@ import {ActivatedRoute} from '@angular/router';
   templateUrl: './generic-nomenclature.component.html',
   styleUrls: ['./generic-nomenclature.component.css']
 })
-export class GenericNomenclatureComponent implements OnInit {
+export class GenericNomenclatureComponent implements OnInit, OnDestroy {
   displayedColumns: any[] = [];
   dataSource = new MatTableDataSource<any>();
 
