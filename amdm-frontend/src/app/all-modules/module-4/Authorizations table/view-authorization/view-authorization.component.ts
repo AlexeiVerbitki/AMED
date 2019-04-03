@@ -161,6 +161,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                 'producer_id': [{value: null, disabled: true}], // to be deleted
                 'stuff_type_id': [{value: null, disabled: true}], // to delete
                 'expiration_date': [{value: null, disabled: true}],
+                'expirationDatePicker': [],
                 'customsNumber': [{value: null, disabled: true}],
                 'customsDeclarationDate': [{value: null, disabled: true}],
                 'authorizationsNumber': [{value: null, disabled: true}], // inca nu exista la pasul acesta
@@ -170,6 +171,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                 'sgeapDate': [null],
                 'processVerbalNumber': [null],
                 'processVerbalDate': [null],
+                'revisionDate': [null],
                 'authorized': [{value: null, disabled: true}],
                 'customsPoints': [{value: null, disabled: true}],
                 'unitOfImportTable': this.fb.group({
@@ -317,6 +319,14 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                             if (this.importData.importAuthorizationEntity.sgeapNumber)                 {this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').setValue(this.importData.importAuthorizationEntity.sgeapNumber);}
                             if (this.importData.importAuthorizationEntity.sgeapDate)                   {this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').setValue(new Date(this.importData.importAuthorizationEntity.sgeapDate));}
 
+
+                            if (this.importData.importAuthorizationEntity.expirationDate) {
+                                this.evaluateImportForm.get('importAuthorizationEntity.expirationDatePicker').setValue(new Date(this.importData.importAuthorizationEntity.expirationDate));
+                            }
+                            if (this.importData.importAuthorizationEntity.revisionDate) {
+                                this.evaluateImportForm.get('importAuthorizationEntity.revisionDate').setValue(new Date(this.importData.importAuthorizationEntity.revisionDate));
+                            }
+
                             if (this.importData.importAuthorizationEntity.medType === 2 || this.importData.importAuthorizationEntity.medType === 3){
                                 if (this.importData.importAuthorizationEntity.processVerbalNumber) {
                                     this.evaluateImportForm.get('importAuthorizationEntity.processVerbalNumber').setValue(this.importData.importAuthorizationEntity.processVerbalNumber);
@@ -355,12 +365,15 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.expirationDatePicker').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.revisionDate').disable();
 
                     if (this.importData.importAuthorizationEntity.medType === 2) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
                     }
+
 
                     this.authorizationNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
                 }, error => {

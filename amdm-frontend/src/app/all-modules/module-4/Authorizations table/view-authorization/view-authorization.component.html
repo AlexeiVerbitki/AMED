@@ -348,6 +348,31 @@
 		                </div>
 	                </div>
 
+                    <div class="col-4" >
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker24"
+                                       placeholder="Data revizuirii"
+                                       formControlName="revisionDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker24"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker24></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
+                    <div class="col-4" >
+                        <div class="md-form-modified" >
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker23"
+                                       placeholder="Data expirarii autorizatiei"
+                                       formControlName="expirationDatePicker">
+                                <mat-datepicker-toggle matSuffix [for]="picker23"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker23></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
                     <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity?.conditionsAndSpecification">
                         <div class="md-form">
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
