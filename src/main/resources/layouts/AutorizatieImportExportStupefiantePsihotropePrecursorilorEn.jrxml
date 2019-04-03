@@ -296,24 +296,16 @@
 				</jr:table>
 			</componentElement>
 		</band>
-		<band height="178">
-			<!--<staticText>
-
-				<reportElement x="0" y="2" width="535" height="28" uuid="bca65b32-5230-4c62-a10d-37f046b429b8"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[The Standing Committee on Narcotic Drug Control guarantees that these substances will be used exclusively for medical or scientific purposes.]]></text>
-			</staticText>-->
+		<band height="191">
 			<staticText>
-				<reportElement x="1" y="69" width="389" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
+				<reportElement x="1" y="69" width="219" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[General Manager]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="91" width="389" height="19" uuid="85bda993-1196-461f-8baa-7323d41cdc31"/>
+				<reportElement x="1" y="91" width="219" height="39" uuid="85bda993-1196-461f-8baa-7323d41cdc31"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -321,28 +313,28 @@
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="113" width="389" height="21" uuid="79e311bb-203d-4cde-a6d5-f6b27ff9cfef"/>
+				<reportElement x="1" y="133" width="219" height="21" uuid="79e311bb-203d-4cde-a6d5-f6b27ff9cfef"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pharmacyst]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="1" y="150" width="278" height="21" uuid="f8ebf0a0-18a1-456b-9820-99fdacb376bc"/>
+				<reportElement x="1" y="170" width="278" height="21" uuid="f8ebf0a0-18a1-456b-9820-99fdacb376bc"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Valid until: " + $P{validUntil}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="370" y="112" width="165" height="22" uuid="04c0cc23-5462-4d5f-9afe-7815a75d72ce"/>
+				<reportElement x="370" y="133" width="165" height="22" uuid="04c0cc23-5462-4d5f-9afe-7815a75d72ce"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{druggist}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="370" y="91" width="165" height="19" uuid="e9db05a9-8c57-430e-a0a5-e9db7dc376f3"/>
+				<reportElement x="370" y="91" width="165" height="39" uuid="e9db05a9-8c57-430e-a0a5-e9db7dc376f3"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>

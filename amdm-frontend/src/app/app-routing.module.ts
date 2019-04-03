@@ -83,6 +83,10 @@ const routes: Routes = [
                 loadChildren: '../app/management/management.module#ManagementModule'
             },
             {
+                path: 'reports',
+                loadChildren: '../app/reports/reports.module#ReportsModule'
+            },
+            {
                 path: 'create-documents',
                 loadChildren: '../app/create-documents/create-document.module#CreateDocumentModule'
             },

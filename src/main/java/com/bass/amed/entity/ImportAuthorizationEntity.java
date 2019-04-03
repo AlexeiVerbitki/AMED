@@ -24,6 +24,7 @@ public class ImportAuthorizationEntity {
 	private NmManufacturesEntity                  producer;
 	private Timestamp                             customsDeclarationDate;
 	private Timestamp                             expirationDate;
+	private Timestamp                             revisionDate;
 	private NmCustomsCodesEntity                  customsCode;
 	private Integer                               customsNumber;
 	private NmTypesOfCustomsTransactionsEntity    customsTransactionType;
@@ -37,6 +38,10 @@ public class ImportAuthorizationEntity {
 	private Timestamp                             anexaDate;
 	private String                                specification;
 	private Timestamp                             SpecificationDate;
+	private String                                sgeapNumber;
+	private Timestamp                             sgeapDate;
+	private String                                processVerbalNumber;
+	private Timestamp                             processVerbalDate;
 	private Set<NmCustomsPointsEntity>            nmCustomsPointsList;
 
 
@@ -351,176 +356,252 @@ public class ImportAuthorizationEntity {
 		this.nmCustomsPointsList = nmCustomsPointsList;
 	}
 
-
-	//	@Basic
-//	@Column(name = "customs_code", nullable = true)
-//	public NmCustomsCodesEntity getCustomsCode() { return customsCode; }
-//
-//	public void setCustomsCode(NmCustomsCodesEntity customsCode) { this.customsCode = customsCode; }
-//
-//	public Boolean getAuthorized() { return authorized; }
-//
-//	public void setAuthorized(Boolean authorized) { this.authorized = authorized; }
-
-
-	@Override
-	public boolean equals(
-			Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof ImportAuthorizationEntity))
-			return false;
-
-		ImportAuthorizationEntity that = (ImportAuthorizationEntity) o;
-
-		if (id != null ? !id
-				.equals(that.id) : that.id != null)
-			return false;
-		if (applicationRegistrationNumber != null ? !applicationRegistrationNumber
-				.equals(that.applicationRegistrationNumber) : that.applicationRegistrationNumber != null)
-			return false;
-		if (applicationDate != null ? !applicationDate
-				.equals(that.applicationDate) : that.applicationDate != null)
-			return false;
-		if (applicant != null ? !applicant
-				.equals(that.applicant) : that.applicant != null)
-			return false;
-		if (seller != null ? !seller
-				.equals(that.seller) : that.seller != null)
-			return false;
-		if (basisForImport != null ? !basisForImport
-				.equals(that.basisForImport) : that.basisForImport != null)
-			return false;
-		if (importer != null ? !importer
-				.equals(that.importer) : that.importer != null)
-			return false;
-		if (conditionsAndSpecification != null ? !conditionsAndSpecification
-				.equals(that.conditionsAndSpecification) : that.conditionsAndSpecification != null)
-			return false;
-		if (quantity != null ? !quantity
-				.equals(that.quantity) : that.quantity != null)
-			return false;
-		if (price != null ? !price
-				.equals(that.price) : that.price != null)
-			return false;
-		if (currency != null ? !currency
-				.equals(that.currency) : that.currency != null)
-			return false;
-		if (summ != null ? !summ
-				.equals(that.summ) : that.summ != null)
-			return false;
-		if (producer != null ? !producer
-				.equals(that.producer) : that.producer != null)
-			return false;
-		if (customsDeclarationDate != null ? !customsDeclarationDate
-				.equals(that.customsDeclarationDate) : that.customsDeclarationDate != null)
-			return false;
-		if (expirationDate != null ? !expirationDate
-				.equals(that.expirationDate) : that.expirationDate != null)
-			return false;
-		if (customsCode != null ? !customsCode
-				.equals(that.customsCode) : that.customsCode != null)
-			return false;
-		if (customsNumber != null ? !customsNumber
-				.equals(that.customsNumber) : that.customsNumber != null)
-			return false;
-		if (customsTransactionType != null ? !customsTransactionType
-				.equals(that.customsTransactionType) : that.customsTransactionType != null)
-			return false;
-		if (authorizationsNumber != null ? !authorizationsNumber
-				.equals(that.authorizationsNumber) : that.authorizationsNumber != null)
-			return false;
-		if (medType != null ? !medType
-				.equals(that.medType) : that.medType != null)
-			return false;
-		if (importAuthorizationDetailsEntityList != null ? !importAuthorizationDetailsEntityList
-				.equals(that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList != null)
-			return false;
-		if (authorized != null ? !authorized
-				.equals(that.authorized) : that.authorized != null)
-			return false;
-		if (contract != null ? !contract
-				.equals(that.contract) : that.contract != null)
-			return false;
-		if (contractDate != null ? !contractDate
-				.equals(that.contractDate) : that.contractDate != null)
-			return false;
-		if (anexa != null ? !anexa
-				.equals(that.anexa) : that.anexa != null)
-			return false;
-		if (anexaDate != null ? !anexaDate
-				.equals(that.anexaDate) : that.anexaDate != null)
-			return false;
-		if (specification != null ? !specification
-				.equals(that.specification) : that.specification != null)
-			return false;
-		if (SpecificationDate != null ? !SpecificationDate
-				.equals(that.SpecificationDate) : that.SpecificationDate != null)
-			return false;
-		return nmCustomsPointsList != null ? nmCustomsPointsList
-				.equals(that.nmCustomsPointsList) : that.nmCustomsPointsList == null;
+	@Basic
+	@Column(name = "sgeap_number", nullable = true)
+	public String getSgeapNumber()
+	{
+		return sgeapNumber;
 	}
 
-	@Override
-	public int hashCode() {
-		int result = id != null ? id
-				.hashCode() : 0;
-		result = 31 * result + (applicationRegistrationNumber != null ? applicationRegistrationNumber
-				.hashCode() : 0);
-		result = 31 * result + (applicationDate != null ? applicationDate
-				.hashCode() : 0);
-		result = 31 * result + (applicant != null ? applicant
-				.hashCode() : 0);
-		result = 31 * result + (seller != null ? seller
-				.hashCode() : 0);
-		result = 31 * result + (basisForImport != null ? basisForImport
-				.hashCode() : 0);
-		result = 31 * result + (importer != null ? importer
-				.hashCode() : 0);
-		result = 31 * result + (conditionsAndSpecification != null ? conditionsAndSpecification
-				.hashCode() : 0);
-		result = 31 * result + (quantity != null ? quantity
-				.hashCode() : 0);
-		result = 31 * result + (price != null ? price
-				.hashCode() : 0);
-		result = 31 * result + (currency != null ? currency
-				.hashCode() : 0);
-		result = 31 * result + (summ != null ? summ
-				.hashCode() : 0);
-		result = 31 * result + (producer != null ? producer
-				.hashCode() : 0);
-		result = 31 * result + (customsDeclarationDate != null ? customsDeclarationDate
-				.hashCode() : 0);
-		result = 31 * result + (expirationDate != null ? expirationDate
-				.hashCode() : 0);
-		result = 31 * result + (customsCode != null ? customsCode
-				.hashCode() : 0);
-		result = 31 * result + (customsNumber != null ? customsNumber
-				.hashCode() : 0);
-		result = 31 * result + (customsTransactionType != null ? customsTransactionType
-				.hashCode() : 0);
-		result = 31 * result + (authorizationsNumber != null ? authorizationsNumber
-				.hashCode() : 0);
-		result = 31 * result + (medType != null ? medType
-				.hashCode() : 0);
-		result = 31 * result + (importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList
-				.hashCode() : 0);
-		result = 31 * result + (authorized != null ? authorized
-				.hashCode() : 0);
-		result = 31 * result + (contract != null ? contract
-				.hashCode() : 0);
-		result = 31 * result + (contractDate != null ? contractDate
-				.hashCode() : 0);
-		result = 31 * result + (anexa != null ? anexa
-				.hashCode() : 0);
-		result = 31 * result + (anexaDate != null ? anexaDate
-				.hashCode() : 0);
-		result = 31 * result + (specification != null ? specification
-				.hashCode() : 0);
-		result = 31 * result + (SpecificationDate != null ? SpecificationDate
-				.hashCode() : 0);
-		result = 31 * result + (nmCustomsPointsList != null ? nmCustomsPointsList
-				.hashCode() : 0);
-		return result;
+	public void setSgeapNumber(String sgeapNumber)
+	{
+		this.sgeapNumber = sgeapNumber;
 	}
+
+	@Basic
+	@Column(name = "sgeap_date", nullable = true)
+	public Timestamp getSgeapDate()
+	{
+		return sgeapDate;
+	}
+
+	public void setSgeapDate(Timestamp sgeapDate)
+	{
+		this.sgeapDate = sgeapDate;
+	}
+
+	@Basic
+	@Column(name = "process_verbal_number", nullable = true)
+	public String getProcessVerbalNumber()
+	{
+		return processVerbalNumber;
+	}
+
+	public void setProcessVerbalNumber(String processVerbalNumber)
+	{
+		this.processVerbalNumber = processVerbalNumber;
+	}
+
+	@Basic
+	@Column(name = "process_verbal_date", nullable = true)
+	public Timestamp getProcessVerbalDate()
+	{
+		return processVerbalDate;
+	}
+
+	public void setProcessVerbalDate(Timestamp processVerbalDate)
+	{
+		this.processVerbalDate = processVerbalDate;
+	}
+
+    @Basic
+    @Column(name = "revision_date", nullable = true)
+    public Timestamp getRevisionDate()
+    {
+        return revisionDate;
+    }
+
+    public void setRevisionDate(Timestamp revisionDate)
+    {
+        this.revisionDate = revisionDate;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (!(o instanceof ImportAuthorizationEntity))
+        {
+            return false;
+        }
+
+        ImportAuthorizationEntity that = (ImportAuthorizationEntity) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null)
+        {
+            return false;
+        }
+        if (applicationRegistrationNumber != null ? !applicationRegistrationNumber.equals(that.applicationRegistrationNumber) : that.applicationRegistrationNumber != null)
+        {
+            return false;
+        }
+        if (applicationDate != null ? !applicationDate.equals(that.applicationDate) : that.applicationDate != null)
+        {
+            return false;
+        }
+        if (applicant != null ? !applicant.equals(that.applicant) : that.applicant != null)
+        {
+            return false;
+        }
+        if (seller != null ? !seller.equals(that.seller) : that.seller != null)
+        {
+            return false;
+        }
+        if (basisForImport != null ? !basisForImport.equals(that.basisForImport) : that.basisForImport != null)
+        {
+            return false;
+        }
+        if (importer != null ? !importer.equals(that.importer) : that.importer != null)
+        {
+            return false;
+        }
+        if (conditionsAndSpecification != null ? !conditionsAndSpecification.equals(that.conditionsAndSpecification) : that.conditionsAndSpecification != null)
+        {
+            return false;
+        }
+        if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null)
+        {
+            return false;
+        }
+        if (price != null ? !price.equals(that.price) : that.price != null)
+        {
+            return false;
+        }
+        if (currency != null ? !currency.equals(that.currency) : that.currency != null)
+        {
+            return false;
+        }
+        if (summ != null ? !summ.equals(that.summ) : that.summ != null)
+        {
+            return false;
+        }
+        if (producer != null ? !producer.equals(that.producer) : that.producer != null)
+        {
+            return false;
+        }
+        if (customsDeclarationDate != null ? !customsDeclarationDate.equals(that.customsDeclarationDate) : that.customsDeclarationDate != null)
+        {
+            return false;
+        }
+        if (expirationDate != null ? !expirationDate.equals(that.expirationDate) : that.expirationDate != null)
+        {
+            return false;
+        }
+        if (revisionDate != null ? !revisionDate.equals(that.revisionDate) : that.revisionDate != null)
+        {
+            return false;
+        }
+        if (customsCode != null ? !customsCode.equals(that.customsCode) : that.customsCode != null)
+        {
+            return false;
+        }
+        if (customsNumber != null ? !customsNumber.equals(that.customsNumber) : that.customsNumber != null)
+        {
+            return false;
+        }
+        if (customsTransactionType != null ? !customsTransactionType.equals(that.customsTransactionType) : that.customsTransactionType != null)
+        {
+            return false;
+        }
+        if (authorizationsNumber != null ? !authorizationsNumber.equals(that.authorizationsNumber) : that.authorizationsNumber != null)
+        {
+            return false;
+        }
+        if (medType != null ? !medType.equals(that.medType) : that.medType != null)
+        {
+            return false;
+        }
+        if (importAuthorizationDetailsEntityList != null ? !importAuthorizationDetailsEntityList.equals(that.importAuthorizationDetailsEntityList) : that.importAuthorizationDetailsEntityList != null)
+        {
+            return false;
+        }
+        if (authorized != null ? !authorized.equals(that.authorized) : that.authorized != null)
+        {
+            return false;
+        }
+        if (contract != null ? !contract.equals(that.contract) : that.contract != null)
+        {
+            return false;
+        }
+        if (contractDate != null ? !contractDate.equals(that.contractDate) : that.contractDate != null)
+        {
+            return false;
+        }
+        if (anexa != null ? !anexa.equals(that.anexa) : that.anexa != null)
+        {
+            return false;
+        }
+        if (anexaDate != null ? !anexaDate.equals(that.anexaDate) : that.anexaDate != null)
+        {
+            return false;
+        }
+        if (specification != null ? !specification.equals(that.specification) : that.specification != null)
+        {
+            return false;
+        }
+        if (SpecificationDate != null ? !SpecificationDate.equals(that.SpecificationDate) : that.SpecificationDate != null)
+        {
+            return false;
+        }
+        if (sgeapNumber != null ? !sgeapNumber.equals(that.sgeapNumber) : that.sgeapNumber != null)
+        {
+            return false;
+        }
+        if (sgeapDate != null ? !sgeapDate.equals(that.sgeapDate) : that.sgeapDate != null)
+        {
+            return false;
+        }
+        if (processVerbalNumber != null ? !processVerbalNumber.equals(that.processVerbalNumber) : that.processVerbalNumber != null)
+        {
+            return false;
+        }
+        if (processVerbalDate != null ? !processVerbalDate.equals(that.processVerbalDate) : that.processVerbalDate != null)
+        {
+            return false;
+        }
+        return nmCustomsPointsList != null ? nmCustomsPointsList.equals(that.nmCustomsPointsList) : that.nmCustomsPointsList == null;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (applicationRegistrationNumber != null ? applicationRegistrationNumber.hashCode() : 0);
+        result = 31 * result + (applicationDate != null ? applicationDate.hashCode() : 0);
+        result = 31 * result + (applicant != null ? applicant.hashCode() : 0);
+        result = 31 * result + (seller != null ? seller.hashCode() : 0);
+        result = 31 * result + (basisForImport != null ? basisForImport.hashCode() : 0);
+        result = 31 * result + (importer != null ? importer.hashCode() : 0);
+        result = 31 * result + (conditionsAndSpecification != null ? conditionsAndSpecification.hashCode() : 0);
+        result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (currency != null ? currency.hashCode() : 0);
+        result = 31 * result + (summ != null ? summ.hashCode() : 0);
+        result = 31 * result + (producer != null ? producer.hashCode() : 0);
+        result = 31 * result + (customsDeclarationDate != null ? customsDeclarationDate.hashCode() : 0);
+        result = 31 * result + (expirationDate != null ? expirationDate.hashCode() : 0);
+        result = 31 * result + (revisionDate != null ? revisionDate.hashCode() : 0);
+        result = 31 * result + (customsCode != null ? customsCode.hashCode() : 0);
+        result = 31 * result + (customsNumber != null ? customsNumber.hashCode() : 0);
+        result = 31 * result + (customsTransactionType != null ? customsTransactionType.hashCode() : 0);
+        result = 31 * result + (authorizationsNumber != null ? authorizationsNumber.hashCode() : 0);
+        result = 31 * result + (medType != null ? medType.hashCode() : 0);
+        result = 31 * result + (importAuthorizationDetailsEntityList != null ? importAuthorizationDetailsEntityList.hashCode() : 0);
+        result = 31 * result + (authorized != null ? authorized.hashCode() : 0);
+        result = 31 * result + (contract != null ? contract.hashCode() : 0);
+        result = 31 * result + (contractDate != null ? contractDate.hashCode() : 0);
+        result = 31 * result + (anexa != null ? anexa.hashCode() : 0);
+        result = 31 * result + (anexaDate != null ? anexaDate.hashCode() : 0);
+        result = 31 * result + (specification != null ? specification.hashCode() : 0);
+        result = 31 * result + (SpecificationDate != null ? SpecificationDate.hashCode() : 0);
+        result = 31 * result + (sgeapNumber != null ? sgeapNumber.hashCode() : 0);
+        result = 31 * result + (sgeapDate != null ? sgeapDate.hashCode() : 0);
+        result = 31 * result + (processVerbalNumber != null ? processVerbalNumber.hashCode() : 0);
+        result = 31 * result + (processVerbalDate != null ? processVerbalDate.hashCode() : 0);
+        result = 31 * result + (nmCustomsPointsList != null ? nmCustomsPointsList.hashCode() : 0);
+        return result;
+    }
 }

@@ -14,7 +14,6 @@
 	<parameter name="requestDescription" class="java.lang.String"/>
 	<parameter name="requestDate" class="java.lang.String"/>
 	<parameter name="reason" class="java.lang.String"/>
-	<!--<parameter name="legalBasis" class="java.lang.String"/>-->
 	<parameter name="responsablePerson" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="agencyName" class="java.lang.String"/>
@@ -22,10 +21,14 @@
 		<![CDATA[]]>
 	</queryString>
 	<pageHeader>
-		<band height="80" splitType="Stretch">
+		<band height="70" splitType="Stretch">
 			<image>
-				<reportElement x="0" y="0" width="535" height="80" uuid="4b8c7148-d4e8-41c2-8c72-9feba3bf25c2"/>
-				<imageExpression><![CDATA["layouts/icons/scrisoareDeRefuz.jpg"]]></imageExpression>
+				<reportElement x="0" y="0" width="220" height="60" uuid="d4fe1f91-f2a0-4e52-b4c3-5c3e9dd935ca"/>
+				<imageExpression><![CDATA["layouts/icons/header_left.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="220" y="0" width="317" height="70" uuid="11dd8ec7-6404-4cc7-9d59-a7e8f6fd0917"/>
+				<imageExpression><![CDATA["layouts/icons/header_right.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>

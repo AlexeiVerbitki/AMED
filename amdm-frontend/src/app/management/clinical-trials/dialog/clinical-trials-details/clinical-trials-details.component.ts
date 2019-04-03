@@ -52,9 +52,9 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
             'comissionNr': {value: null, disabled: true},
             'comissionDate': {value: null, disabled: true},
 
-            'medicament': [],
-            'referenceProduct': [],
-            'placebo': [],
+            'medicaments': [],
+            'referenceProducts': [],
+            'placebos': [],
             'clinicTrialAmendEntities': [],
             'clinicTrialNotificationEntities': [],
 
@@ -92,9 +92,9 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
                 this.ctForm.get('comissionNr').setValue(data.clinicalTrails.comissionNr);
                 this.ctForm.get('comissionDate').setValue(new Date(data.clinicalTrails.comissionDate));
                 this.ctForm.get('medicalInstitutions').setValue(data.clinicalTrails.medicalInstitutions);
-                this.ctForm.get('medicament').setValue(data.clinicalTrails.medicament);
-                this.ctForm.get('referenceProduct').setValue(data.clinicalTrails.referenceProduct);
-                this.ctForm.get('placebo').setValue(data.clinicalTrails.placebo);
+                this.ctForm.get('medicaments').setValue(data.clinicalTrails.medicaments);
+                this.ctForm.get('referenceProducts').setValue(data.clinicalTrails.referenceProducts);
+                this.ctForm.get('placebos').setValue(data.clinicalTrails.placebos);
                 this.ctForm.get('documents').setValue(data.documents);
 
                 data.clinicalTrails.clinicTrialAmendEntities.sort((one, two) => (one.id < two.id ? 1 : -1));
@@ -105,7 +105,7 @@ export class ClinicalTrialsDetailsComponent implements OnInit, OnDestroy {
                 this.ctForm.get('clinicTrialNotificationEntities').setValue(filteredNotif);
                 // this.ctForm.get('medicament').disable();
 
-                // console.log('this.ctForm', this.ctForm);
+                console.log('this.ctForm', this.ctForm);
                 //this.dataSource.data = data;
             }, error => {
                 // this.loadingService.hide();

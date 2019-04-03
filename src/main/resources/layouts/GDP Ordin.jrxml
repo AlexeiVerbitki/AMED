@@ -38,7 +38,7 @@
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Nr. ________ din ___/___/______"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="56" width="535" height="14" uuid="30570afb-e818-48c9-a274-9c09c7393701"/>
@@ -54,12 +54,12 @@
 				</textElement>
 				<text><![CDATA[mun. Chișinău]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="1" y="104" width="359" height="36" uuid="123b1b2f-aa8d-451f-b7ad-b516cc3aa44a"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1" y="104" width="459" height="36" uuid="123b1b2f-aa8d-451f-b7ad-b516cc3aa44a"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Ref.: Cu privire la inspectarea întreprinderii " + $P{companyName} + " în vederea conformității cu Bunele Practici de Distribuție a medicamentelor de uz uman"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Ref.: Cu privire la inspectarea întreprinderii " + $P{companyName} + " în vederea evaluării conformității cu Bunele Practici de Distribuție a medicamentelor de uz uman"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="148" width="535" height="62" uuid="846b8973-1175-4097-afdf-519ec7c04fe4"/>
@@ -72,7 +72,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA["	În conformitate cu Ordinul MS RM nr. 1400 din 09.12.2014 cu privire la aprobarea Regulilor de bună practică de distribuție a medicamentelor (GDP) de uz uman și în urma recepționării solicitării nr. " + $P{requestNr} + " din "+ $P{requestDate} + " de la întreprinderea " + $P{companyName} + " (scrisoare înregistrată cu nr. " + $P{registeredLetterNr} + " din "+ $P{registeredLetterDate} + ") privind efectuarea inspecției la locul de distribuție angro în vederea evaluării corespunderii cu normele GDP."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["	În conformitate cu Ordinul MS RM nr. 1400 din 09.12.2014 cu privire la aprobarea Regulilor de bună practică de distribuție a medicamentelor (GDP) de uz uman și în urma recepționării solicitării nr. " + $P{requestNr} + " din "+ $P{requestDate} + " de la întreprinderea " + $P{companyName} + " privind efectuarea inspecției la locul de distribuție angro în vederea evaluării corespunderii cu normele GDP."]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="70">

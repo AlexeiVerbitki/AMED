@@ -296,31 +296,23 @@
 				</jr:table>
 			</componentElement>
 		</band>
-		<band height="178">
-			<!--<staticText>
-
-				<reportElement x="0" y="2" width="535" height="28" uuid="bca65b32-5230-4c62-a10d-37f046b429b8"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[Comitetul Permanent de Control asupra Drogurilor garantează, că substanţele nominalizate vor fi folosite exclusiv în scopuri medicale sau științifice.]]></text>
-			</staticText>-->
+		<band height="171">
 			<staticText>
-				<reportElement x="1" y="69" width="278" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
+				<reportElement x="1" y="69" width="228" height="22" uuid="44afcc80-b83a-47d3-bddb-aea6ada86136"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Director  general]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="91" width="278" height="28" uuid="85bda993-1196-461f-8baa-7323d41cdc31"/>
+				<reportElement x="1" y="91" width="228" height="28" uuid="85bda993-1196-461f-8baa-7323d41cdc31"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Preşedintele Comitetului Permanent de Control asupra Drogurilor]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="119" width="278" height="22" uuid="79e311bb-203d-4cde-a6d5-f6b27ff9cfef"/>
+				<reportElement x="1" y="119" width="228" height="22" uuid="79e311bb-203d-4cde-a6d5-f6b27ff9cfef"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -334,21 +326,21 @@
 				<textFieldExpression><![CDATA["Valabilă pînă la: " + $P{validUntil}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="119" width="256" height="22" uuid="04c0cc23-5462-4d5f-9afe-7815a75d72ce"/>
+				<reportElement x="360" y="119" width="175" height="22" uuid="04c0cc23-5462-4d5f-9afe-7815a75d72ce"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{druggist}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="91" width="256" height="28" uuid="e9db05a9-8c57-430e-a0a5-e9db7dc376f3"/>
+				<reportElement x="360" y="91" width="175" height="28" uuid="e9db05a9-8c57-430e-a0a5-e9db7dc376f3"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{committeeChairman}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="69" width="256" height="22" uuid="65fc8ddd-3dc1-4b2f-9324-55b868d0e406"/>
+				<reportElement x="360" y="69" width="175" height="22" uuid="65fc8ddd-3dc1-4b2f-9324-55b868d0e406"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>

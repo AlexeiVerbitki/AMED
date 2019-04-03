@@ -106,6 +106,10 @@
                             class="fa fa fa-eye fa-lg" aria-hidden="true"></i> Audit</a>
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']" *ngIf="checkRole('scr_admin')">
+                    <a routerLink="/dashboard/reports" class="pl-3 nav-link waves-light" mdbWavesEffect><i
+                            class="fa fa-file-o fa-lg" aria-hidden="true"></i> Rapoarte</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']" *ngIf="checkRole('scr_admin')">
                     <a routerLink="/dashboard/admin" class="pl-3 nav-link waves-light" mdbWavesEffect><i
                             class="fa fa-lock fa-lg" aria-hidden="true"></i> Administrare</a>
                 </li>
@@ -135,10 +139,6 @@
                        class="pl-3 nav-link waves-effect waves-light"
                        mdbWavesEffect><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
                 </li>
-                <!--<li class="nav-item" [routerLinkActive]="['active']">-->
-                <!--<a mdbTooltip="Gestionare documente" placement="right" routerLink="/dashboard/doc-management" class="pl-3 nav-link waves-light"-->
-                <!--mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i></a>-->
-                <!--</li>-->
                 <li class="nav-item" [routerLinkActive]="['active']"
                     *ngIf="checkRole('scr_module_2') || checkRole('scr_admin')">
                     <a mdbTooltip="Cartela medicament" placement="right" routerLink="/dashboard/management/medicaments"
@@ -162,6 +162,11 @@
                     <a mdbTooltip="Aprobare Prețuri" placement="right"
                        routerLink="/dashboard/management/prices-approval" class="pl-3 nav-link waves-light"
                        mdbWavesEffect><i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i></a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']" *ngIf="checkRole('scr_admin')">
+                    <a mdbTooltip="Gestionare autorizatiilor" placement="right" routerLink="/dashboard/module/import-authorization/authorizations-table"
+                       class="pl-3 nav-link waves-light"
+                       mdbWavesEffect><i class="fa fa-list-alt    fa-lg" aria-hidden="true"></i></a>
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']"
                     *ngIf="checkRole('scr_module_5') || checkRole('scr_admin')">
@@ -205,14 +210,14 @@
                        mdbWavesEffect><i class="fa fa fa-eye fa-lg" aria-hidden="true"></i></a>
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']" *ngIf="checkRole('scr_admin')">
+                    <a mdbTooltip="Rapoarte" placement="right" routerLink="/dashboard/reports"
+                       class="pl-3 nav-link waves-light"
+                       mdbWavesEffect><i class="fa fa-file-o fa-lg" aria-hidden="true"></i></a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']" *ngIf="checkRole('scr_admin')">
                     <a mdbTooltip="Administrare" placement="right" routerLink="/dashboard/admin"
                        class="pl-3 nav-link waves-light"
                        mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i></a>
-                </li>
-                <li class="nav-item" [routerLinkActive]="['active']" *ngIf="checkRole('scr_admin')">
-                    <a mdbTooltip="Gestionare autorizatiilor" placement="right" routerLink="/dashboard/module/import-authorization/authorizations-table"
-                       class="pl-3 nav-link waves-light"
-                       mdbWavesEffect><i class="fa fa-list-alt    fa-lg" aria-hidden="true"></i></a>
                 </li>
             </ul>
         </links>

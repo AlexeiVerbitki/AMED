@@ -1,8 +1,7 @@
 package com.bass.amed.common;
 
-public interface AdministrationConstants
-{
-    String[] TABLES                = new String[]{
+public interface AdministrationConstants {
+    String[] TABLES = new String[]{
             "nm_active_substances",
             "nm_atc_codes",
             "nm_authorization_comment",
@@ -66,14 +65,17 @@ public interface AdministrationConstants
             "nm_import_activities",
             "nm_ldap_user_status",
             "nm_register_catalog_codes",
-			"drug_units_conversion_rates",
+            "drug_units_conversion_rates",
+            "nm_reports",
+            "nm_report_types",
+            "nm_med_inst_subdivisions"
     };
-    String   SQL_GET_ALL_BY_TABLE  = "SELECT * FROM %s";
-    String   SQL_DELETE_TABLE      = "DELETE FROM %s WHERE ID = :id";
-    String   SQL_INSERT            = "INSERT INTO %s (%s) VALUES(%s)";
-    String   SQL_UPDATE            = "UPDATE %s SET %s WHERE ID = %s";
-    String   SQL_GET_COLUMNS_NAMES =
+    String SQL_GET_ALL_BY_TABLE = "SELECT * FROM %s";
+    String SQL_DELETE_TABLE = "DELETE FROM %s WHERE ID = :id";
+    String SQL_INSERT = "INSERT INTO %s (%s) VALUES(%s)";
+    String SQL_UPDATE = "UPDATE %s SET %s WHERE ID = %s";
+    String SQL_GET_COLUMNS_NAMES =
             "SELECT COLUMN_NAME, COLUMN_COMMENT\n" +
                     "FROM INFORMATION_SCHEMA.COLUMNS\n" +
-                    "WHERE table_name = '%s'\n" ;
+                    "WHERE table_name = '%s'\n";
 }

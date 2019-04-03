@@ -2193,11 +2193,11 @@ public class RequestController
 
                         AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
                         dataSet2.setAmount(AmountUtils.round(entity.getSumm(), 2));
-                        dataSet2.setField18("");
-                        dataSet2.setProductCode(entity.getCustomsCode() == null ? "" : entity.getCustomsCode().getCode());
-                        dataSet2.setProductName(entity.getCustomsCode() == null ? "" : entity.getCustomsCode().getDescription());
-                        dataSet2.setQuantity("");
-                        dataSet2.setUnitMeasure("");
+                        dataSet2.setField18(" ");
+                        dataSet2.setProductCode(entity.getCustomsCode() == null ? " " : entity.getCustomsCode().getCode());
+                        dataSet2.setProductName(entity.getCustomsCode() == null ? " " : entity.getCustomsCode().getDescription());
+                        dataSet2.setQuantity(" ");
+                        dataSet2.setUnitMeasure(" ");
 
                         autorizationImportDataSet2ArrayList.add(dataSet2);
                     }
@@ -2342,6 +2342,31 @@ public class RequestController
                 parameters.put("manufacturerCountry", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getDescription());
                 parameters.put("manufacturerCountryCode", request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList().iterator().next().getProducer().getCountry().getCode());
             }
+            else
+            {
+                parameters.put("manufacturerAndAddress" , "");
+                parameters.put("manufacturerCountry"    , "");
+                parameters.put("manufacturerCountryCode", "");
+            }
+            if (request.getImportAuthorizationEntity() != null && request.getImportAuthorizationEntity().getRevisionDate() != null){
+                parameters.put("revision", "Autorizașia urmează să fie revizuită la " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getRevisionDate()));
+            }
+
+            String instructions = "Instrucțiunea în limba română sau română și rusă\nProdusele sunt autorizate spre import.\n";
+            if (request.getImportAuthorizationEntity() != null && (request.getImportAuthorizationEntity().getProcessVerbalNumber() != null || request.getImportAuthorizationEntity().getProcessVerbalDate() != null))
+            {
+                instructions = instructions + "Proces verbal ";
+            }
+
+            if (request.getImportAuthorizationEntity() != null && request.getImportAuthorizationEntity().getProcessVerbalNumber() != null)
+            {
+                instructions = instructions + "nr. " + request.getImportAuthorizationEntity().getProcessVerbalNumber() + " ";
+            }
+            if (request.getImportAuthorizationEntity() != null && request.getImportAuthorizationEntity().getProcessVerbalDate() != null)
+            {
+                instructions = instructions + "din  " + new SimpleDateFormat("dd/MM/yyyy").format(request.getImportAuthorizationEntity().getProcessVerbalDate());
+            }
+            parameters.put("instructions", instructions);
 
 
             parameters.put("autorizationImportDataSet", autorizationImportDataSet);
@@ -2397,6 +2422,10 @@ public class RequestController
                     if (entity.getCustomsCode() != null)
                     {
                         specificationMedicament.setCustomsCode(entity.getCustomsCode().getCode());
+                    }
+                    else
+                    {
+                        specificationMedicament.setCustomsCode("");
                     }
                     if (entity.getName() != null)
                     {
@@ -2515,7 +2544,7 @@ public class RequestController
                 parameters.put("sellerAddress", request.getImportAuthorizationEntity().getSeller().getAddress() + " " + request.getImportAuthorizationEntity().getSeller().getCountry().getCode());
             }
             parameters.put("sellerDirector", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
-            parameters.put("totalSum", String.valueOf(AmountUtils.round(totalSum, 2)) + " " + request.getImportAuthorizationEntity().getCurrency().getShortDescription());
+            parameters.put("total", String.valueOf(AmountUtils.round(totalSum, 2)) + " " + request.getImportAuthorizationEntity().getCurrency().getShortDescription());
             parameters.put("importSpecificationMedicament", new JRBeanCollectionDataSource(ImportSpecificationDataSetArrayList));
 
 

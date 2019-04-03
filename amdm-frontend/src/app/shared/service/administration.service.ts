@@ -284,6 +284,10 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-clinical-trail-phases', {});
     }
 
+    getClinicalTrailsTypest(): Observable<any> {
+        return this.http.get('/api/clinical-trails/all-clinical-trail-types', {});
+    }
+
     getAllCustomsCodesByDescription(partialCode: string): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('partialCode', partialCode);
@@ -398,5 +402,13 @@ export class AdministrationService {
 
     getMedInstSubdivisionsByMedInstId(id: string): Observable<any> {
         return this.http.get('/api/administration/get-med-inst-subdivisions-by-id', {params: {id: id}});
+    }
+
+    getAllReportTypes(): Observable<any> {
+        return this.http.get('/api/administration/all-report-types', {});
+    }
+
+    getAllReportsByReportType(reportTypeId): Observable<any> {
+        return this.http.get('/api/administration/all-reports-by-report-type', {params: {id: reportTypeId}});
     }
 }

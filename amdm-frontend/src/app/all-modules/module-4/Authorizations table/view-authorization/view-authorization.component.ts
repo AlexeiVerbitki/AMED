@@ -99,6 +99,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
     atLeastOneApproved: boolean;
     private subscriptions: Subscription[] = [];
     requestData: any;
+    maxDate = new Date();
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -165,6 +166,10 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                 'authorizationsNumber': [{value: null, disabled: true}], // inca nu exista la pasul acesta
                 'medType': [{value: '', disabled: true}],
                 'importAuthorizationDetailsEntityList': [{value: null, disabled: true}],
+                'sgeapNumber': [null],
+                'sgeapDate': [null],
+                'processVerbalNumber': [null],
+                'processVerbalDate': [null],
                 'authorized': [{value: null, disabled: true}],
                 'customsPoints': [{value: null, disabled: true}],
                 'unitOfImportTable': this.fb.group({
@@ -309,8 +314,21 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                             if (this.importData.importAuthorizationEntity.anexaDate)                   {this.evaluateImportForm.get('importAuthorizationEntity.anexaDate').setValue(new Date(this.importData.importAuthorizationEntity.anexaDate));}
                             if (this.importData.importAuthorizationEntity.specification)               {this.evaluateImportForm.get('importAuthorizationEntity.specification').setValue(this.importData.importAuthorizationEntity.specification);}
                             if (this.importData.importAuthorizationEntity.specificationDate)           {this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(this.importData.importAuthorizationEntity.specificationDate));}
+                            if (this.importData.importAuthorizationEntity.sgeapNumber)                 {this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').setValue(this.importData.importAuthorizationEntity.sgeapNumber);}
+                            if (this.importData.importAuthorizationEntity.sgeapDate)                   {this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').setValue(new Date(this.importData.importAuthorizationEntity.sgeapDate));}
 
-                        let arr = [];
+                            if (this.importData.importAuthorizationEntity.medType === 2 || this.importData.importAuthorizationEntity.medType === 3){
+                                if (this.importData.importAuthorizationEntity.processVerbalNumber) {
+                                    this.evaluateImportForm.get('importAuthorizationEntity.processVerbalNumber').setValue(this.importData.importAuthorizationEntity.processVerbalNumber);
+                                    this.evaluateImportForm.get('importAuthorizationEntity.processVerbalNumber').disable();
+                                }
+                                if (this.importData.importAuthorizationEntity.processVerbalDate) {
+                                    this.evaluateImportForm.get('importAuthorizationEntity.processVerbalDate').setValue(new Date(this.importData.importAuthorizationEntity.processVerbalDate));
+                                    this.evaluateImportForm.get('importAuthorizationEntity.processVerbalDate').disable();
+                                }
+                            }
+
+                            let arr = [];
                         for (const c of this.importData.importAuthorizationEntity.nmCustomsPointsList) {
                             c.descrCode = c.description + ' - ' + c.code;
                             arr = [...arr, c];
@@ -335,6 +353,8 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.currency').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').disable();
 
                     if (this.importData.importAuthorizationEntity.medType === 2) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
@@ -420,6 +440,7 @@ export class ViewAuthorizationComponent implements OnInit, OnDestroy {
 
         const authorizationModel = this.importData;
         authorizationModel.importAuthorizationEntity.nmCustomsPointsList = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
+
 
         authorizationModel.importAuthorizationEntity.expirationDate = this.calculateExpirationDate();
 

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
@@ -56,7 +56,9 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     medicaments: any[] = [];
     authorizedManufacturedMedicaments: any[] = [];
     otherAsepticPreparations: any[] = [];
+    otherClinicalAsepticPreparations: any[] = [];
     otherNesterilePreparations: any[] = [];
+    otherClinicalNesterilePreparations: any[] = [];
     finalSterilized: any[] = [];
     biologicalMedicines: any[] = [];
     importActivities: any[] = [];
@@ -69,17 +71,27 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
     biologicalMedicinesCertified: any[] = [];
     testsForQualityControls: any[] = [];
     otherFinalSterilized: any[] = [];
+    otherClinicalFinalSterilized: any[] = [];
     otherPrimaryPackagings: any[] = [];
+    otherClinicalPrimaryPackagings: any[] = [];
     otherSterilizations: any[] = [];
+    otherClinicalSterilizations: any[] = [];
     otherProductions: any[] = [];
+    otherClinicalProductions: any[] = [];
     otherBiologicalMedicines: any[] = [];
+    otherClinicalBiologicalMedicines: any[] = [];
     otherImportActivities: any[] = [];
     otherBiologicalMedicinesImport: any[] = [];
     otherNesterilePreparationsCertified: any[] = [];
+    otherClinicalNesterilePreparationsCertified: any[] = [];
     otherBiologicalMedicinesCertified: any[] = [];
+    otherClinicalBiologicalMedicinesCertified: any[] = [];
     otherSterileCertifieds: any[] = [];
+    otherClinicalSterileCertifieds: any[] = [];
     otherPreparationsOrProductions: any[] = [];
+    otherClinicalPreparationsOrProductions: any[] = [];
     otherTestsForQualityControl: any[] = [];
+    otherClinicalTestsForQualityControl: any[] = [];
     subsidiaryList: any[] = [];
     selectedSubsidiaries: any[] = [];
     laborators: any[] = [];
@@ -141,26 +153,38 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             'dataEliberariiLic': {disabled: true, value: null},
             'dataExpirariiLic': {disabled: true, value: null},
             'asepticPreparationsValues': [null],
+            'clinicalAsepticPreparationsValues': [null],
             'nesterilePreparationsValues': [null],
+            'clinicalNesterilePreparationsValues': [null],
             'finalSterilizedValues': [null],
+            'clinicalFinalSterilizedValues': [null],
             'production': [null],
+            'clinicalProduction': [null],
             'primaryPackaging': [null],
+            'clinicalPrimaryPackaging': [null],
             'gmpID': [null],
             'secondaryPackaging': [null],
+            'clinicalSecondaryPackaging': [null],
             'sterilization': [null],
+            'clinicalSterilization': [null],
             'testsForQualityControl': [null],
+            'clinicalTestsForQualityControl': [null],
             'testsForQualityControlImport': [null],
             'biologicalMedicinesValues': [null],
+            'clinicalBiologicalMedicinesValues': [null],
             'importActivities': [null],
             'biologicalMedicinesImport': [null],
             'nesterilePreparationsCertifiedValues': [null],
+            'clinicalNesterilePreparationsCertifiedValues': [null],
             'biologicalMedicinesCertifiedValues': [null],
+            'clinicalBiologicalMedicinesCertifiedValues': [null],
             'sterileCertifiedsValues': [null],
+            'clinicalSterileCertifiedsValues': [null],
             'humanUse': [false],
             'medicamentClinicalInvestigation': [false],
             'veterinary': [false],
             'groupLeader': [null],
-            'cause' : [null],
+            'cause': [null],
             'veterinaryDetails': {disabled: true, value: null},
             'informatiiLoculDistributieAngro':
                 fb.group({
@@ -200,17 +224,29 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             this.checkSuspendedAuthorisations();
             if (!this.eForm.get('type').value || (this.eForm.get('type').value.code != 'GMPE' && this.eForm.get('type').value.code != 'GMPM')) {
                 this.eForm.get('asepticPreparationsValues').disable();
+                this.eForm.get('clinicalAsepticPreparationsValues').disable();
                 this.eForm.get('finalSterilizedValues').disable();
+                this.eForm.get('clinicalFinalSterilizedValues').disable();
                 this.eForm.get('sterileCertifiedsValues').disable();
+                this.eForm.get('clinicalSterileCertifiedsValues').disable();
                 this.eForm.get('nesterilePreparationsValues').disable();
+                this.eForm.get('clinicalNesterilePreparationsValues').disable();
                 this.eForm.get('nesterilePreparationsCertifiedValues').disable();
+                this.eForm.get('clinicalNesterilePreparationsCertifiedValues').disable();
                 this.eForm.get('biologicalMedicinesValues').disable();
+                this.eForm.get('clinicalBiologicalMedicinesValues').disable();
                 this.eForm.get('biologicalMedicinesCertifiedValues').disable();
+                this.eForm.get('clinicalBiologicalMedicinesCertifiedValues').disable();
                 this.eForm.get('production').disable();
+                this.eForm.get('clinicalProduction').disable();
                 this.eForm.get('sterilization').disable();
+                this.eForm.get('clinicalSterilization').disable();
                 this.eForm.get('primaryPackaging').disable();
+                this.eForm.get('clinicalPrimaryPackaging').disable();
                 this.eForm.get('secondaryPackaging').disable();
+                this.eForm.get('clinicalSecondaryPackaging').disable();
                 this.eForm.get('testsForQualityControl').disable();
+                this.eForm.get('clinicalTestsForQualityControl').disable();
                 this.eForm.get('testsForQualityControlImport').disable();
                 this.eForm.get('biologicalMedicinesImport').disable();
                 this.eForm.get('importActivities').disable();
@@ -225,17 +261,29 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 this.eForm.get('informatiiLoculDistributieAngro.etapeleDeFabricatie').disable();
             } else {
                 this.eForm.get('asepticPreparationsValues').enable();
+                this.eForm.get('clinicalAsepticPreparationsValues').enable();
                 this.eForm.get('finalSterilizedValues').enable();
+                this.eForm.get('clinicalFinalSterilizedValues').enable();
                 this.eForm.get('sterileCertifiedsValues').enable();
+                this.eForm.get('clinicalSterileCertifiedsValues').enable();
                 this.eForm.get('nesterilePreparationsValues').enable();
+                this.eForm.get('clinicalNesterilePreparationsValues').enable();
                 this.eForm.get('nesterilePreparationsCertifiedValues').enable();
+                this.eForm.get('clinicalNesterilePreparationsCertifiedValues').enable();
                 this.eForm.get('biologicalMedicinesValues').enable();
+                this.eForm.get('clinicalBiologicalMedicinesValues').enable();
                 this.eForm.get('biologicalMedicinesCertifiedValues').enable();
+                this.eForm.get('clinicalBiologicalMedicinesCertifiedValues').enable();
                 this.eForm.get('production').enable();
+                this.eForm.get('clinicalProduction').enable();
                 this.eForm.get('sterilization').enable();
+                this.eForm.get('clinicalSterilization').enable();
                 this.eForm.get('primaryPackaging').enable();
+                this.eForm.get('clinicalPrimaryPackaging').enable();
                 this.eForm.get('secondaryPackaging').enable();
+                this.eForm.get('clinicalSecondaryPackaging').enable();
                 this.eForm.get('testsForQualityControl').enable();
+                this.eForm.get('clinicalTestsForQualityControl').enable();
                 this.eForm.get('testsForQualityControlImport').enable();
                 this.eForm.get('biologicalMedicinesImport').enable();
                 this.eForm.get('importActivities').enable();
@@ -325,7 +373,6 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                             this.loadAllQuickSearches(data, data.company, data.type);
                         } else {
                             this.subscriptions.push(this.requestService.checkExistingAuthorization(data.company.id).subscribe(auth => {
-                                console.log(auth);
                                 if (auth.id) {
                                     this.fillExistingAuthorizationDetails(auth, data, true);
                                 } else {
@@ -506,30 +553,58 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                         const arrAseptic: any[] = [];
                         const arrFinalSterilized: any[] = [];
                         const arrSterileCertifieds: any[] = [];
+                        const clinicalArrAseptic: any[] = [];
+                        const clinicalArrFinalSterilized: any[] = [];
+                        const clinicalArrSterileCertifieds: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].sterileProducts) {
-                            if (z.category == 'P') {
-                                if (z.sterileProduct) {
-                                    arrAseptic.push(z.sterileProduct);
-                                } else {
-                                    this.otherAsepticPreparations.push({description: z.description});
+                            if (z.type && z.type == 'C') {
+                                if (z.category == 'P') {
+                                    if (z.sterileProduct) {
+                                        clinicalArrAseptic.push(z.sterileProduct);
+                                    } else {
+                                        this.otherClinicalAsepticPreparations.push({description: z.description});
+                                    }
+                                } else if (z.category == 'S') {
+                                    if (z.sterileProduct) {
+                                        clinicalArrFinalSterilized.push(z.sterileProduct);
+                                    } else {
+                                        this.otherClinicalFinalSterilized.push({description: z.description});
+                                    }
+                                } else if (z.category == 'C') {
+                                    if (z.sterileProduct) {
+                                        clinicalArrSterileCertifieds.push(z.sterileProduct);
+                                    } else {
+                                        this.otherClinicalSterileCertifieds.push({description: z.description});
+                                    }
                                 }
-                            } else if (z.category == 'S') {
-                                if (z.sterileProduct) {
-                                    arrFinalSterilized.push(z.sterileProduct);
-                                } else {
-                                    this.otherFinalSterilized.push({description: z.description});
-                                }
-                            } else if (z.category == 'C') {
-                                if (z.sterileProduct) {
-                                    arrSterileCertifieds.push(z.sterileProduct);
-                                } else {
-                                    this.otherSterileCertifieds.push({description: z.description});
+                            } else {
+                                if (z.category == 'P') {
+                                    if (z.sterileProduct) {
+                                        arrAseptic.push(z.sterileProduct);
+                                    } else {
+                                        this.otherAsepticPreparations.push({description: z.description});
+                                    }
+                                } else if (z.category == 'S') {
+                                    if (z.sterileProduct) {
+                                        arrFinalSterilized.push(z.sterileProduct);
+                                    } else {
+                                        this.otherFinalSterilized.push({description: z.description});
+                                    }
+                                } else if (z.category == 'C') {
+                                    if (z.sterileProduct) {
+                                        arrSterileCertifieds.push(z.sterileProduct);
+                                    } else {
+                                        this.otherSterileCertifieds.push({description: z.description});
+                                    }
                                 }
                             }
                         }
                         this.eForm.get('finalSterilizedValues').setValue(arrFinalSterilized);
                         this.eForm.get('asepticPreparationsValues').setValue(arrAseptic);
                         this.eForm.get('sterileCertifiedsValues').setValue(arrSterileCertifieds);
+                        this.eForm.get('clinicalFinalSterilizedValues').setValue(clinicalArrFinalSterilized);
+                        this.eForm.get('clinicalAsepticPreparationsValues').setValue(clinicalArrAseptic);
+                        this.eForm.get('clinicalSterileCertifiedsValues').setValue(clinicalArrSterileCertifieds);
                     }
                 },
                 error => console.log(error)
@@ -543,23 +618,43 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].neSterileProducts) {
                         const arrNesterilePreparations: any[] = [];
                         const arrNesterilePreparationsCertified: any[] = [];
+                        const arrClinicalNesterilePreparations: any[] = [];
+                        const arrClinicalNesterilePreparationsCertified: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].neSterileProducts) {
-                            if (z.category == 'N') {
-                                if (z.nesterileProduct) {
-                                    arrNesterilePreparations.push(z.nesterileProduct);
-                                } else {
-                                    this.otherNesterilePreparations.push({description: z.description});
+                            if (z.type && z.type == 'C') {
+                                if (z.category == 'N') {
+                                    if (z.nesterileProduct) {
+                                        arrClinicalNesterilePreparations.push(z.nesterileProduct);
+                                    } else {
+                                        this.otherClinicalNesterilePreparations.push({description: z.description});
+                                    }
+                                } else if (z.category == 'C') {
+                                    if (z.nesterileProduct) {
+                                        arrClinicalNesterilePreparationsCertified.push(z.nesterileProduct);
+                                    } else {
+                                        this.otherClinicalNesterilePreparationsCertified.push({description: z.description});
+                                    }
                                 }
-                            } else if (z.category == 'C') {
-                                if (z.nesterileProduct) {
-                                    arrNesterilePreparationsCertified.push(z.nesterileProduct);
-                                } else {
-                                    this.otherNesterilePreparationsCertified.push({description: z.description});
+                            } else {
+                                if (z.category == 'N') {
+                                    if (z.nesterileProduct) {
+                                        arrNesterilePreparations.push(z.nesterileProduct);
+                                    } else {
+                                        this.otherNesterilePreparations.push({description: z.description});
+                                    }
+                                } else if (z.category == 'C') {
+                                    if (z.nesterileProduct) {
+                                        arrNesterilePreparationsCertified.push(z.nesterileProduct);
+                                    } else {
+                                        this.otherNesterilePreparationsCertified.push({description: z.description});
+                                    }
                                 }
                             }
                         }
                         this.eForm.get('nesterilePreparationsValues').setValue(arrNesterilePreparations);
                         this.eForm.get('nesterilePreparationsCertifiedValues').setValue(arrNesterilePreparationsCertified);
+                        this.eForm.get('clinicalNesterilePreparationsValues').setValue(arrClinicalNesterilePreparations);
+                        this.eForm.get('clinicalNesterilePreparationsCertifiedValues').setValue(arrClinicalNesterilePreparationsCertified);
                     }
                 },
                 error => console.log(error)
@@ -573,23 +668,43 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].biologicalMedicines) {
                         const arrBiologicalMedicines: any[] = [];
                         const arrBiologicalMedicinesCertified: any[] = [];
+                        const arrClinicalBiologicalMedicines: any[] = [];
+                        const arrClinicalBiologicalMedicinesCertified: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].biologicalMedicines) {
-                            if (z.category == 'B') {
-                                if (z.biologicalMedicine) {
-                                    arrBiologicalMedicines.push(z.biologicalMedicine);
-                                } else {
-                                    this.otherBiologicalMedicines.push({description: z.description});
+                            if (z.type && z.type == 'C') {
+                                if (z.category == 'B') {
+                                    if (z.biologicalMedicine) {
+                                        arrClinicalBiologicalMedicines.push(z.biologicalMedicine);
+                                    } else {
+                                        this.otherClinicalBiologicalMedicines.push({description: z.description});
+                                    }
+                                } else if (z.category == 'C') {
+                                    if (z.biologicalMedicine) {
+                                        arrClinicalBiologicalMedicinesCertified.push(z.biologicalMedicine);
+                                    } else {
+                                        this.otherClinicalBiologicalMedicinesCertified.push({description: z.description});
+                                    }
                                 }
-                            } else if (z.category == 'C') {
-                                if (z.biologicalMedicine) {
-                                    arrBiologicalMedicinesCertified.push(z.biologicalMedicine);
-                                } else {
-                                    this.otherBiologicalMedicinesCertified.push({description: z.description});
+                            } else {
+                                if (z.category == 'B') {
+                                    if (z.biologicalMedicine) {
+                                        arrBiologicalMedicines.push(z.biologicalMedicine);
+                                    } else {
+                                        this.otherBiologicalMedicines.push({description: z.description});
+                                    }
+                                } else if (z.category == 'C') {
+                                    if (z.biologicalMedicine) {
+                                        arrBiologicalMedicinesCertified.push(z.biologicalMedicine);
+                                    } else {
+                                        this.otherBiologicalMedicinesCertified.push({description: z.description});
+                                    }
                                 }
                             }
                         }
                         this.eForm.get('biologicalMedicinesValues').setValue(arrBiologicalMedicines);
                         this.eForm.get('biologicalMedicinesCertifiedValues').setValue(arrBiologicalMedicinesCertified);
+                        this.eForm.get('clinicalBiologicalMedicinesValues').setValue(arrClinicalBiologicalMedicines);
+                        this.eForm.get('clinicalBiologicalMedicinesCertifiedValues').setValue(arrClinicalBiologicalMedicinesCertified);
                     }
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].biologicalMedicinesImport) {
                         const arrBiologicalMedicines: any[] = [];
@@ -614,18 +729,32 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     this.productions = data;
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].manufactures) {
                         const arrManufactures: any[] = [];
+                        const arrClinicalManufactures: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].manufactures) {
-                            if (z.manufacture) {
-                                arrManufactures.push(z.manufacture);
+                            if (z.type && z.type == 'C') {
+                                if (z.manufacture) {
+                                    arrClinicalManufactures.push(z.manufacture);
+                                } else {
+                                    if (z.category == 'O') {
+                                        this.otherClinicalProductions.push({description: z.description});
+                                    } else if (z.category == 'OP') {
+                                        this.otherClinicalPreparationsOrProductions.push({description: z.description});
+                                    }
+                                }
                             } else {
-                                if (z.category == 'O') {
-                                    this.otherProductions.push({description: z.description});
-                                } else if (z.category == 'OP') {
-                                    this.otherPreparationsOrProductions.push({description: z.description});
+                                if (z.manufacture) {
+                                    arrManufactures.push(z.manufacture);
+                                } else {
+                                    if (z.category == 'O') {
+                                        this.otherProductions.push({description: z.description});
+                                    } else if (z.category == 'OP') {
+                                        this.otherPreparationsOrProductions.push({description: z.description});
+                                    }
                                 }
                             }
                         }
                         this.eForm.get('production').setValue(arrManufactures);
+                        this.eForm.get('clinicalProduction').setValue(arrClinicalManufactures);
                     }
                 },
                 error => console.log(error)
@@ -656,14 +785,24 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     this.sterilizations = data;
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].sterilizations) {
                         const arrSterilizations: any[] = [];
+                        const arrClinicalSterilizations: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].sterilizations) {
-                            if (z.sterilization) {
-                                arrSterilizations.push(z.sterilization);
+                            if (z.type && z.type == 'C') {
+                                if (z.sterilization) {
+                                    arrClinicalSterilizations.push(z.sterilization);
+                                } else {
+                                    this.otherClinicalSterilizations.push({description: z.description});
+                                }
                             } else {
-                                this.otherSterilizations.push({description: z.description});
+                                if (z.sterilization) {
+                                    arrSterilizations.push(z.sterilization);
+                                } else {
+                                    this.otherSterilizations.push({description: z.description});
+                                }
                             }
                         }
                         this.eForm.get('sterilization').setValue(arrSterilizations);
+                        this.eForm.get('clinicalSterilization').setValue(arrClinicalSterilizations);
                     }
                 },
                 error => console.log(error)
@@ -675,14 +814,24 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     this.primaryPackagings = data;
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].primaryPackagings) {
                         const arrPrimaryPackagings: any[] = [];
+                        const arrClinicalPrimaryPackagings: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].primaryPackagings) {
-                            if (z.primaryPackaging) {
-                                arrPrimaryPackagings.push(z.primaryPackaging);
+                            if (z.type && z.type == 'C') {
+                                if (z.primaryPackaging) {
+                                    arrClinicalPrimaryPackagings.push(z.primaryPackaging);
+                                } else {
+                                    this.otherClinicalPrimaryPackagings.push({description: z.description});
+                                }
                             } else {
-                                this.otherPrimaryPackagings.push({description: z.description});
+                                if (z.primaryPackaging) {
+                                    arrPrimaryPackagings.push(z.primaryPackaging);
+                                } else {
+                                    this.otherPrimaryPackagings.push({description: z.description});
+                                }
                             }
                         }
                         this.eForm.get('primaryPackaging').setValue(arrPrimaryPackagings);
+                        this.eForm.get('clinicalPrimaryPackaging').setValue(arrClinicalPrimaryPackagings);
                     }
                 },
                 error => console.log(error)
@@ -694,12 +843,20 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     this.secondaryPackagings = data;
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].secondaryPackagings) {
                         const arrSecondaryPackagings: any[] = [];
+                        const arrClinicalSecondaryPackagings: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].secondaryPackagings) {
-                            if (z.secondaryPackaging) {
-                                arrSecondaryPackagings.push(z.secondaryPackaging);
+                            if (z.type && z.type == 'C') {
+                                if (z.secondaryPackaging) {
+                                    arrClinicalSecondaryPackagings.push(z.secondaryPackaging);
+                                }
+                            } else {
+                                if (z.secondaryPackaging) {
+                                    arrSecondaryPackagings.push(z.secondaryPackaging);
+                                }
                             }
                         }
                         this.eForm.get('secondaryPackaging').setValue(arrSecondaryPackagings);
+                        this.eForm.get('clinicalSecondaryPackaging').setValue(arrClinicalSecondaryPackagings);
                     }
                 },
                 error => console.log(error)
@@ -711,14 +868,24 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     this.testsForQualityControls = data;
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].testsForQualityControl) {
                         const arrTestsForQualityControl: any[] = [];
+                        const arrClinicalTestsForQualityControl: any[] = [];
                         for (const z of dataDB.gmpAuthorizations[0].testsForQualityControl) {
-                            if (z.testQualityControl) {
-                                arrTestsForQualityControl.push(z.testQualityControl);
+                            if (z.type && z.type == 'C') {
+                                if (z.testQualityControl) {
+                                    arrClinicalTestsForQualityControl.push(z.testQualityControl);
+                                } else {
+                                    this.otherClinicalTestsForQualityControl.push({description: z.description});
+                                }
                             } else {
-                                this.otherTestsForQualityControl.push({description: z.description});
+                                if (z.testQualityControl) {
+                                    arrTestsForQualityControl.push(z.testQualityControl);
+                                } else {
+                                    this.otherTestsForQualityControl.push({description: z.description});
+                                }
                             }
                         }
                         this.eForm.get('testsForQualityControl').setValue(arrTestsForQualityControl);
+                        this.eForm.get('clinicalTestsForQualityControl').setValue(arrClinicalTestsForQualityControl);
                     }
                     if (dataDB.gmpAuthorizations && dataDB.gmpAuthorizations.length != 0 && dataDB.gmpAuthorizations[0].testsForQualityControlImport) {
                         const arrTestsForQualityControl: any[] = [];
@@ -943,7 +1110,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         const gmpAuthorization = {
             id: this.eForm.get('gmpID').value,
             status: 'P',
-            cause : this.eForm.get('cause').value,
+            cause: this.eForm.get('cause').value,
             company: this.eForm.get('company').value,
             sterileProducts: [],
             neSterileProducts: [],
@@ -984,82 +1151,157 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         // produse sterile
         if (this.eForm.get('asepticPreparationsValues').value) {
             for (const w of this.eForm.get('asepticPreparationsValues').value) {
-                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'P'});
+                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'P', type: 'U'});
             }
         }
         if (this.otherAsepticPreparations.length != 0) {
             for (const w of this.otherAsepticPreparations) {
-                gmpAuthorization.sterileProducts.push({description: w.description, category: 'P'});
+                gmpAuthorization.sterileProducts.push({description: w.description, category: 'P', type: 'U'});
             }
         }
+
+        if (this.eForm.get('clinicalAsepticPreparationsValues').value) {
+            for (const w of this.eForm.get('clinicalAsepticPreparationsValues').value) {
+                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'P', type: 'C'});
+            }
+        }
+        if (this.otherClinicalAsepticPreparations.length != 0) {
+            for (const w of this.otherClinicalAsepticPreparations) {
+                gmpAuthorization.sterileProducts.push({description: w.description, category: 'P', type: 'C'});
+            }
+        }
+
         if (this.eForm.get('finalSterilizedValues').value) {
             for (const w of this.eForm.get('finalSterilizedValues').value) {
-                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'S'});
+                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'S', type: 'U'});
             }
         }
         if (this.otherFinalSterilized.length != 0) {
             for (const w of this.otherFinalSterilized) {
-                gmpAuthorization.sterileProducts.push({description: w.description, category: 'S'});
+                gmpAuthorization.sterileProducts.push({description: w.description, category: 'S', type: 'U'});
             }
         }
+
+        if (this.eForm.get('clinicalFinalSterilizedValues').value) {
+            for (const w of this.eForm.get('clinicalFinalSterilizedValues').value) {
+                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'S', type: 'C'});
+            }
+        }
+        if (this.otherClinicalFinalSterilized.length != 0) {
+            for (const w of this.otherClinicalFinalSterilized) {
+                gmpAuthorization.sterileProducts.push({description: w.description, category: 'S', type: 'C'});
+            }
+        }
+
         if (this.eForm.get('sterileCertifiedsValues').value) {
             for (const w of this.eForm.get('sterileCertifiedsValues').value) {
-                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'C'});
+                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'C', type: 'U'});
             }
         }
         if (this.otherSterileCertifieds.length != 0) {
             for (const w of this.otherSterileCertifieds) {
-                gmpAuthorization.sterileProducts.push({description: w.description, category: 'C'});
+                gmpAuthorization.sterileProducts.push({description: w.description, category: 'C', type: 'U'});
             }
         }
 
-        if (this.eForm.get('finalSterilizedValues').value) {
-            for (const w of this.eForm.get('finalSterilizedValues').value) {
-                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'S'});
+        if (this.eForm.get('clinicalSterileCertifiedsValues').value) {
+            for (const w of this.eForm.get('clinicalSterileCertifiedsValues').value) {
+                gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'C', type: 'C'});
             }
         }
+        if (this.otherClinicalSterileCertifieds.length != 0) {
+            for (const w of this.otherClinicalSterileCertifieds) {
+                gmpAuthorization.sterileProducts.push({description: w.description, category: 'C', type: 'C'});
+            }
+        }
+
+        // if (this.eForm.get('finalSterilizedValues').value) {
+        //     for (const w of this.eForm.get('finalSterilizedValues').value) {
+        //         gmpAuthorization.sterileProducts.push({sterileProduct: w, category: 'S'});
+        //     }
+        // }
 
         // produse nesterile
         if (this.eForm.get('nesterilePreparationsValues').value) {
             for (const w of this.eForm.get('nesterilePreparationsValues').value) {
-                gmpAuthorization.neSterileProducts.push({nesterileProduct: w, category: 'N'});
+                gmpAuthorization.neSterileProducts.push({nesterileProduct: w, category: 'N', type: 'U'});
             }
         }
         if (this.otherNesterilePreparations.length != 0) {
             for (const w of this.otherNesterilePreparations) {
-                gmpAuthorization.neSterileProducts.push({description: w.description, category: 'N'});
+                gmpAuthorization.neSterileProducts.push({description: w.description, category: 'N', type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalNesterilePreparationsValues').value) {
+            for (const w of this.eForm.get('clinicalNesterilePreparationsValues').value) {
+                gmpAuthorization.neSterileProducts.push({nesterileProduct: w, category: 'N', type: 'C'});
+            }
+        }
+        if (this.otherClinicalNesterilePreparations.length != 0) {
+            for (const w of this.otherClinicalNesterilePreparations) {
+                gmpAuthorization.neSterileProducts.push({description: w.description, category: 'N', type: 'C'});
             }
         }
         if (this.eForm.get('nesterilePreparationsCertifiedValues').value) {
             for (const w of this.eForm.get('nesterilePreparationsCertifiedValues').value) {
-                gmpAuthorization.neSterileProducts.push({nesterileProduct: w, category: 'C'});
+                gmpAuthorization.neSterileProducts.push({nesterileProduct: w, category: 'C', type: 'U'});
             }
         }
         if (this.otherNesterilePreparationsCertified.length != 0) {
             for (const w of this.otherNesterilePreparationsCertified) {
-                gmpAuthorization.neSterileProducts.push({description: w.description, category: 'C'});
+                gmpAuthorization.neSterileProducts.push({description: w.description, category: 'C', type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalNesterilePreparationsCertifiedValues').value) {
+            for (const w of this.eForm.get('clinicalNesterilePreparationsCertifiedValues').value) {
+                gmpAuthorization.neSterileProducts.push({nesterileProduct: w, category: 'C', type: 'C'});
+            }
+        }
+        if (this.otherClinicalNesterilePreparationsCertified.length != 0) {
+            for (const w of this.otherClinicalNesterilePreparationsCertified) {
+                gmpAuthorization.neSterileProducts.push({description: w.description, category: 'C', type: 'C'});
             }
         }
 
         // medicamente biologice
         if (this.eForm.get('biologicalMedicinesValues').value) {
             for (const w of this.eForm.get('biologicalMedicinesValues').value) {
-                gmpAuthorization.biologicalMedicines.push({biologicalMedicine: w, category: 'B'});
+                gmpAuthorization.biologicalMedicines.push({biologicalMedicine: w, category: 'B', type: 'U'});
             }
         }
         if (this.otherBiologicalMedicines.length != 0) {
             for (const w of this.otherBiologicalMedicines) {
-                gmpAuthorization.biologicalMedicines.push({description: w.description, category: 'B'});
+                gmpAuthorization.biologicalMedicines.push({description: w.description, category: 'B', type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalBiologicalMedicinesValues').value) {
+            for (const w of this.eForm.get('clinicalBiologicalMedicinesValues').value) {
+                gmpAuthorization.biologicalMedicines.push({biologicalMedicine: w, category: 'B', type: 'C'});
+            }
+        }
+        if (this.otherClinicalBiologicalMedicines.length != 0) {
+            for (const w of this.otherClinicalBiologicalMedicines) {
+                gmpAuthorization.biologicalMedicines.push({description: w.description, category: 'B', type: 'C'});
             }
         }
         if (this.eForm.get('biologicalMedicinesCertifiedValues').value) {
             for (const w of this.eForm.get('biologicalMedicinesCertifiedValues').value) {
-                gmpAuthorization.biologicalMedicines.push({biologicalMedicine: w, category: 'C'});
+                gmpAuthorization.biologicalMedicines.push({biologicalMedicine: w, category: 'C', type: 'U'});
             }
         }
         if (this.otherBiologicalMedicinesCertified.length != 0) {
             for (const w of this.otherBiologicalMedicinesCertified) {
-                gmpAuthorization.biologicalMedicines.push({description: w.description, category: 'C'});
+                gmpAuthorization.biologicalMedicines.push({description: w.description, category: 'C', type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalBiologicalMedicinesCertifiedValues').value) {
+            for (const w of this.eForm.get('clinicalBiologicalMedicinesCertifiedValues').value) {
+                gmpAuthorization.biologicalMedicines.push({biologicalMedicine: w, category: 'C', type: 'C'});
+            }
+        }
+        if (this.otherClinicalBiologicalMedicinesCertified.length != 0) {
+            for (const w of this.otherClinicalBiologicalMedicinesCertified) {
+                gmpAuthorization.biologicalMedicines.push({description: w.description, category: 'C', type: 'C'});
             }
         }
 
@@ -1078,29 +1320,54 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         // fabricatii
         if (this.eForm.get('production').value) {
             for (const w of this.eForm.get('production').value) {
-                gmpAuthorization.manufactures.push({manufacture: w, category: 'P'});
+                gmpAuthorization.manufactures.push({manufacture: w, category: 'P', type: 'U'});
             }
         }
         if (this.otherProductions.length != 0) {
             for (const w of this.otherProductions) {
-                gmpAuthorization.manufactures.push({description: w.description, category: 'O'});
+                gmpAuthorization.manufactures.push({description: w.description, category: 'O', type: 'U'});
             }
         }
         if (this.otherPreparationsOrProductions.length != 0) {
             for (const w of this.otherPreparationsOrProductions) {
-                gmpAuthorization.manufactures.push({description: w.description, category: 'OP'});
+                gmpAuthorization.manufactures.push({description: w.description, category: 'OP', type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalProduction').value) {
+            for (const w of this.eForm.get('clinicalProduction').value) {
+                gmpAuthorization.manufactures.push({manufacture: w, category: 'P', type: 'C'});
+            }
+        }
+        if (this.otherClinicalProductions.length != 0) {
+            for (const w of this.otherClinicalProductions) {
+                gmpAuthorization.manufactures.push({description: w.description, category: 'O', type: 'C'});
+            }
+        }
+        if (this.otherClinicalPreparationsOrProductions.length != 0) {
+            for (const w of this.otherClinicalPreparationsOrProductions) {
+                gmpAuthorization.manufactures.push({description: w.description, category: 'OP', type: 'C'});
             }
         }
 
         // sterilizari
         if (this.eForm.get('sterilization').value) {
             for (const w of this.eForm.get('sterilization').value) {
-                gmpAuthorization.sterilizations.push({sterilization: w});
+                gmpAuthorization.sterilizations.push({sterilization: w, type: 'U'});
             }
         }
         if (this.otherSterilizations.length != 0) {
             for (const w of this.otherSterilizations) {
-                gmpAuthorization.sterilizations.push({description: w.description});
+                gmpAuthorization.sterilizations.push({description: w.description, type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalSterilization').value) {
+            for (const w of this.eForm.get('clinicalSterilization').value) {
+                gmpAuthorization.sterilizations.push({sterilization: w, type: 'C'});
+            }
+        }
+        if (this.otherClinicalSterilizations.length != 0) {
+            for (const w of this.otherClinicalSterilizations) {
+                gmpAuthorization.sterilizations.push({description: w.description, type: 'C'});
             }
         }
 
@@ -1119,25 +1386,46 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         // ambalare primara
         if (this.eForm.get('primaryPackaging').value) {
             for (const w of this.eForm.get('primaryPackaging').value) {
-                gmpAuthorization.primaryPackagings.push({primaryPackaging: w});
+                gmpAuthorization.primaryPackagings.push({primaryPackaging: w, type: 'U'});
             }
         }
         if (this.otherPrimaryPackagings.length != 0) {
             for (const w of this.otherPrimaryPackagings) {
-                gmpAuthorization.primaryPackagings.push({description: w.description});
+                gmpAuthorization.primaryPackagings.push({description: w.description, type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalPrimaryPackaging').value) {
+            for (const w of this.eForm.get('clinicalPrimaryPackaging').value) {
+                gmpAuthorization.primaryPackagings.push({primaryPackaging: w, type: 'C'});
+            }
+        }
+        if (this.otherClinicalPrimaryPackagings.length != 0) {
+            for (const w of this.otherClinicalPrimaryPackagings) {
+                gmpAuthorization.primaryPackagings.push({description: w.description, type: 'C'});
             }
         }
         // ambalare secundara
         if (this.eForm.get('secondaryPackaging').value) {
             for (const w of this.eForm.get('secondaryPackaging').value) {
-                gmpAuthorization.secondaryPackagings.push({secondaryPackaging: w});
+                gmpAuthorization.secondaryPackagings.push({secondaryPackaging: w, type: 'U'});
             }
         }
+        if (this.eForm.get('clinicalSecondaryPackaging').value) {
+            for (const w of this.eForm.get('clinicalSecondaryPackaging').value) {
+                gmpAuthorization.secondaryPackagings.push({secondaryPackaging: w, type: 'C'});
+            }
+        }
+
 
         // teste pentru controlul calitatii
         if (this.eForm.get('testsForQualityControl').value) {
             for (const w of this.eForm.get('testsForQualityControl').value) {
-                gmpAuthorization.testsForQualityControl.push({testQualityControl: w});
+                gmpAuthorization.testsForQualityControl.push({testQualityControl: w, type: 'U'});
+            }
+        }
+        if (this.eForm.get('clinicalTestsForQualityControl').value) {
+            for (const w of this.eForm.get('clinicalTestsForQualityControl').value) {
+                gmpAuthorization.testsForQualityControl.push({testQualityControl: w, type: 'C'});
             }
         }
         if (this.eForm.get('testsForQualityControlImport').value) {
@@ -1147,7 +1435,12 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         }
         if (this.otherTestsForQualityControl.length != 0) {
             for (const w of this.otherTestsForQualityControl) {
-                gmpAuthorization.testsForQualityControl.push({description: w.description});
+                gmpAuthorization.testsForQualityControl.push({description: w.description, type: 'U'});
+            }
+        }
+        if (this.otherClinicalTestsForQualityControl.length != 0) {
+            for (const w of this.otherClinicalTestsForQualityControl) {
+                gmpAuthorization.testsForQualityControl.push({description: w.description, type: 'C'});
             }
         }
 
@@ -1420,10 +1713,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeAsepticPreparation(index
-                                 :
-                                 number
-    ) {
+    addClinicalAsepticPreparation() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Preparat aseptic',
+            errMsg: 'Preparatul trebuie introdus',
+            title: 'Adaugare preparat aseptic'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalAsepticPreparations.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeAsepticPreparation(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast preparat?',
@@ -1434,6 +1750,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherAsepticPreparations.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalAsepticPreparation(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast preparat?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalAsepticPreparations.splice(index, 1);
             }
         });
     }
@@ -1464,10 +1795,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeFinalSterilized(index
-                              :
-                              number
-    ) {
+    addClinicalFinalSterilized() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Produs sterilizat final ',
+            errMsg: 'Produsul trebuie introdus',
+            title: 'Adaugare produs sterilizat final'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalFinalSterilized.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeFinalSterilized(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
@@ -1478,6 +1832,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherFinalSterilized.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalFinalSterilized(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalFinalSterilized.splice(index, 1);
             }
         });
     }
@@ -1508,10 +1877,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeOtherSterileCertified(index
-                                    :
-                                    number
-    ) {
+    addClinicalSterileCertified() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Produs sterilizat',
+            errMsg: 'Produsul trebuie introdus',
+            title: 'Adaugare produs sterilizat'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalSterileCertifieds.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeOtherSterileCertified(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
@@ -1522,6 +1914,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherSterileCertifieds.splice(index, 1);
+            }
+        });
+    }
+
+    removeOtherClinicalSterileCertified(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalSterileCertifieds.splice(index, 1);
             }
         });
     }
@@ -1552,10 +1959,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeNesterileProducts(index
-                                :
-                                number
-    ) {
+    addClinicalNesterileProducts() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Produs nesterilizat',
+            errMsg: 'Produsul trebuie introdus',
+            title: 'Adaugare produs nesterilizat'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalNesterilePreparations.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeNesterileProducts(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
@@ -1566,6 +1996,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherNesterilePreparations.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalNesterileProducts(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalNesterilePreparations.splice(index, 1);
             }
         });
     }
@@ -1596,10 +2041,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeNesterilePreparationsCertified(index
-                                             :
-                                             number
-    ) {
+    addClinicalNesterilePreparationsCertified() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Produs nesterilizat',
+            errMsg: 'Produsul trebuie introdus',
+            title: 'Adaugare produs nesterilizat'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalNesterilePreparationsCertified.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeNesterilePreparationsCertified(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
@@ -1610,6 +2078,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherNesterilePreparationsCertified.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalNesterilePreparationsCertified(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast produs?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalNesterilePreparationsCertified.splice(index, 1);
             }
         });
     }
@@ -1681,10 +2164,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeBiologicalMedicines(index
-                                  :
-                                  number
-    ) {
+    addClinicalBiologicalMedicines() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Medicament biologic',
+            errMsg: 'Medicamentul biologic trebuie introdus',
+            title: 'Adaugare medicament biologic'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalBiologicalMedicines.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeBiologicalMedicines(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast medicament?',
@@ -1695,6 +2201,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherBiologicalMedicines.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalBiologicalMedicines(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast medicament?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalBiologicalMedicines.splice(index, 1);
             }
         });
     }
@@ -1766,10 +2287,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeBiologicalMedicinesCertified(index
-                                           :
-                                           number
-    ) {
+    addClinicalBiologicalMedicinesCertified() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Medicament biologic',
+            errMsg: 'Medicamentul biologic trebuie introdus',
+            title: 'Adaugare medicament biologic'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalBiologicalMedicinesCertified.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeBiologicalMedicinesCertified(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast medicament?',
@@ -1780,6 +2324,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherBiologicalMedicinesCertified.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalBiologicalMedicinesCertified(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast medicament?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalBiologicalMedicinesCertified.splice(index, 1);
             }
         });
     }
@@ -1810,10 +2369,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeProduction(index
-                         :
-                         number
-    ) {
+    addClinicalProduction() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Fabricatie',
+            errMsg: 'Fabricatia trebuie introdusa',
+            title: 'Adaugare fabricatie'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalProductions.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeProduction(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceasta fabricatie?',
@@ -1824,6 +2406,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherProductions.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalProduction(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceasta fabricatie?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalProductions.splice(index, 1);
             }
         });
     }
@@ -1854,10 +2451,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeSterilization(index
-                            :
-                            number
-    ) {
+    addClinicalSterilization() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Sterilizare',
+            errMsg: 'Sterilizarea trebuie introdusa',
+            title: 'Adaugare sterilizare'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalSterilizations.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeSterilization(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceasta sterilizare?',
@@ -1868,6 +2488,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherSterilizations.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalSterilization(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceasta sterilizare?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalSterilizations.splice(index, 1);
             }
         });
     }
@@ -1898,10 +2533,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removePreparationsOrProductions(index
-                                        :
-                                        number
-    ) {
+    addClinicalPreparationsOrProductions() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Alte produse sau activităţi de fabricaţie',
+            errMsg: 'Produsul sau activitatea de fabricatie trebuie introdusa',
+            title: 'Alte produse sau activităţi de fabricaţie'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalPreparationsOrProductions.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removePreparationsOrProductions(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast produs/fabricaţie?',
@@ -1912,6 +2570,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherPreparationsOrProductions.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalPreparationsOrProductions(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast produs/fabricaţie?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalPreparationsOrProductions.splice(index, 1);
             }
         });
     }
@@ -1942,10 +2615,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removePrimaryPackaging(index
-                               :
-                               number
-    ) {
+    addClinicalPrimaryPackaging() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Ambalare primară',
+            errMsg: 'Ambalarea primară trebuie introdusa',
+            title: 'Adaugare ambalare primară'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalPrimaryPackagings.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removePrimaryPackaging(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceasta ambalare?',
@@ -1959,6 +2655,22 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             }
         });
     }
+
+    removeClinicalPrimaryPackaging(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceasta ambalare?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalPrimaryPackagings.splice(index, 1);
+            }
+        });
+    }
+
 
     addTestsForQualityControl() {
         const dialogConfig2 = new MatDialogConfig();
@@ -1986,10 +2698,33 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         );
     }
 
-    removeTestsForQualityControl(index
-                                     :
-                                     number
-    ) {
+    addClinicalTestsForQualityControl() {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {
+            name: 'Teste pentru controlul calităţii',
+            errMsg: 'Testul trebuie introdus',
+            title: 'Adaugare teste pentru controlul calităţii'
+        };
+
+        const dialogRef = this.dialog.open(AddDescriptionComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+                if (result && result.response) {
+                    this.otherClinicalTestsForQualityControl.push({
+                        description: result.description
+                    });
+                }
+            }
+        );
+    }
+
+    removeTestsForQualityControl(index: number) {
         const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur ca doriti sa stergeti aceast test?',
@@ -2000,6 +2735,21 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 this.otherTestsForQualityControl.splice(index, 1);
+            }
+        });
+    }
+
+    removeClinicalTestsForQualityControl(index: number) {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data: {
+                message: 'Sunteti sigur ca doriti sa stergeti aceast test?',
+                confirm: false
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.otherClinicalTestsForQualityControl.splice(index, 1);
             }
         });
     }
@@ -2718,18 +3468,31 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             responsiblePersons: [],
             qualityControlPersons: [],
             preparateAseptic: [],
+            preparateAsepticMedicamenteClinice: [],
             sterilizateFinal: [],
+            sterilizateFinalMedicamenteClinice: [],
             certificareaSeriei: [],
+            certificareaSerieiMedicamenteClinice: [],
             produseNesterile: [],
+            produseNesterileMedicamenteClinice: [],
             produseNesterileNumaiCertificareaSeriei: [],
+            produseNesterileNumaiCertificareaSerieiMedicamenteClinice: [],
             medicamenteBiologice: [],
+            medicamenteBiologiceMedicamenteClinice: [],
             medicamenteBiologiceNumaiCertificareaSeriei: [],
+            medicamenteBiologiceNumaiCertificareaSerieiMedicamenteClinice: [],
             manufactures: [],
+            manufacturesMedicamenteClinice: [],
             substanceSterilization: [],
+            substanceSterilizationMedicamenteClinice: [],
             otherManufactures: [],
+            otherManufacturesMedicamenteClinice: [],
             ambalarePrimara: [],
+            ambalarePrimaraMedicamenteClinice: [],
             ambalareSecundara: [],
+            ambalareSecundaraMedicamenteClinice: [],
             qualityControlTests: [],
+            qualityControlTestsMedicamenteClinice: [],
             inspectionDate: result.inspectionDate,
             aplicationDomainOfLastInspection: result.aplicationDomainOfLastInspection,
             certificateNr: '',
@@ -2769,6 +3532,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 valueEn: t.descriptionEn
             }));
         }
+        if (this.eForm.get('clinicalAsepticPreparationsValues').value) {
+            this.eForm.get('clinicalAsepticPreparationsValues').value.forEach(t => model.preparateAsepticMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalAsepticPreparations) {
+            this.otherClinicalAsepticPreparations.forEach(t => model.preparateAsepticMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
         if (this.eForm.get('finalSterilizedValues').value) {
             this.eForm.get('finalSterilizedValues').value.forEach(t => model.sterilizateFinal.push({
                 value: t.description,
@@ -2777,6 +3552,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         }
         if (this.otherFinalSterilized) {
             this.otherFinalSterilized.forEach(t => model.sterilizateFinal.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('clinicalFinalSterilizedValues').value) {
+            this.eForm.get('clinicalFinalSterilizedValues').value.forEach(t => model.sterilizateFinalMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalFinalSterilized) {
+            this.otherClinicalFinalSterilized.forEach(t => model.sterilizateFinalMedicamenteClinice.push({
                 value: t.description,
                 valueEn: t.descriptionEn
             }));
@@ -2793,6 +3580,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 valueEn: t.descriptionEn
             }));
         }
+        if (this.eForm.get('clinicalSterileCertifiedsValues').value) {
+            this.eForm.get('clinicalSterileCertifiedsValues').value.forEach(t => model.certificareaSerieiMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalSterileCertifieds) {
+            this.otherClinicalSterileCertifieds.forEach(t => model.certificareaSerieiMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
         if (this.eForm.get('nesterilePreparationsValues').value) {
             this.eForm.get('nesterilePreparationsValues').value.forEach(t => model.produseNesterile.push({
                 value: t.description,
@@ -2801,6 +3600,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         }
         if (this.otherNesterilePreparations) {
             this.otherNesterilePreparations.forEach(t => model.produseNesterile.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('clinicalNesterilePreparationsValues').value) {
+            this.eForm.get('clinicalNesterilePreparationsValues').value.forEach(t => model.produseNesterileMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalNesterilePreparations) {
+            this.otherClinicalNesterilePreparations.forEach(t => model.produseNesterileMedicamenteClinice.push({
                 value: t.description,
                 valueEn: t.descriptionEn
             }));
@@ -2817,6 +3628,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 valueEn: t.descriptionEn
             }));
         }
+        if (this.eForm.get('clinicalNesterilePreparationsCertifiedValues').value) {
+            this.eForm.get('clinicalNesterilePreparationsCertifiedValues').value.forEach(t => model.produseNesterileNumaiCertificareaSerieiMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalNesterilePreparationsCertified) {
+            this.otherClinicalNesterilePreparationsCertified.forEach(t => model.produseNesterileNumaiCertificareaSerieiMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
         if (this.eForm.get('biologicalMedicinesValues').value) {
             this.eForm.get('biologicalMedicinesValues').value.forEach(t => model.medicamenteBiologice.push({
                 value: t.description,
@@ -2825,6 +3648,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         }
         if (this.otherBiologicalMedicines) {
             this.otherBiologicalMedicines.forEach(t => model.medicamenteBiologice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('clinicalBiologicalMedicinesValues').value) {
+            this.eForm.get('clinicalBiologicalMedicinesValues').value.forEach(t => model.medicamenteBiologiceMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalBiologicalMedicines) {
+            this.otherClinicalBiologicalMedicines.forEach(t => model.medicamenteBiologiceMedicamenteClinice.push({
                 value: t.description,
                 valueEn: t.descriptionEn
             }));
@@ -2841,6 +3676,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 valueEn: t.descriptionEn
             }));
         }
+        if (this.eForm.get('clinicalBiologicalMedicinesCertifiedValues').value) {
+            this.eForm.get('clinicalBiologicalMedicinesCertifiedValues').value.forEach(t => model.medicamenteBiologiceNumaiCertificareaSerieiMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalBiologicalMedicinesCertified) {
+            this.otherClinicalBiologicalMedicinesCertified.forEach(t => model.medicamenteBiologiceNumaiCertificareaSerieiMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
         if (this.eForm.get('production').value) {
             this.eForm.get('production').value.forEach(t => model.manufactures.push({
                 value: t.description,
@@ -2849,6 +3696,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         }
         if (this.otherProductions) {
             this.otherProductions.forEach(t => model.manufactures.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('clinicalProduction').value) {
+            this.eForm.get('clinicalProduction').value.forEach(t => model.manufacturesMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalProductions) {
+            this.otherClinicalProductions.forEach(t => model.manufacturesMedicamenteClinice.push({
                 value: t.description,
                 valueEn: t.descriptionEn
             }));
@@ -2865,8 +3724,26 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 valueEn: t.descriptionEn
             }));
         }
+        if (this.eForm.get('clinicalSterilization').value) {
+            this.eForm.get('clinicalSterilization').value.forEach(t => model.substanceSterilizationMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalSterilizations) {
+            this.otherClinicalSterilizations.forEach(t => model.substanceSterilizationMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
         if (this.otherPreparationsOrProductions) {
             this.otherPreparationsOrProductions.forEach(t => model.otherManufactures.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalPreparationsOrProductions) {
+            this.otherClinicalPreparationsOrProductions.forEach(t => model.otherManufacturesMedicamenteClinice.push({
                 value: t.description,
                 valueEn: t.descriptionEn
             }));
@@ -2883,8 +3760,26 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 valueEn: t.descriptionEn
             }));
         }
+        if (this.eForm.get('clinicalPrimaryPackaging').value) {
+            this.eForm.get('clinicalPrimaryPackaging').value.forEach(t => model.ambalarePrimaraMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalPrimaryPackagings) {
+            this.otherClinicalPrimaryPackagings.forEach(t => model.ambalarePrimaraMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
         if (this.eForm.get('secondaryPackaging').value) {
             this.eForm.get('secondaryPackaging').value.forEach(t => model.ambalareSecundara.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('clinicalSecondaryPackaging').value) {
+            this.eForm.get('clinicalSecondaryPackaging').value.forEach(t => model.ambalareSecundaraMedicamenteClinice.push({
                 value: t.description,
                 valueEn: t.descriptionEn
             }));
@@ -2897,6 +3792,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         }
         if (this.otherTestsForQualityControl) {
             this.otherTestsForQualityControl.forEach(t => model.qualityControlTests.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.eForm.get('clinicalTestsForQualityControl').value) {
+            this.eForm.get('clinicalTestsForQualityControl').value.forEach(t => model.qualityControlTestsMedicamenteClinice.push({
+                value: t.description,
+                valueEn: t.descriptionEn
+            }));
+        }
+        if (this.otherClinicalTestsForQualityControl) {
+            this.otherClinicalTestsForQualityControl.forEach(t => model.qualityControlTestsMedicamenteClinice.push({
                 value: t.description,
                 valueEn: t.descriptionEn
             }));

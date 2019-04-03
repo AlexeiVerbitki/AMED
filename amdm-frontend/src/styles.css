@@ -167,6 +167,8 @@ footer {
     width : 450px;
 }
 
+.mat-typography{font:300 14px/28px Roboto,"Helvetica Neue",sans-serif}
+
 .table-widths-all {
     display                    : block;
     width                      : 100%;

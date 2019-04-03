@@ -19,4 +19,7 @@ public class GMPTestsForQualityControlEntity
     @Basic
     @Column(name = "description")
     private String description;
+    @Basic
+    @Column(name = "type")
+    private String type;
 }

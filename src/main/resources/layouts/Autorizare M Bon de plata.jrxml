@@ -134,8 +134,9 @@ Fax. +373 22 737000; 737002;]]></text>
 					<jr:column width="39" uuid="0986ca19-dbb1-4b86-bda0-3736a19fc951">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="39" height="30" uuid="4166b481-70be-448f-8347-b71ade8eb712"/>
+								<box leftPadding="1"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -146,8 +147,9 @@ Fax. +373 22 737000; 737002;]]></text>
 					<jr:column width="139" uuid="1b44ebb2-7b71-4c9b-a304-3874259c9461">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="139" height="30" uuid="c20cb948-542d-4753-b659-1fec9c15ed84"/>
+								<box leftPadding="1"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -158,8 +160,9 @@ Fax. +373 22 737000; 737002;]]></text>
 					<jr:column width="89" uuid="1a54ac0a-aee3-41e5-9c66-99e43b014865">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="89" height="30" uuid="9634efdf-42a7-4433-b479-ec61fedd6980"/>
+								<box leftPadding="1"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -170,8 +173,9 @@ Fax. +373 22 737000; 737002;]]></text>
 					<jr:column width="88" uuid="b1bf6f1a-5523-443b-9842-818bd32385cc">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="88" height="30" uuid="c05e843b-7de1-440f-93b1-8fd6ae7eb9e5"/>
+								<box leftPadding="1"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -182,8 +186,9 @@ Fax. +373 22 737000; 737002;]]></text>
 					<jr:column width="88" uuid="c19c2ab8-24e4-4933-b323-9d0ba0956eda">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="88" height="30" uuid="0f50c652-a34b-4c42-8b40-b63f33f22eba"/>
+								<box leftPadding="1"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>
@@ -194,8 +199,9 @@ Fax. +373 22 737000; 737002;]]></text>
 					<jr:column width="88" uuid="4a497717-de4b-4729-b2a1-084b0f50d129">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="88" height="30" uuid="9812bee4-0a52-4489-99e9-6c92e7f8b257"/>
+								<box leftPadding="1"/>
 								<textElement textAlignment="Left">
 									<font fontName="DejaVu Sans" size="10"/>
 								</textElement>

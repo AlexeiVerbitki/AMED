@@ -77,17 +77,6 @@
             </div>
         </div>
         <div class="row">
-            <!--<div class="col-md-3">-->
-            <!--<div class="md-form-modified">-->
-            <!--<mat-form-field class="w-100">-->
-            <!--<input matInput [matDatepicker]="picker1"-->
-            <!--placeholder="Data deschidere studiul clinic international"-->
-            <!--formControlName="startDateInternational">-->
-            <!--<mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>-->
-            <!--<mat-datepicker touchUi #picker1></mat-datepicker>-->
-            <!--</mat-form-field>-->
-            <!--</div>-->
-            <!--</div>-->
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
@@ -263,160 +252,114 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-        </div>
-
-        <h3 class="text-center font-weight-bold">MIC Testat</h3>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="medicament" class="form-control" mdbInputDirective
-                           value="{{f.value.medicament?.name}}" disabled="true">
-                    <label for="medicament">Nume</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="manufacturer" class="form-control" mdbInputDirective
-                           value="{{f.value.medicament?.manufacture?.description}}" disabled="true">
-                    <label for="manufacturer">Producator</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="adminMode" class="form-control" mdbInputDirective
-                           value="{{f.value.medicament?.administratingMode}}" disabled="true">
-                    <label for="adminMode">Calea de administrare</label>
-                </div>
             </div>
         </div>
+
+        <br>
+        <h3 class="text-center font-weight-bold">Lista medicamente</h3>
         <div class="gradient-card-header bg-sidebar border-gradient">
             <div class="container-fluid">
                 <!-- Title -->
                 <div class="row">
-                    <div class="col-12">
-                        <div class="card-header-title white-text">Substanţe active</div>
+                    <div class="col">
+                        <div class="card-header-title white-text">MIC Testat</div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Card content -->
+        <!-- Card header -->
         <div class="card-body card-body-cascade">
-            <table class="table table-widths text-center">
-                <thead class="bg-sidebar white-text">
-                <tr>
-                    <th scope="col">Denumire</th>
-                    <th scope="col">Cod CAS</th>
-                    <th scope="col">Concentratie</th>
-                    <th scope="col">Unitate de masură</th>
-                    <th scope="col">Producător</th>
-                    <th scope="col">Ţară producător</th>
-                    <th scope="col">Adresă producător</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let substance of f.value.medicament?.activeSubstances;let i = index">
-                    <th scope="row">{{ substance.activeSubstance.description }}</th>
-                    <td>{{ substance.activeSubstance.code }}</td>
-                    <td>{{ substance.quantity }}</td>
-                    <td>{{ substance.unitsOfMeasurement.description }}</td>
-                    <td>{{ substance.manufacture.description }}</td>
-                    <td>{{ substance.manufacture.country.description }}</td>
-                    <td>{{ substance.manufacture.address }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="container-fluid">
+                <div class="row bg-sidebar white-text text-center">
+                    <div class="col">Nume</div>
+                    <div class="col">Producătorul</div>
+                    <div class="col">Concentrație</div>
+                    <div class="col">Forma farmaceutică</div>
+                    <div class="col">Grupa farmacoterapeutică</div>
+                    <div class="col">Populaţie subiecţi SC</div>
+                    <div class="col">Calea de administrare</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card content -->
+        <div class="container-fluid">
+            <div class="row text-center align-items-center"
+                 *ngFor="let medicament of f.value.medicaments; let i = index">
+                <div class="col">{{medicament.name}}</div>
+                <div class="col">{{medicament.manufacture.description}}</div>
+                <div class="col">{{medicament.dose}}</div>
+                <div class="col">{{medicament.pharmaceuticalForm?.description}}</div>
+                <div class="col">{{medicament.atcCode?.description}}</div>
+                <div class="col">{{medicament.subjectsSC}}</div>
+                <div class="col">{{medicament.administratingMode}}</div>
+            </div>
         </div>
         <hr>
 
-
-        <h3 class="text-center font-weight-bold">MIC Referință</h3>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="medicamentRef" class="form-control" mdbInputDirective
-                           value="{{f.value.referenceProduct?.name}}" disabled="true">
-                    <label for="medicamentRef">Nume</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="manufacturerRef" class="form-control" mdbInputDirective
-                           value="{{f.value.referenceProduct?.manufacture?.description}}" disabled="true">
-                    <label for="manufacturerRef">Producator</label>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="adminModeRef" class="form-control" mdbInputDirective
-                           value="{{f.value.referenceProduct?.administratingMode}}" disabled="true">
-                    <label for="adminModeRef">Calea de administrare</label>
-                </div>
-            </div>
-        </div>
         <div class="gradient-card-header bg-sidebar border-gradient">
             <div class="container-fluid">
                 <!-- Title -->
                 <div class="row">
-                    <div class="col-12">
-                        <div class="card-header-title white-text">Substanţe active</div>
+                    <div class="col">
+                        <div class="card-header-title white-text">MIC Referință</div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Card content -->
+        <!-- Card header -->
         <div class="card-body card-body-cascade">
-            <table class="table table-widths text-center">
-                <thead class="bg-sidebar white-text">
-                <tr>
-                    <th scope="col">Denumire</th>
-                    <th scope="col">Cod CAS</th>
-                    <th scope="col">Concentratie</th>
-                    <th scope="col">Unitate de masură</th>
-                    <th scope="col">Producător</th>
-                    <th scope="col">Ţară producător</th>
-                    <th scope="col">Adresă producător</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let substance of f.value.referenceProduct?.activeSubstances;let i = index">
-                    <th scope="row">{{ substance.activeSubstance.description }}</th>
-                    <td>{{ substance.activeSubstance.code }}</td>
-                    <td>{{ substance.quantity }}</td>
-                    <td>{{ substance.unitsOfMeasurement.description }}</td>
-                    <td>{{ substance.manufacture.description }}</td>
-                    <td>{{ substance.manufacture.country.description }}</td>
-                    <td>{{ substance.manufacture.address }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="container-fluid">
+                <div class="row bg-sidebar white-text text-center">
+                    <div class="col">Nume</div>
+                    <div class="col">Producătorul</div>
+                    <div class="col">Concentrație</div>
+                    <div class="col">Forma farmaceutică</div>
+                    <div class="col">Grupa farmacoterapeutică</div>
+                    <div class="col">Calea de administrare</div>
+                </div>
+            </div>
+        </div>
+        <!-- Card content -->
+        <div class="container-fluid">
+            <div class="row text-center align-items-center"
+                 *ngFor="let refProduct of f.value.referenceProducts; let i = index">
+                <div class="col">{{refProduct.name}}</div>
+                <div class="col">{{refProduct.manufacture.description}}</div>
+                <div class="col">{{refProduct.dose}}</div>
+                <div class="col">{{refProduct.pharmaceuticalForm.description}}</div>
+                <div class="col">{{refProduct.atcCode?.description}}</div>
+                <div class="col">{{refProduct.administratingMode}}</div>
+            </div>
         </div>
         <hr>
 
-        <h3 class="text-center font-weight-bold">MIC Placebo</h3>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="placebo" class="form-control" mdbInputDirective
-                           value="{{f.value.placebo?.name}}" disabled="true">
-                    <label for="placebo">Nume</label>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col">
+                        <div class="card-header-title white-text">MIC Placebo</div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="dosePlacebo" class="form-control" mdbInputDirective
-                           value="{{f.value.placebo?.dose}}" disabled="true">
-                    <label for="dosePlacebo">Doza</label>
+        </div>
+        <!-- Card header -->
+        <div class="card-body card-body-cascade">
+            <div class="container-fluid">
+                <div class="row bg-sidebar white-text text-center">
+                    <div class="col">Nume</div>
+                    <div class="col">Producătorul</div>
+                    <div class="col">Forma farmaceutică</div>
+                    <div class="col">Calea de administrare</div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="md-form">
-                    <input type="text" id="adminModePlacebo" class="form-control" mdbInputDirective
-                           value="{{f.value.placebo?.administratingMode}}" disabled="true">
-                    <label for="adminModePlacebo">Calea de administrare</label>
-                </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row text-center align-items-center" *ngFor="let placebo of f.value.placebos; let i = index">
+                <div class="col">{{placebo.name}}</div>
+                <div class="col">{{placebo.manufacture.description}}</div>
+                <div class="col">{{placebo.pharmaceuticalForm.description}}</div>
+                <div class="col">{{placebo.administratingMode}}</div>
             </div>
         </div>
         <hr>

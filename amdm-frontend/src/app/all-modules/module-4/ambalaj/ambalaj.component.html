@@ -221,6 +221,7 @@
                         </div>
                     </div>
 
+
                     <div class="col-4">
                         <div class="md-form-modified">
                             <mat-form-field class="w-100">
@@ -238,6 +239,48 @@
 
                     <div class="col-md-4">
                         <div class="md-form">
+                            <input id="sgeapNumber" mdbInputDirective type="text" class="form-control"
+                                   formControlName="sgeapNumber">
+                            <label for="sgeapNumber">Numarul intrarii SGEAP</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input id="sgeapDate" matInput [matDatepicker]="picker4" [max]="maxDate"
+                                       placeholder="Data intrarii SGEAP" formControlName="sgeapDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker4></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4"
+                         *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==3">
+                        <div class="md-form">
+                            <input id="processVerbalNumber" mdbInputDirective type="text" class="form-control"
+                                   formControlName="processVerbalNumber">
+                            <label for="processVerbalNumber">Nr. procesului verbal
+                                <!--<span class="text-danger">*</span>-->
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-4" *ngIf="importData !== null && importData?.importAuthorizationEntity.medType==3">
+                        <div class="md-form-modified">
+                            <mat-form-field class="w-100">
+                                <input matInput [matDatepicker]="picker22" [max]="maxDate"
+                                       placeholder="Data procesului verbal"
+                                       formControlName="processVerbalDate">
+                                <mat-datepicker-toggle matSuffix [for]="picker22"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker22></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form">
                             <input id="conditionsAndSpecification" mdbInputDirective type="text" class="form-control"
                                    formControlName="conditionsAndSpecification">
                             <label for="conditionsAndSpecification">Altele
@@ -245,6 +288,8 @@
                             </label>
                         </div>
                     </div>
+
+
 
                     <!--<div class="col-md-4">-->
                     <!--<div class="md-form">-->

@@ -124,7 +124,8 @@ const interceptors = [{
     ],
     schemas: [],
     entryComponents: [
-        DivisionSelectDialogComponent,AddLaboratorStandardsComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent, MedicamentHistoryDialogComponent, SelectDocumentNumberComponent,
+        DivisionSelectDialogComponent, AddLaboratorStandardsComponent, AuxiliarySubstanceDialogComponent, ConfirmationDialogComponent,
+        MedicamentHistoryDialogComponent, SelectDocumentNumberComponent,
         MedicamentModificationsDialogComponent, RequestAdditionalDataDialogComponent, ActiveSubstanceDialogComponent, MedicamentDetailsDialogComponent,
         AddManufactureComponent, AddDivisionComponent, AddExpertComponent, SelectVariationTypeComponent, SelectSubsidiaryModalComponent, InspectorsModalComponent
     ],

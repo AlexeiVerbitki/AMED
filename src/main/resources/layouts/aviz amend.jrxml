@@ -1,25 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="aviz amend" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="aviz studiu" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="40" rightMargin="20" topMargin="15" bottomMargin="15" uuid="c084aefd-f7fb-40ce-ab3f-dc897567241a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="empty rows"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 2_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 2_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 3_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 3_CH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="776c8586-9725-4a51-b8b0-ff0046c9cfe7">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="institution" class="java.lang.String"/>
+		<field name="investigators" class="java.lang.String"/>
+		<field name="subdivision" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Dataset2" uuid="d9335bd9-75e4-4f89-894c-f2455b3b482e">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="product" class="java.lang.String"/>
+		<field name="manufactures" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Dataset3" uuid="fc5313d8-51d4-4296-bbcd-95c410492f1a">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="product" class="java.lang.String"/>
+		<field name="manufactures" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Dataset4" uuid="f9daae69-270e-45f3-87d4-f24c97fe7dc5">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="product" class="java.lang.String"/>
+		<field name="manufactures" class="java.lang.String"/>
+	</subDataset>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
 	<parameter name="amdmDate" class="java.lang.String"/>
-	<parameter name="protocolClinic" class="java.lang.String"/>
 	<parameter name="applicant" class="java.lang.String"/>
 	<parameter name="sponsor" class="java.lang.String"/>
-	<parameter name="institution" class="java.lang.String"/>
 	<parameter name="studyCode" class="java.lang.String"/>
 	<parameter name="eudra" class="java.lang.String"/>
 	<parameter name="studyType" class="java.lang.String"/>
 	<parameter name="phase" class="java.lang.String"/>
-	<parameter name="avizAmdmNr" class="java.lang.String"/>
-	<parameter name="avizComitetEticNr" class="java.lang.String"/>
-	<parameter name="amdmOrderNr" class="java.lang.String"/>
-	<parameter name="amdmIdentification" class="java.lang.String"/>
-	<parameter name="docAnexed" class="java.lang.String"/>
 	<parameter name="clinicalStudyName" class="java.lang.String"/>
+	<parameter name="institutionSubdivisionInestigator" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="prodInvest" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="prodRef" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="prodPlac" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="amdmIdentification" class="java.lang.String"/>
+	<parameter name="protocolClinic" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -36,23 +172,23 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="236" splitType="Stretch">
+		<band height="162" splitType="Stretch">
 			<textField>
-				<reportElement x="2" y="30" width="528" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
+				<reportElement x="0" y="17" width="535" height="20" uuid="b8809fc8-2a40-4a5a-988b-18213e70bf00"/>
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="0" y="140" width="535" height="50" uuid="3cfeeffa-ac49-4028-a901-0a53eca72db4"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="90" width="535" height="47" uuid="3cfeeffa-ac49-4028-a901-0a53eca72db4"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["	Prin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale, în baza deciziei Comisiei Medicamentului din cadrul AMDM din data de " + $P{amdmDate} + ", aprobă Amendamentul la protocolul studiului clinic " + $P{protocolClinic}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="80" width="529" height="30" uuid="30570afb-e818-48c9-a274-9c09c7393701"/>
+				<reportElement x="0" y="50" width="535" height="30" uuid="30570afb-e818-48c9-a274-9c09c7393701"/>
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -61,149 +197,472 @@ PENTRU AMENDAMENT LA STUDIU CLINIC
 ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="214" width="535" height="16" uuid="b99560f1-587b-4c68-ae01-35453f85997f"/>
+				<reportElement x="0" y="144" width="535" height="18" uuid="b99560f1-587b-4c68-ae01-35453f85997f"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Titlu studiu: " + $P{clinicalStudyName}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="381">
-			<textField>
-				<reportElement x="105" y="1" width="429" height="20" uuid="5d27dabd-9b00-4962-af3e-e0e1098142aa"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{applicant}]]></textFieldExpression>
-			</textField>
+		<band height="22">
 			<staticText>
-				<reportElement x="5" y="1" width="100" height="20" uuid="52bf6fed-67df-4698-8148-42a166d1e92f"/>
+				<reportElement x="1" y="2" width="83" height="20" uuid="ef071650-a7bf-4774-86d0-3be8f53c720f"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Solicitant]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="85" y="2" width="451" height="20" uuid="4cbe4753-0be0-482f-bcb5-8a3d618497c4"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{applicant}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="22">
 			<staticText>
-				<reportElement x="5" y="21" width="100" height="20" uuid="a1ed8601-95b4-4da0-a62a-da7079c0aca0"/>
+				<reportElement x="1" y="2" width="83" height="20" uuid="104e0f33-ff31-457e-b6d7-e2f68451a838"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Sponsor]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="105" y="21" width="429" height="20" uuid="c4b43ce4-f7f3-4497-89db-d52236e051e3"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="85" y="2" width="451" height="20" uuid="a458ab6a-c8c9-44d3-acc4-2ac039bd8a99"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sponsor}]]></textFieldExpression>
 			</textField>
+		</band>
+		<band height="82">
 			<staticText>
-				<reportElement x="5" y="41" width="100" height="20" uuid="1d642649-e1f1-48bf-8e15-e4a01355c5a3"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Instituţie]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="106" y="41" width="429" height="20" uuid="d1761313-34b7-4324-8b84-8e9562004ea7"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{institution}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="5" y="61" width="100" height="20" uuid="8a290b19-a921-44a4-a7b7-6ce85ca57f5d"/>
+				<reportElement x="2" y="2" width="84" height="20" uuid="46e2484c-3139-4dd2-a6a3-2d515d6e1392"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cod studiu]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="106" y="61" width="429" height="20" uuid="98d5a0a6-0e1a-472c-bf4d-48fd9c664c4d"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="86" y="2" width="450" height="20" uuid="5d2211d6-bebf-44fb-9ea2-eea75218de97"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{studyCode}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="81" width="100" height="20" uuid="51ccddfa-465a-4e59-851b-e9f3d27f5666"/>
+				<reportElement x="1" y="22" width="85" height="20" uuid="d879c0da-35c0-44e9-93c7-9de16785f1d0"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Eudra CT nr.]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="106" y="81" width="429" height="20" uuid="7de0c9e0-ab57-467a-9ed1-e7f842852f24"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="86" y="22" width="450" height="20" uuid="5bff2362-551d-48d5-bd03-997a7f745ef8"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{eudra}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="101" width="100" height="20" uuid="711a6f20-a198-4a20-8067-ad53b6924b0a"/>
+				<reportElement x="1" y="42" width="85" height="20" uuid="f1b6ef72-086d-4c7e-824b-2e105da723d4"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tip studiu]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="105" y="101" width="429" height="20" uuid="2e4a5984-af7a-4518-adda-86df071ebe60"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="86" y="42" width="450" height="20" uuid="93ca4181-5adf-4145-8ccc-f7964389f068"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{studyType}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="121" width="100" height="20" uuid="51747c14-5d83-4988-814e-6b723be58f7d"/>
+				<reportElement x="1" y="62" width="85" height="20" uuid="47076474-4bf7-4a83-b960-fe06891fe8a2"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Faza]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="106" y="121" width="429" height="20" uuid="7c48413f-c726-45b4-9851-565cf3ae0c39"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="86" y="62" width="450" height="20" uuid="17f10edb-8ece-40bf-95d4-e6cc7201ec50"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{phase}]]></textFieldExpression>
 			</textField>
+		</band>
+		<band height="64">
+			<componentElement>
+				<reportElement x="1" y="24" width="535" height="40" uuid="a21b3fbf-956a-4fbf-883f-61b9ec4b8f1a">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="27956c59-e2f9-4fd2-99e4-b92f0a3369c3">
+						<dataSourceExpression><![CDATA[$P{institutionSubdivisionInestigator}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="161" uuid="6668a744-6a2a-4e9c-98c3-d9daa12ed479">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="161" height="20" uuid="6c770f4f-9351-4fa9-9423-af1263c2e664"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Instituţie"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="161" height="20" uuid="870daf1c-7029-4e3b-90a1-610da417617f"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{institution}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="182" uuid="3887d195-4464-41d2-8926-269f54de1055">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="182" height="20" uuid="4f754b41-a530-4adb-a0e8-790ffa666889"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Subdiviziune"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="182" height="20" uuid="d272b428-9724-41a2-9ece-6c6e0c61bb02"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{subdivision}.replaceAll("\\|","\n")]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="192" uuid="e697cd77-9d42-4f1f-9657-52c730ddf878">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="192" height="20" uuid="0464c509-5ce2-40ec-8c25-e27d6534ced8"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Investigator"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="192" height="20" uuid="5d7939c6-73f1-422d-bfd4-23e45a598229"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{investigators}.replaceAll("\\|","\n")]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 			<staticText>
-				<reportElement x="4" y="141" width="176" height="20" uuid="a93fdc73-50b7-4913-9238-6804c17d6d18"/>
-				<textElement>
+				<reportElement x="0" y="4" width="535" height="20" uuid="944feef7-3608-43ed-bfd8-def8af6c4003"/>
+				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Informaţii privind studiul:]]></text>
+				<text><![CDATA[Lista unităţi medicale]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="0" y="161" width="535" height="50" uuid="d1c90714-df48-455e-ab4f-d661517eee79"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Aviz AMDM nr. " + $P{avizAmdmNr} + "; Aviz Comitetul de Etică nr. " + $P{avizComitetEticNr} + "; Ordin AMDM nr. " + $P{amdmOrderNr}]]></textFieldExpression>
-			</textField>
+		</band>
+		<band height="64">
 			<staticText>
-				<reportElement x="5" y="211" width="168" height="20" uuid="90d301e3-4e25-4636-ba55-3b5bf0c7dae4"/>
-				<textElement>
+				<reportElement x="0" y="4" width="535" height="20" uuid="9318bfb5-8588-485f-b7a9-471bf27f4a07"/>
+				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Identificare amendament: ]]></text>
+				<text><![CDATA[Informaţii privind studiul]]></text>
 			</staticText>
+			<componentElement>
+				<reportElement x="0" y="24" width="535" height="40" uuid="1f772dd8-0a02-4847-985b-537558443fae">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset2" uuid="9e46d38b-e54b-471d-bea6-bd99b8ef0201">
+						<dataSourceExpression><![CDATA[$P{prodInvest}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="268" uuid="aa74c511-b6fa-4dc3-83b2-074965aeff5e">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="268" height="20" uuid="66759de7-ee5d-4af6-aa29-5b6d24929f4a"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Produs de investigat"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="268" height="20" uuid="b872e21b-2675-4b1b-ad50-78f316094814"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="267" uuid="972afd6d-0b98-4a00-944f-d1438c0caec1">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="267" height="20" uuid="bcc10bd8-4f4c-464e-ad3d-625039b800a0"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Producător"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="267" height="20" uuid="4e5131b2-d509-44c9-902f-f91eba7127b6"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{manufactures}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="40">
+			<componentElement>
+				<reportElement x="0" y="0" width="535" height="40" uuid="f93ea9d9-8c6d-4c17-842b-581827da1f47">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+					<property name="com.jaspersoft.studio.components.autoresize.next" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset3" uuid="7b2a9acc-059d-4c7e-a985-e8fa2cff15e7">
+						<dataSourceExpression><![CDATA[$P{prodRef}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="268" uuid="ee8dc5fb-3ed1-483d-91a3-0f9cb776c7eb">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table 2_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="268" height="20" uuid="a430bb67-004d-4081-923a-a32fb65368ec"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Produs de referință"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 2_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="268" height="20" uuid="29768768-8d25-4b43-83fd-4e10d89f8477"/>
+								<box leftPadding="1"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="267" uuid="89a51aee-53de-4410-a969-890f3fd139a4">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table 2_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="267" height="20" uuid="c5858f6b-df0a-4daa-853c-232f702e41ed"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Producător"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 2_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="267" height="20" uuid="312a44cf-aa92-47b6-b133-ffcfa7f76b1f"/>
+								<box leftPadding="1"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{manufactures}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="40">
+			<componentElement>
+				<reportElement x="0" y="0" width="535" height="40" uuid="c7832780-27dc-4187-a2d9-2e6a2cdf6daa">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 3_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 3_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 3_TD"/>
+					<property name="com.jaspersoft.studio.components.autoresize.proportional" value="true"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset4" uuid="decad42a-459c-45a3-8bd2-54d72b61d9ca">
+						<dataSourceExpression><![CDATA[$P{prodPlac}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="268" uuid="b97228c3-8eba-46fb-abe1-9012933c8d7d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table 3_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="268" height="20" uuid="374e1ddf-aaa0-49a2-aa09-9bc9acebbb60"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Produs Placebo"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 3_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="268" height="20" uuid="49bdff74-b7ce-4db0-974d-57614b99bc23"/>
+								<box leftPadding="1"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="267" uuid="44686e6f-655c-44ed-9b86-7ddfe2ee45b6">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table 3_CH" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="267" height="20" uuid="1bc7b11b-0d59-4daf-bac6-4e6d118026a5"/>
+								<box leftPadding="1"/>
+								<textElement textAlignment="Left">
+									<font fontName="DejaVu Sans" size="11" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Producător"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 3_TD" height="20">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="267" height="20" uuid="b3167424-425c-4296-81c8-c3d0da5de33e"/>
+								<box leftPadding="1"/>
+								<textElement>
+									<font fontName="DejaVu Sans" size="11"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{manufactures}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="155">
 			<textField>
-				<reportElement x="173" y="211" width="362" height="20" uuid="6710a0b2-e8c4-4cdb-8fc5-64a10e38b3a3"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
+				<reportElement x="281" y="132" width="248" height="18" uuid="48551c21-6e94-4a98-8816-f9c00d5d7466"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{amdmIdentification}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="261" width="535" height="60" uuid="1112461b-2ab4-4fd5-b78f-b3978f0ee612"/>
-				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
-				</textElement>
-				<text><![CDATA[	Studiul se va desfăşura cu respectarea legislaţiei în vigoare privind organizarea studiului clinic în Republica Moldova, Regulilor de Bună Practică în studiul clinic (GCP ICH) cu respectarea calităţii şi eticii studiilor clinice prevăzute în Declaraţia drepturilor omului de la Helsinki, reactualizată.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="5" y="341" width="258" height="28" uuid="7360bdb7-f3a3-4ce9-902d-eceab41a1cf5"/>
+				<reportElement x="1" y="122" width="258" height="28" uuid="4fe10618-6dd6-40e8-b630-35300e776cd0"/>
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
@@ -211,12 +670,26 @@ PENTRU AMENDAMENT LA STUDIU CLINIC
 Preşedinte al Comisiei Medicamentului                             
 ]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="294" y="351" width="241" height="18" uuid="887d4eb6-7442-469e-aba0-28725881925b"/>
-				<textElement textAlignment="Right">
+			<staticText>
+				<reportElement x="1" y="55" width="535" height="50" uuid="a6daa2c5-3dc5-4362-b7ca-f2845b7a7cad"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<text><![CDATA[	Studiul se va desfăşura cu respectarea legislaţiei în vigoare privind organizarea studiului clinic în Republica Moldova, Regulilor de Bună Practică în studiul clinic (GCP ICH) cu respectarea calităţii şi eticii studiilor clinice prevăzute în Declaraţia drepturilor omului de la Helsinki, reactualizată.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="20" width="168" height="20" uuid="3f19582a-5f88-4125-902e-71cea8606eb8"/>
+				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+				<text><![CDATA[Identificare amendament: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="173" y="20" width="362" height="20" uuid="9f17a547-9cec-47b8-94bd-2a4a59c4b1c1"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{amdmIdentification}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

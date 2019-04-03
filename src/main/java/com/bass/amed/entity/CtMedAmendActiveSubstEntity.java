@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Data
 @Entity
-@Table(name = "ct_med_amend_active_subst", schema = "amed", catalog = "")
+@Table(name = "ct_med_amend_active_subst")
 public class CtMedAmendActiveSubstEntity {
 
     @Id
@@ -35,24 +35,11 @@ public class CtMedAmendActiveSubstEntity {
     @JoinColumn( name = "manufacture_id" )
     private NmManufacturesEntity manufacture;
 
-    @Basic
-    @Column(name = "status")
-    private Character status;
-
-    public void asign(NotRegMedActiveSubstEntity entity){
+    public void asign(CtMedActiveSubstEntity entity){
         this.activeSubstance = entity.getActiveSubstance();
         this.quantity = entity.getQuantity();
         this.unitsOfMeasurement = entity.getUnitsOfMeasurement();
         this.manufacture = entity.getManufacture();
-    }
-
-    public boolean meaningfulyEquals(NotRegMedActiveSubstEntity o) {
-        if (o == null ) return false;
-
-        return Objects.equals(activeSubstance, o.getActiveSubstance()) &&
-                Objects.equals(quantity, o.getQuantity()) &&
-                Objects.equals(unitsOfMeasurement, o.getUnitsOfMeasurement()) &&
-                Objects.equals(manufacture, o.getManufacture());
     }
 
     @Override
@@ -69,7 +56,6 @@ public class CtMedAmendActiveSubstEntity {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(ctMedAmendId, activeSubstance, quantity, unitsOfMeasurement, manufacture);
     }
 }

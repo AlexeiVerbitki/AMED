@@ -22,4 +22,7 @@ public class GMPNesterileProductsEntity
     @Basic
     @Column(name = "category")
     private String category;
+    @Basic
+    @Column(name = "type")
+    private String type;
 }

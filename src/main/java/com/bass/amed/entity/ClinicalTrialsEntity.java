@@ -9,9 +9,8 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "clinical_trials", schema = "amed")
-public class ClinicalTrialsEntity
-{
+@Table(name = "clinical_trials")
+public class ClinicalTrialsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -54,15 +53,19 @@ public class ClinicalTrialsEntity
     @Basic
     @Column(name = "sponsor")
     private String sponsor;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "medicament_id")
-    private ImportMedNotRegisteredEntity medicament;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "reference_product_id")
-    private ImportMedNotRegisteredEntity referenceProduct;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "placebo_id")
-    private ImportMedNotRegisteredEntity placebo;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "medicament_ct_id")
+    private Set<CtMedicamentEntity> medicaments = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "ref_prod_ct_id")
+    private Set<CtMedicamentEntity> referenceProducts = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "placebo_ct_id")
+    private Set<CtMedicamentEntity> placebos = new HashSet<>();
+
     @Basic
     @Column(name = "trial_population_national")
     private Integer trialPopNat;
@@ -95,4 +98,44 @@ public class ClinicalTrialsEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "clinical_trails_id")
     private Set<ClinicTrailNotificationEntity> clinicTrialNotificationEntities = new HashSet<>();
+
+    public void assign(ClinicTrialAmendEntity entity) {
+        this.phase = entity.getPhaseTo();
+        this.treatment = entity.getTreatmentTo();
+        this.provenance = entity.getProvenanceTo();
+        this.eudraCtNr = entity.getEudraCtNrTo();
+        this.code = entity.getCodeTo();
+        this.title = entity.getTitleTo();
+        this.sponsor = entity.getSponsorTo();
+        this.trialPopNat = entity.getTrialPopNatTo();
+        this.trialPopInternat = entity.getTrialPopInternatTo();
+        entity.getMedicalInstitutions().forEach(medInst -> {
+            if (medInst.getIsNew()) {
+                CtMedicalInstitutionEntity medicalInstitutionEntity = new CtMedicalInstitutionEntity();
+                medicalInstitutionEntity.asign(medInst);
+                this.medicalInstitutions.add(medicalInstitutionEntity);
+            }
+        });
+        entity.getMedicaments().forEach(medicament -> {
+            if (medicament.getIsNew()) {
+                CtMedicamentEntity medicamentdEntity = new CtMedicamentEntity();
+                medicamentdEntity.asign(medicament);
+                this.medicaments.add(medicamentdEntity);
+            }
+        });
+        entity.getReferenceProducts().forEach(refProd -> {
+            if (refProd.getIsNew()) {
+                CtMedicamentEntity refProdAmendEntity = new CtMedicamentEntity();
+                refProdAmendEntity.asign(refProd);
+                this.referenceProducts.add(refProdAmendEntity);
+            }
+        });
+        entity.getPlacebos().forEach(placebo -> {
+            if (placebo.getIsNew()) {
+                CtMedicamentEntity placeboAmendEntity = new CtMedicamentEntity();
+                placeboAmendEntity.asign(placebo);
+                this.placebos.add(placeboAmendEntity);
+            }
+        });
+    }
 }

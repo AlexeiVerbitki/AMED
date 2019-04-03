@@ -79,6 +79,7 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
     customsPointsList: any[] = [];
     exchangeCurrencies: any[] = [];
     expirationDate: any[] = [];
+    expirationDatePicker: any;
     checked: boolean;
     activeLicenses: any;
     importDetailsList: any = [];
@@ -88,6 +89,7 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
     showClickAuthorizationError = false;
     atLeastOneApproved: boolean;
     private subscriptions: Subscription[] = [];
+    maxDate = new Date();
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -146,12 +148,18 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
                 'summ': [Validators.required],
                 'producer_id': [Validators.required], // to be deleted
                 'stuff_type_id': [Validators.required], // to delete
-                'expiration_date': [Validators.required],
+                'expirationDate': [Validators.required],
+                'expirationDatePicker': [],
                 'customsNumber': [],
                 'customsDeclarationDate': [],
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
                 'importAuthorizationDetailsEntityList': [],
+                'sgeapNumber': [null],
+                'sgeapDate': [null],
+                'processVerbalNumber': [null],
+                'processVerbalDate': [null],
+                'revisionDate': [null],
                 'authorized': [],
                 'customsPoints': [],
                 'unitOfImportTable': this.fb.group({
@@ -236,6 +244,16 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
                     this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').setValue(arr);
                     // console.log('this.importData.importAuthorizationEntity.nmCustomsPointsList', arr);
 
+                    if (data.importAuthorizationEntity.sgeapNumber) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').setValue(data.importAuthorizationEntity.sgeapNumber);
+                    }
+                    if (data.importAuthorizationEntity.sgeapDate) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').setValue(new Date(data.importAuthorizationEntity.sgeapDate));
+                    }
+                    if (data.importAuthorizationEntity.revisionDate) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.revisionDate').setValue(new Date(data.importAuthorizationEntity.revisionDate));
+                    }
+
                     this.evaluateImportForm.get('startDate').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.seller').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.contract').disable();
@@ -251,11 +269,25 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.currency').disable();
                     this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').disable();
+                    this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').disable();
 
                     if (data.importAuthorizationEntity.medType === 2) {
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
+                    }
+
+
+                    if (data.importAuthorizationEntity.medType === 2 || data.importAuthorizationEntity.medType === 3){
+                        if (data.importAuthorizationEntity.processVerbalNumber) {
+                            this.evaluateImportForm.get('importAuthorizationEntity.processVerbalNumber').setValue(data.importAuthorizationEntity.processVerbalNumber);
+                            this.evaluateImportForm.get('importAuthorizationEntity.processVerbalNumber').disable();
+                        }
+                        if (data.importAuthorizationEntity.processVerbalDate) {
+                            this.evaluateImportForm.get('importAuthorizationEntity.processVerbalDate').setValue(new Date(data.importAuthorizationEntity.processVerbalDate));
+                            this.evaluateImportForm.get('importAuthorizationEntity.processVerbalDate').disable();
+                        }
                     }
 
                     this.authorizationNumber = data.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
@@ -283,7 +315,7 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
         this.loadCustomsPoints();
-
+        this.expirationDatePicker = '';
         // console.log('importTypeForms.value', this.importTypeForms.value);
     }
 
@@ -294,16 +326,30 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
         return points;
     }
 
+    calculateSumm() {
+        // const authorizationModel = this.importData;
+        let summ: any;
+        // this.expirationDate.push(this.activeLicenses.expirationDate);
+        this.importDetailsList.forEach(item => {
+            if (item.approved === true) {
+                summ = summ + item.summ;
+                // console.log('modelToSubmit.importAuthorizationEntity.summ', authorizationModel.importAuthorizationEntity.summ);
+            }
+        });
+        return summ;
+    }
+
     calculateExpirationDate() {
         const authorizationModel = this.importData;
         let expirationDate: any;
         this.expirationDate.push(this.activeLicenses.expirationDate);
         this.importDetailsList.forEach(item => {
+
             if (item.approved === true && item.expirationDate) {
                 this.expirationDate.push(item.expirationDate);
-                authorizationModel.importAuthorizationEntity.summ = authorizationModel.importAuthorizationEntity.summ + item.summ;
-                // console.log('modelToSubmit.importAuthorizationEntity.summ', authorizationModel.importAuthorizationEntity.summ);
             }
+
+
         });
 
         // console.log('this.expirationDate', this.expirationDate);
@@ -321,7 +367,7 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
                 expirationDate = datePlusYear;
             }
         }
-        return expirationDate;
+        return new Date(expirationDate);
     }
 
     viewDoc(document: string) {
@@ -335,10 +381,14 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
         const authorizationModel = this.importData;
         authorizationModel.importAuthorizationEntity.nmCustomsPointsList = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
 
-        authorizationModel.importAuthorizationEntity.expirationDate = this.calculateExpirationDate();
+        // this.expirationDatePicker = this.calculateExpirationDate();
+        console.log('expirationDatePicker', this.expirationDatePicker);
+        authorizationModel.importAuthorizationEntity.expirationDate = this.expirationDatePicker;
+        authorizationModel.importAuthorizationEntity.summ = this.calculateSumm();
 
         authorizationModel.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
         authorizationModel.importAuthorizationEntity.nmCustomsPointsList = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
+        authorizationModel.importAuthorizationEntity.revisionDate = this.evaluateImportForm.get('importAuthorizationEntity.revisionDate').value;
         // console.log('authorizationModel', authorizationModel);
 
         observable = this.requestService.viewImportAuthorization(authorizationModel);
@@ -495,6 +545,8 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
                 this.dialogSetReject(i, result[1]);
                 this.expirationDate = [];
             }
+            this.expirationDatePicker = this.calculateExpirationDate();
+            console.log('expirationDatePicker', this.expirationDatePicker)
         });
     }
 
@@ -765,6 +817,9 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
             item.approvedQuantity = item.quantity;
             item.summ = item.approvedQuantity * item.price;
             this.atLeastOneApproved = true;
+
+            this.expirationDatePicker = this.calculateExpirationDate();
+            console.log('expirationDatePicker', this.expirationDatePicker)
         });
     }
 
@@ -794,6 +849,7 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
         modelToSubmit.importAuthorizationEntity.authorized = aprrovedOrNot;
         modelToSubmit.importAuthorizationEntity.nmCustomsPointsList = this.evaluateImportForm.get('importAuthorizationEntity.customsPoints').value;
         modelToSubmit.currentStep = currentStep;
+        modelToSubmit.importAuthorizationEntity.revisionDate = this.evaluateImportForm.get('importAuthorizationEntity.revisionDate').value;
 
         modelToSubmit.importAuthorizationEntity.authorizationsNumber = this.importData.importAuthorizationEntity.id + '/' + new Date().getFullYear() + '-AM';
         modelToSubmit.requestHistories.push({
@@ -814,7 +870,9 @@ export class MedRegApproveComponent implements OnInit, OnDestroy {
         //=============
         modelToSubmit.importAuthorizationEntity.summ = 0;
 
-        modelToSubmit.importAuthorizationEntity.expirationDate = this.calculateExpirationDate();
+        console.log('expirationDatePicker', this.expirationDatePicker);
+        modelToSubmit.importAuthorizationEntity.expirationDate = this.expirationDatePicker;
+        modelToSubmit.importAuthorizationEntity.summ = this.calculateSumm();
         this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
                 // console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                 this.loadingService.hide();

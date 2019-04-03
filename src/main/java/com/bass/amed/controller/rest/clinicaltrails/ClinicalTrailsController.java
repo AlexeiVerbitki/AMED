@@ -38,6 +38,8 @@ public class ClinicalTrailsController {
     DocumentsRepository documentsRepository;
     @Autowired
     private AuditLogService auditLogService;
+    @Autowired
+    ClinicalTrialsTypesRepository clinicalTrialsTypesRepository;
 
     @PostMapping(value = "/save-request")
     public ResponseEntity<RegistrationRequestsEntity> saveClinicalTrailRequest(@RequestBody RegistrationRequestsEntity requests) throws CustomException {
@@ -198,5 +200,11 @@ public class ClinicalTrailsController {
         return new ResponseEntity<>(Arrays.asList(clinicalTrailsService.getDocumentNumber()), HttpStatus.OK);
     }
 
+    @RequestMapping("/all-clinical-trail-types")
+    public ResponseEntity<List<ClinicalTrialsTypesEntity>> getAllCtTypes() {
+        LOGGER.debug("Retrieve clinical trail types");
+        List<ClinicalTrialsTypesEntity> clinicTrailNotificationTypeEntities = clinicalTrialsTypesRepository.findAll();
+        return new ResponseEntity<>(clinicTrailNotificationTypeEntities, HttpStatus.OK);
+    }
 
 }

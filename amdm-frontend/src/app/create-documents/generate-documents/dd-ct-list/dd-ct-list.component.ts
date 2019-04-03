@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {MatDialog, MatDialogConfig, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {RequestService} from '../../../shared/service/request.service';
 import {Subscription} from 'rxjs/internal/Subscription';
@@ -14,7 +14,7 @@ import {DocumentService} from '../../../shared/service/document.service';
     templateUrl: './dd-ct-list.component.html',
     styleUrls: ['./dd-ct-list.component.css']
 })
-export class DdCtListComponent implements OnInit {
+export class DdCtListComponent implements OnInit, AfterViewInit {
 
     private subscriptions: Subscription[] = [];
 

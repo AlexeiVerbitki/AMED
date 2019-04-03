@@ -95,6 +95,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
     currentCurrency: any;
     isUnitOfImportValid = false;
     registrationDate: any;
+    maxDate = new Date();
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -165,6 +166,10 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
                 'importAuthorizationDetailsEntityList': [],
+                'sgeapNumber': [null],
+                'sgeapDate': [null],
+                'processVerbalNumber': [null],
+                'processVerbalDate': [null],
                 'unitOfImportTable': this.fb.group({
                     customsCode: [null, Validators.required],
                     name: [null, Validators.required],
@@ -214,6 +219,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     this.evaluateImportForm.get('importAuthorizationEntity.currency').setValue(data.importAuthorizationEntity.currency);
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.currency').setValue(data.importAuthorizationEntity.currency);
                     this.evaluateImportForm.get('importAuthorizationEntity.customsNumber').setValue(data.importAuthorizationEntity.customsNumber);
+
                     if (data.importAuthorizationEntity.customsDeclarationDate !== null) {
                         this.evaluateImportForm.get('importAuthorizationEntity.customsDeclarationDate').setValue(new Date(data.importAuthorizationEntity.customsDeclarationDate));
                     }
@@ -230,6 +236,13 @@ export class MedRegComponent implements OnInit, OnDestroy {
                         this.evaluateImportForm.get('importAuthorizationEntity.specificationDate').setValue(new Date(data.importAuthorizationEntity.specificationDate));
                     }
                     this.unitOfImportTable = data.importAuthorizationEntity.importAuthorizationDetailsEntityList;
+
+                    if (data.importAuthorizationEntity.sgeapNumber) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').setValue(data.importAuthorizationEntity.sgeapNumber);
+                    }
+                    if (data.importAuthorizationEntity.sgeapDate) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').setValue(new Date(data.importAuthorizationEntity.sgeapDate));
+                    }
 
                     //If it's a registered medicament, disable the following fields
 
@@ -255,6 +268,13 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     if (data.importAuthorizationEntity.medType === 2) {
                         if (data.importAuthorizationEntity.medType) {
                             // this.evaluateImportForm.get('type.id').setValue(16);
+
+                            if (data.importAuthorizationEntity.processVerbalNumber) {
+                                this.evaluateImportForm.get('importAuthorizationEntity.processVerbalNumber').setValue(data.importAuthorizationEntity.processVerbalNumber);
+                            }
+                            if (data.importAuthorizationEntity.processVerbalDate) {
+                                this.evaluateImportForm.get('importAuthorizationEntity.processVerbalDate').setValue(new Date(data.importAuthorizationEntity.processVerbalDate));
+                            }
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').setErrors(null);
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setErrors(null);
@@ -460,7 +480,9 @@ export class MedRegComponent implements OnInit, OnDestroy {
                         priceInContractCurrency = this.medicamentPrice.priceMdl;
                     } else {
                         const exchangeCurrency = this.exchangeCurrenciesForPeriod.find(x => x.currency.shortDescription == contractCurrency.shortDescription);
-                        priceInContractCurrency = this.medicamentPrice.priceMdl / exchangeCurrency.value;
+                        if (this.medicamentPrice && this.medicamentPrice.priceMdl && exchangeCurrency && exchangeCurrency.value) {
+                            priceInContractCurrency = this.medicamentPrice.priceMdl / exchangeCurrency.value;
+                        }
                     }
 
                     if (this.userPrice > priceInContractCurrency) {

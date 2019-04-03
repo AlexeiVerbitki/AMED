@@ -10,5 +10,4 @@ public class ClinicalTrialExpertDTO {
     private String titleClinicalStudyCode;
     private String investigatedProduct;
     private String institution;
-    private String investigaotrs;
 }

@@ -39,7 +39,7 @@
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Nr. ________ din ___/___/______"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="-1" y="100" width="281" height="40" uuid="354735f7-8d20-49cf-b842-959a6fcab171"/>
@@ -83,7 +83,7 @@
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["1. " + $P{ordinDetails}.replace("\\|","\n")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["1. " + $P{ordinDetails}.replaceAll("\\|","\n")]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="232">

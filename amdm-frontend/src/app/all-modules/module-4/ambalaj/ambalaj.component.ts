@@ -68,6 +68,7 @@ export class AmbalajComponent implements OnInit,OnDestroy {
     authorizationCurrency: any;
     currentCurrency: any;
     isUnitOfImportValid = false;
+    maxDate = new Date();
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -124,6 +125,10 @@ export class AmbalajComponent implements OnInit,OnDestroy {
                 'authorizationsNumber': [], // inca nu exista la pasul acesta
                 'medType': [''],
                 'importAuthorizationDetailsEntityList': [],
+                'sgeapNumber': [null],
+                'sgeapDate': [null],
+                'processVerbalNumber': [null],
+                'processVerbalDate': [null],
                 'unitOfImportTable': this.fb.group({
 
                     customsCode: [null, Validators.required],
@@ -190,6 +195,12 @@ export class AmbalajComponent implements OnInit,OnDestroy {
                     if (this.importData.importAuthorizationEntity.medType === 4) {
 
                         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.atcCode').setErrors(null);
+                    }
+                    if (data.importAuthorizationEntity.sgeapNumber) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.sgeapNumber').setValue(data.importAuthorizationEntity.sgeapNumber);
+                    }
+                    if (data.importAuthorizationEntity.sgeapDate) {
+                        this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').setValue(new Date(data.importAuthorizationEntity.sgeapDate));
                     }
 
 

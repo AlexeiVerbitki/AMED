@@ -63,4 +63,7 @@ export const NomenclatureConstants = [
     {nr: 62, title: 'Statuturile utilizatorilor LDAP', name: 'nm_ldap_user_status'},
     {nr: 63, title: 'Codurile registrelor', name: 'nm_register_catalog_codes'},
     {nr: 64, title: 'Rata de conversie a unitatilor de masura pentru droguri', name: 'drug_units_conversion_rates'},
+    {nr: 65, title: 'Rapoarte', name: 'nm_reports'},
+    {nr: 66, title: 'Tipuri de rapoarte', name: 'nm_report_types'},
+    {nr: 67, title: 'Subdiviziuni la institutii medicale', name: 'nm_med_inst_subdivisions'},
 ];

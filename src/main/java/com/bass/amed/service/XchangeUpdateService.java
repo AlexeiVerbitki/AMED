@@ -29,60 +29,46 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class XchangeUpdateService
-{
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+public class XchangeUpdateService {
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Chisinau"));
     @Autowired
     private CurrencyHistoryRepository currenciesHistoryRepository;
     @Autowired
-    private CurrencyRepository        currencyRepository;
-    private Unmarshaller              unmarshaller;
-    private Date                      today = new Date();
-    private Date                      lastUpdatedDate;
+    private CurrencyRepository currencyRepository;
 
 
-    public void execute() throws JAXBException, MalformedURLException
-    {
-        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Chisinau"));
-        today = resetTime(today);
-
+    public void execute() throws JAXBException, MalformedURLException {
+        Date today = resetTime(new Date());
         LOGGER.info("Start updating currency exchange rate");
-        lastUpdatedDate = currenciesHistoryRepository.findLastInsertedCurrencyDate();
+        Date lastUpdatedDate = currenciesHistoryRepository.findLastInsertedCurrencyDate();
 
-        if (lastUpdatedDate == null)
-        {
+        LOGGER.info("Last updated date in nm_curencies is {}", lastUpdatedDate);
+
+        if (lastUpdatedDate == null) {
             LOGGER.info("Last updated date is null. I Try to extract today's currency rates..");
             lastUpdatedDate = new Date();
-            updateCurrencies();
-        }
-        else if (DateUtils.isSameDay(lastUpdatedDate, today))
-        {
+            updateCurrencies(lastUpdatedDate, today);
+        } else if (DateUtils.isSameDay(lastUpdatedDate, today)) {
             LOGGER.info("DB alredy contains today's currency rates..");
             return;
-        }
-        else if (lastUpdatedDate.before(today))
-        {
+        } else if (lastUpdatedDate.before(today)) {
             LOGGER.info("DB doesn't contain today's currency rates. Trying to extract...");
-            updateCurrencies();
+            updateCurrencies(lastUpdatedDate, today);
         }
     }
 
-    private void updateCurrencies() throws JAXBException, MalformedURLException
-    {
-        do
-        {
+    private void updateCurrencies(Date lastUpdatedDate, Date today) throws JAXBException, MalformedURLException {
+        do {
             lastUpdatedDate = addOneDay(lastUpdatedDate);
             calendar.setTime(lastUpdatedDate);
-            if(calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                LOGGER.info("Escape updating for weekend: " + lastUpdatedDate);
-                continue;
-            }
-            ValCurs currencies = getTodayXchangeRates();
+//            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+//                LOGGER.info("Escape updating for weekend: " + lastUpdatedDate);
+//                continue;
+//            }
+            ValCurs currencies = getTodayXchangeRates(lastUpdatedDate);
 
-            if (currencies != null)
-            {
-                List<NmCurrenciesHistoryEntity> nmCurrencies = valCursToNm(currencies);
+            if (currencies != null) {
+                List<NmCurrenciesHistoryEntity> nmCurrencies = valCursToNm(lastUpdatedDate,currencies);
                 currenciesHistoryRepository.saveAll(nmCurrencies);
             }
 
@@ -91,11 +77,12 @@ public class XchangeUpdateService
         while (today.after(lastUpdatedDate));
     }
 
-    private ValCurs getTodayXchangeRates() throws JAXBException, MalformedURLException
-    {
+    private ValCurs getTodayXchangeRates(Date lastUpdatedDate) throws JAXBException, MalformedURLException {
         JAXBContext jc = JAXBContext.newInstance(ValCurs.class);
-        unmarshaller = jc.createUnmarshaller();
+        Unmarshaller unmarshaller = jc.createUnmarshaller();
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        sdf.setTimeZone(TimeZone.getTimeZone("Europe/Chisinau"));
         String todayFormatingDate = sdf.format(lastUpdatedDate);
 
         String url = "https://www.bnm.md/ro/official_exchange_rates?date=" + todayFormatingDate;
@@ -123,15 +110,13 @@ public class XchangeUpdateService
     }
 
 
-
     @Transactional
-    List<NmCurrenciesHistoryEntity> valCursToNm(ValCurs valCurrencies)
-    {
+    List<NmCurrenciesHistoryEntity> valCursToNm(Date lastUpdatedDate, ValCurs valCurrencies) {
         List<NmCurrenciesHistoryEntity> nmCurrencies = new ArrayList<>(valCurrencies.getValutes().size());
 
         valCurrencies.getValutes().forEach(c -> {
-            NmCurrenciesEntity        currency        = currencyRepository.findByCode(c.getNumCode());
-            if(currency == null) return;
+            NmCurrenciesEntity currency = currencyRepository.findByCode(c.getNumCode());
+            if (currency == null) return;
             NmCurrenciesHistoryEntity currencyHistory = new NmCurrenciesHistoryEntity();
             currencyHistory.setCurrency(currency);
             currencyHistory.setMultiplicity(c.getNominal());
@@ -145,67 +130,55 @@ public class XchangeUpdateService
 
 
     // oldCurrencies.xls contains currencies exchange from BNM: https://www.bnm.md/bdi/pages/reports/dovre/DOVRE7.xhtml
-    public void insertOldBNMCurrencyValuesFromXLS()
-    {
-        try
-        {
-            File            file  = new File("C:\\Users\\gheorghe.guzun\\Downloads\\oldCurrencies.xls");
-            POIFSFileSystem fs    = new POIFSFileSystem(new FileInputStream(file));
-            HSSFWorkbook    wb    = new HSSFWorkbook(fs);
-            HSSFSheet       sheet = wb.getSheetAt(0);
-            HSSFRow         row;
+    public void insertOldBNMCurrencyValuesFromXLS() {
+        try {
+            File file = new File("C:\\Users\\gheorghe.guzun\\Downloads\\oldCurrencies.xls");
+            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
+            HSSFWorkbook wb = new HSSFWorkbook(fs);
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row;
 
             int rows;
             rows = sheet.getPhysicalNumberOfRows();
 
             row = sheet.getRow(1);
-            if (row == null)
-            {
+            if (row == null) {
                 return;
             }
 
             int collsQuantity = row.getPhysicalNumberOfCells();
-            if (collsQuantity < 2)
-            {
+            if (collsQuantity < 2) {
                 return;
             }
             List<NmCurrenciesHistoryEntity> currencies = new ArrayList<>(collsQuantity * rows);
 
-            for (int col = 1; col < collsQuantity; col++)
-            {
+            for (int col = 1; col < collsQuantity; col++) {
                 row = sheet.getRow(2);
                 String code = row.getCell(col).getStringCellValue();
                 row = sheet.getRow(4);
-                double             rate     = row.getCell(col).getNumericCellValue();
+                double rate = row.getCell(col).getNumericCellValue();
                 NmCurrenciesEntity currency = currencyRepository.findByCode(code);
-                if (currency == null)
-                {
+                if (currency == null) {
                     continue;
                 }
 
-                for (int r = 5; r <= rows; r++)
-                {
+                for (int r = 5; r <= rows; r++) {
                     row = sheet.getRow(r);
-                    if (row == null || row.getPhysicalNumberOfCells() < 2)
-                    {
+                    if (row == null || row.getPhysicalNumberOfCells() < 2) {
                         break;
                     }
                     double value = 0;
-                    try
-                    {
+                    try {
                         DataFormatter formatter = new DataFormatter();
-                        String        str       = formatter.formatCellValue(row.getCell(col));
-                        NumberFormat  nf        = NumberFormat.getInstance(Locale.FRENCH);
+                        String str = formatter.formatCellValue(row.getCell(col));
+                        NumberFormat nf = NumberFormat.getInstance(Locale.FRENCH);
                         value = nf.parse(str).doubleValue();
                         //                        value = Double.parseDouble(str );
                         //                        value = row.getCell(col).getNumericCellValue();
-                    }
-                    catch (IllegalStateException e)
-                    {
+                    } catch (IllegalStateException e) {
                         continue;
                     }
-                    if (value == 0.0)
-                    {
+                    if (value == 0.0) {
                         continue;
                     }
                     Date date = row.getCell(0).getDateCellValue();
@@ -224,9 +197,7 @@ public class XchangeUpdateService
             currenciesHistoryRepository.saveAll(currencies);
             System.out.println("end currencies saving");
 
-        }
-        catch (Exception ioe)
-        {
+        } catch (Exception ioe) {
             ioe.printStackTrace();
         }
     }

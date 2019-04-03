@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "clinic_trial_amend", schema = "amed", catalog = "")
+@Table(name = "clinic_trial_amend")
 public class ClinicTrialAmendEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,15 +74,17 @@ public class ClinicTrialAmendEntity {
     @Column(name = "sponsor_to")
     private String sponsorTo;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "medicament_id")
-    private CtMedAmendEntity medicament/* = new CtMedAmendRepository()*/;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "reference_product_id")
-    private CtMedAmendEntity referenceProduct /*= new CtMedAmendRepository()*/;
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
-    @JoinColumn(name = "placebo_id")
-    private CtMedAmendEntity placebo /*= new CtMedAmendRepository()*/;
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "medicament_ct_amend_id")
+    private Set<CtMedAmendEntity> medicaments = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "ref_prod_ct_amend_id")
+    private Set<CtMedAmendEntity> referenceProducts  = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @JoinColumn(name = "placebo_ct_amend_id")
+    private Set<CtMedAmendEntity> placebos = new HashSet<>();
 
     @Basic
     @Column(name = "trial_pop_nat_from")
@@ -121,9 +123,61 @@ public class ClinicTrialAmendEntity {
         this.codeTo = entity.getCode();
         this.titleTo = entity.getTitle();
         this.sponsorTo = entity.getSponsor();
-
+        entity.getMedicalInstitutions().forEach(medInst -> {
+            CtAmendMedicalInstitutionEntity amendMedicalInstitutionEntity = new CtAmendMedicalInstitutionEntity();
+            amendMedicalInstitutionEntity.asign(medInst, true);
+            this.medicalInstitutions.add(amendMedicalInstitutionEntity);
+        });
+        entity.getMedicaments().forEach( medicament -> {
+            CtMedAmendEntity medAmendEntity = new CtMedAmendEntity();
+            medAmendEntity.asign(medicament, true);
+            this.medicaments.add(medAmendEntity);
+        });
+        entity.getReferenceProducts().forEach( refProd -> {
+            CtMedAmendEntity refProdAmendEntity = new CtMedAmendEntity();
+            refProdAmendEntity.asign(refProd, true);
+            this.referenceProducts.add(refProdAmendEntity);
+        });
+        entity.getPlacebos().forEach( placebo -> {
+            CtMedAmendEntity placeboAmendEntity = new CtMedAmendEntity();
+            placeboAmendEntity.asign(placebo, true);
+            this.placebos.add(placeboAmendEntity);
+        });
         this.trialPopNatTo = entity.getTrialPopNat();
         this.trialPopInternatTo = entity.getTrialPopInternat();
+    }
+
+    public void assignFrom(ClinicalTrialsEntity entity) {
+        this.clinicalTrialsEntityId = entity.getId();
+        this.phaseFrom = entity.getPhase();
+        this.treatmentFrom = entity.getTreatment();
+        this.provenanceFrom = entity.getProvenance();
+        this.eudraCtNrFrom = entity.getEudraCtNr();
+        this.codeFrom = entity.getCode();
+        this.titleFrom = entity.getTitle();
+        this.sponsorFrom = entity.getSponsor();
+        entity.getMedicalInstitutions().forEach(medInst -> {
+            CtAmendMedicalInstitutionEntity amendMedicalInstitutionEntity = new CtAmendMedicalInstitutionEntity();
+            amendMedicalInstitutionEntity.asign(medInst, false);
+            this.medicalInstitutions.add(amendMedicalInstitutionEntity);
+        });
+        entity.getMedicaments().forEach( medicament -> {
+            CtMedAmendEntity medAmendEntity = new CtMedAmendEntity();
+            medAmendEntity.asign(medicament, false);
+            this.medicaments.add(medAmendEntity);
+        });
+        entity.getReferenceProducts().forEach( refProd -> {
+            CtMedAmendEntity refProdAmendEntity = new CtMedAmendEntity();
+            refProdAmendEntity.asign(refProd, false);
+            this.referenceProducts.add(refProdAmendEntity);
+        });
+        entity.getPlacebos().forEach( placebo -> {
+            CtMedAmendEntity placeboAmendEntity = new CtMedAmendEntity();
+            placeboAmendEntity.asign(placebo, false);
+            this.placebos.add(placeboAmendEntity);
+        });
+        this.trialPopNatFrom = entity.getTrialPopNat();
+        this.trialPopInternatFrom = entity.getTrialPopInternat();
     }
 
     @Override
@@ -134,6 +188,8 @@ public class ClinicTrialAmendEntity {
         return Objects.equals(id, that.id) &&
                 Objects.equals(registrationRequestId, that.registrationRequestId) &&
                 Objects.equals(clinicalTrialsEntityId, that.clinicalTrialsEntityId) &&
+                Objects.equals(amendCode, that.amendCode) &&
+                Objects.equals(note, that.note) &&
                 Objects.equals(treatmentFrom, that.treatmentFrom) &&
                 Objects.equals(treatmentTo, that.treatmentTo) &&
                 Objects.equals(provenanceFrom, that.provenanceFrom) &&
@@ -148,21 +204,22 @@ public class ClinicTrialAmendEntity {
                 Objects.equals(titleTo, that.titleTo) &&
                 Objects.equals(sponsorFrom, that.sponsorFrom) &&
                 Objects.equals(sponsorTo, that.sponsorTo) &&
-                Objects.equals(medicament, that.medicament) &&
-                Objects.equals(referenceProduct, that.referenceProduct) &&
-                Objects.equals(placebo, that.placebo) &&
+                Objects.equals(medicaments, that.medicaments) &&
+                Objects.equals(referenceProducts, that.referenceProducts) &&
+                Objects.equals(placebos, that.placebos) &&
                 Objects.equals(trialPopNatFrom, that.trialPopNatFrom) &&
                 Objects.equals(trialPopNatTo, that.trialPopNatTo) &&
                 Objects.equals(trialPopInternatFrom, that.trialPopInternatFrom) &&
                 Objects.equals(trialPopInternatTo, that.trialPopInternatTo) &&
                 Objects.equals(comissionNr, that.comissionNr) &&
                 Objects.equals(comissionDate, that.comissionDate) &&
-                Objects.equals(status, that.status);
+                Objects.equals(status, that.status) &&
+                Objects.equals(medicalInstitutions, that.medicalInstitutions);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, registrationRequestId, clinicalTrialsEntityId, treatmentFrom, treatmentTo, provenanceFrom, provenanceTo, phaseFrom, phaseTo, eudraCtNrFrom, eudraCtNrTo, codeFrom, codeTo, titleFrom, titleTo, sponsorFrom, sponsorTo, medicament, referenceProduct, placebo, trialPopNatFrom, trialPopNatTo, trialPopInternatFrom, trialPopInternatTo, comissionNr, comissionDate, status);
+        return Objects.hash(id, registrationRequestId, clinicalTrialsEntityId, amendCode, note, treatmentFrom, treatmentTo, provenanceFrom, provenanceTo, phaseFrom, phaseTo, eudraCtNrFrom, eudraCtNrTo, codeFrom, codeTo, titleFrom, titleTo, sponsorFrom, sponsorTo, medicaments, referenceProducts, placebos, trialPopNatFrom, trialPopNatTo, trialPopInternatFrom, trialPopInternatTo, comissionNr, comissionDate, status, medicalInstitutions);
     }
 }

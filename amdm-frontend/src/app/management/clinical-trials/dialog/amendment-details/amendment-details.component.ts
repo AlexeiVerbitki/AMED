@@ -14,20 +14,23 @@ import {UploadFileService} from '../../../../shared/service/upload/upload-file.s
 export class AmendmentDetailsComponent implements OnInit, OnDestroy {
 
     ctAmendForm: FormGroup;
-    medicamentForm: FormGroup;
-    refProdForm: FormGroup;
-    placebForm: FormGroup;
     modifications: any[] = [];
     mediacalInstitutionsFromList: any[] = [];
     mediacalInstitutionsToList: any[] = [];
     areMedInstModified = false;
-    isMedModified = false;
-    isRefProdModified = false;
-    isPlaceboModified = false;
-    medActiveSubstancesFromList: any[] = [];
-    medActiveSubstancesToList: any[] = [];
-    refProdActiveSubstancesFromList: any[] = [];
-    refProdActiveSubstancesToList: any[] = [];
+
+    mediacmentsFrom: any[] = [];
+    mediacmentsTo: any[] = [];
+    areMedModified = false;
+
+    refProdFrom: any[] = [];
+    refProdTo: any[] = [];
+    areRefProdModified = false;
+
+    placeboFrom: any[] = [];
+    placeboTo: any[] = [];
+    arePlacModified = false;
+
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -43,72 +46,6 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
         this.ctAmendForm = this.fb.group({
             'documents': [],
             'note': [{value: null, disabled: true}]
-        });
-
-        this.medicamentForm = this.fb.group({
-            'id': [{value: null, disabled: true}],
-            'nameFrom': [{value: null, disabled: true}],
-            'nameTo': [{value: null, disabled: true}],
-            'registrationNumber': [null],
-            'registrationDate': [new Date()],
-            'internationalMedicamentName': [null],
-            'manufactureFrom': [{value: null, disabled: true}],
-            'manufactureTo': [{value: null, disabled: true}],
-            'doseFrom': [{value: null, disabled: true}],
-            'doseTo': [{value: null, disabled: true}],
-            'volumeQuantityMeasurementFrom': [null],
-            'volumeQuantityMeasurementTo': [null],
-            'pharmFormFrom': [{value: null, disabled: true}],
-            'pharmFormTo': [{value: null, disabled: true}],
-            'atcCodeFrom': [{value: null, disabled: true}],
-            'atcCodeTo': [{value: null, disabled: true}],
-            'administModeFrom': [{value: null, disabled: true}],
-            'administModeTo': [{value: null, disabled: true}],
-            'activeSubstances': [null]
-        });
-
-        this.refProdForm = this.fb.group({
-            'id': [{value: null, disabled: true}],
-            'nameFrom': [{value: null, disabled: true}],
-            'nameTo': [{value: null, disabled: true}],
-            'registrationNumber': [null],
-            'registrationDate': [new Date()],
-            'internationalMedicamentName': [null],
-            'manufactureFrom': [{value: null, disabled: true}],
-            'manufactureTo': [{value: null, disabled: true}],
-            'doseFrom': [{value: null, disabled: true}],
-            'doseTo': [{value: null, disabled: true}],
-            'volumeQuantityMeasurementFrom': [null],
-            'volumeQuantityMeasurementTo': [null],
-            'pharmFormFrom': [{value: null, disabled: true}],
-            'pharmFormTo': [{value: null, disabled: true}],
-            'atcCodeFrom': [{value: null, disabled: true}],
-            'atcCodeTo': [{value: null, disabled: true}],
-            'administModeFrom': [{value: null, disabled: true}],
-            'administModeTo': [{value: null, disabled: true}],
-            'activeSubstances': [null]
-        });
-
-        this.placebForm = this.fb.group({
-            'id': [{value: null, disabled: true}],
-            'nameFrom': [{value: null, disabled: true}],
-            'nameTo': [{value: null, disabled: true}],
-            'registrationNumber': [null],
-            'registrationDate': [new Date()],
-            'internationalMedicamentName': [null],
-            'manufactureFrom': [{value: null, disabled: true}],
-            'manufactureTo': [{value: null, disabled: true}],
-            'doseFrom': [{value: null, disabled: true}],
-            'doseTo': [{value: null, disabled: true}],
-            'volumeQuantityMeasurementFrom': [null],
-            'volumeQuantityMeasurementTo': [null],
-            'pharmFormFrom': [{value: null, disabled: true}],
-            'pharmFormTo': [{value: null, disabled: true}],
-            'atcCodeFrom': [{value: null, disabled: true}],
-            'atcCodeTo': [{value: null, disabled: true}],
-            'administModeFrom': [{value: null, disabled: true}],
-            'administModeTo': [{value: null, disabled: true}],
-            'activeSubstances': [null]
         });
 
         this.subscriptions.push(
@@ -170,31 +107,20 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                     });
                 }
 
-                // console.log('this.areMedInstModified', this.areMedicalInstitutionsModified(currentAmendment.medicalInstitutions));
                 if (this.areMedicalInstitutionsModified(currentAmendment.medicalInstitutions)) {
-                    //console.log('this.areMedInstModified', this.areMedInstModified);
                     this.areMedInstModified = true;
                 }
 
-                if (this.isMedicamentModified(currentAmendment.medicament)) {
-                    this.isMedModified = true;
-                    this.medicamentForm.setValue(currentAmendment.medicament);
-                } else {
-                    // console.log('medicamnet not modified');
+                if (this.areMedicamentsModified(currentAmendment.medicaments)) {
+                    this.areMedModified = true;
                 }
-                if (this.isReferenceProductModified(currentAmendment.referenceProduct)) {
-                    this.isRefProdModified = true;
-                    this.refProdForm.setValue(currentAmendment.referenceProduct);
-                    // console.log('isRefProd modified');
-                } else {
-                    // console.log('isRefProd not modified');
+                if (this.areRefProductsModified(currentAmendment.referenceProducts)) {
+                    this.areRefProdModified = true;
                 }
-                if (this.isPlacebFormModified(currentAmendment.placebo)) {
-                    this.isPlaceboModified = true;
-                    this.placebForm.setValue(currentAmendment.placebo);
-                    // console.log('isPlaceboModified modified');
-                } else {
-                    // console.log('isPlaceboModified not modified');
+
+                if (this.arePlacebosModified(currentAmendment.placebos)) {
+                    this.arePlacModified = true;
+                    console.log('modified maze faze');
                 }
 
                 // console.log('this.ctAmendForm', this.ctAmendForm);
@@ -239,33 +165,91 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    isMedicamentModified(medicament: any) {
-        if (medicament.activeSubstances.some(as => as.status == 'N' || as.status == 'R')) {
-            this.medActiveSubstancesFromList = medicament.activeSubstances.filter(as => as.status == 'U' || as.status == 'R');
-            this.medActiveSubstancesToList = medicament.activeSubstances.filter(as => as.status == 'U' || as.status == 'N');
+    areMedicamentsModified(medicaments: any) {
+        // console.log('medicaments', medicaments);
+        this.mediacmentsFrom = medicaments.filter(medFrom => !medFrom.isNew);
+        this.mediacmentsTo = medicaments.filter(medTo => medTo.isNew);
+        console.log('mediacmentsFrom', this.mediacmentsFrom);
+        console.log('mediacmentsTo', this.mediacmentsTo);
+
+        if (this.mediacmentsFrom.length == this.mediacmentsTo.length) {
+            for (const medicamentFrom of this.mediacmentsFrom) {
+                const medicamentTo = this.mediacmentsTo.find(medTo => medTo.name == medicamentFrom.name);
+                if (medicamentTo && medicamentFrom.manufacture.id == medicamentTo.manufacture.id && medicamentFrom.dose == medicamentTo.dose
+                    && medicamentFrom.pharmaceuticalForm.id == medicamentTo.pharmaceuticalForm.id && medicamentFrom.atcCode.id == medicamentTo.atcCode.id
+                    && medicamentFrom.subjectsSC == medicamentTo.subjectsSC && medicamentFrom.administratingMode == medicamentTo.administratingMode
+                    && medicamentFrom.activeSubstances.length == medicamentTo.activeSubstances.length) {
+                    for (const actSubstFrom of medicamentFrom.activeSubstances) {
+                        const actSubstTo = medicamentTo.activeSubstances.find(actSubstanceTo => actSubstanceTo.activeSubstance.id == actSubstFrom.activeSubstance.id);
+                        if (actSubstTo && actSubstFrom.manufacture.id == actSubstTo.manufacture.id && actSubstFrom.quantity == actSubstTo.quantity
+                            && actSubstFrom.unitsOfMeasurement.id == actSubstTo.unitsOfMeasurement.id) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                } else {
+                    return true;
+                }
+            }
+        } else {
             return true;
         }
-        return !(medicament.nameFrom == medicament.nameTo && medicament.manufactureFrom.id == medicament.manufactureTo.id && medicament.doseFrom == medicament.doseTo
-            && medicament.pharmFormFrom.id == medicament.pharmFormTo.id && medicament.atcCodeFrom.id == medicament.atcCodeTo.id
-            && medicament.administModeFrom == medicament.administModeTo);
+        return false;
     }
 
-    isReferenceProductModified(refProd: any) {
+    areRefProductsModified(refProd: any) {
         // console.log('refProd', refProd);
-        if (refProd.activeSubstances.some(as => as.status == 'N' || as.status == 'R')) {
-            this.refProdActiveSubstancesFromList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'R');
-            this.refProdActiveSubstancesToList = refProd.activeSubstances.filter(as => as.status == 'U' || as.status == 'N');
+        this.refProdFrom = refProd.filter(medFrom => !medFrom.isNew);
+        this.refProdTo = refProd.filter(medTo => medTo.isNew);
+        // console.log('mediacmentsFrom', this.mediacmentsFrom);
+        // console.log('mediacmentsTo', this.mediacmentsTo);
+        //
+        if (this.refProdFrom.length == this.refProdTo.length) {
+            for (const refProdFrom of this.refProdFrom) {
+                const refProdTo = this.refProdTo.find(refTo => refTo.name == refProdFrom.name);
+                if (refProdTo && refProdFrom.manufacture.id == refProdTo.manufacture.id && refProdFrom.dose == refProdTo.dose
+                    && refProdFrom.pharmaceuticalForm.id == refProdTo.pharmaceuticalForm.id && refProdFrom.atcCode.id == refProdTo.atcCode.id
+                    && refProdFrom.administratingMode == refProdTo.administratingMode && refProdFrom.activeSubstances.length == refProdTo.activeSubstances.length) {
+                    for (const actSubstFrom of refProdFrom.activeSubstances) {
+                        const actSubstTo = refProdTo.activeSubstances.find(actSubstanceTo => actSubstanceTo.activeSubstance.id == actSubstFrom.activeSubstance.id);
+                        if (actSubstTo && actSubstFrom.manufacture.id == actSubstTo.manufacture.id && actSubstFrom.quantity == actSubstTo.quantity
+                            && actSubstFrom.unitsOfMeasurement.id == actSubstTo.unitsOfMeasurement.id) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                } else {
+                    return true;
+                }
+            }
+        } else {
             return true;
         }
-        if (refProd.nameFrom == '' && refProd.nameTo == '') {
-            return false;
-        }
-        return !(refProd.nameFrom == refProd.nameTo && refProd.manufactureFrom.id == refProd.manufactureTo.id && refProd.doseFrom == refProd.doseTo
-            && refProd.pharmFormFrom.id == refProd.pharmFormTo.id && refProd.atcCodeFrom.id == refProd.atcCodeTo.id && refProd.administModeFrom == refProd.administModeTo);
+        return false;
     }
 
-    isPlacebFormModified(placebo: any) {
-        return !(placebo.nameFrom == placebo.nameTo && placebo.doseFrom == placebo.doseTo && placebo.administModeFrom == placebo.administModeTo);
+    arePlacebosModified(placebos: any[]) {
+        this.placeboFrom = placebos.filter(placFrom => !placFrom.isNew);
+        this.placeboTo = placebos.filter(placTo => placTo.isNew);
+        if (this.placeboFrom.length == this.placeboTo.length) {
+            for (const placeboFrom of this.placeboFrom) {
+                const placeboTo = this.placeboTo.find(placebTo => placebTo.name == placeboFrom.name);
+                console.log('placeboFrom', placeboFrom);
+                console.log('placeboTo', placeboTo);
+                if (placeboTo && placeboFrom.manufacture.id == placeboTo.manufacture.id
+                    && placeboFrom.pharmaceuticalForm.id == placeboTo.pharmaceuticalForm.id
+                    && placeboFrom.administratingMode == placeboTo.administratingMode) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } else {
+            return true;
+        }
+        return false;
     }
 
     cancel() {

@@ -172,8 +172,8 @@
             </div>
             <hr>
 
+            <br>
             <h5 class="text-center font-weight-bold">Unitatea medicală pentru desfășurarea studiului</h5>
-            <hr>
             <div class="row align-items-center">
                 <div class="col-10">
                     <div class="md-form-modified" [formGroup]="addMediacalInstitutionForm">
@@ -281,7 +281,7 @@
                                 </div>
 
                                 <div class="col-1">
-                                    <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                    <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
                                             (click)="deleteMedicalInstitution(i, medInst.nmMedicalInstitution)"
                                             mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                                     </button>
@@ -289,329 +289,184 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-            <hr>
-
-            <div [formGroup]="medicamentForm">
-                <h5 class="text-center font-weight-bold">MIC Testat</h5>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Nume" formControlName="name" required>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <ng-select [items]="manufacturers | async"
-                                       bindLabel="description"
-                                       placeholder="Producatorul"
-                                       formControlName="manufacture"
-                                       [loading]="loadingManufacturer"
-                                       [typeahead]="manufacturerInputs"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Concentrație" formControlName="dose">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
-                <div class="gradient-card-header bg-sidebar border-gradient">
-                    <div class="container-fluid">
-                        <!-- Title -->
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="card-header-title white-text">Substanţe active</div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text-right fap text-white">
-                                    <i (click)="addMedActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
-                                       aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- Card content -->
-                <div class="card-body card-body-cascade">
-                    <table class="table table-widths text-center">
-                        <thead class="bg-sidebar white-text">
-                        <tr>
-                            <th scope="col">Denumire</th>
-                            <th scope="col">Cod CAS</th>
-                            <th scope="col">Concentratie</th>
-                            <th scope="col">Unitate de masură</th>
-                            <th scope="col">Producător</th>
-                            <th scope="col">Ţară producător</th>
-                            <th scope="col">Adresă producător</th>
-                            <th scope="col">Actiuni</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let substance of medActiveSubstances;let i = index">
-                            <th scope="row">{{ substance.activeSubstance.description }}</th>
-                            <td>{{ substance.activeSubstance.code }}</td>
-                            <td>{{ substance.quantity }}</td>
-                            <td>{{ substance.unitsOfMeasurement.description }}</td>
-                            <td>{{ substance.manufacture.description }}</td>
-                            <td>{{ substance.manufacture.country.description }}</td>
-                            <td>{{ substance.manufacture.address }}</td>
-                            <td>
-                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                        (click)="removeMedActiveSubstance(i)"
-                                        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="row">
-                    <div class="col-3">
-                        <div class="md-form-modified">
-                            <ng-select [items]="farmForms | async"
-                                       bindLabel="description"
-                                       placeholder="Forma farmaceutica"
-                                       formControlName="pharmaceuticalForm"
-                                       [loading]="loadingFarmForms"
-                                       [typeahead]="farmFormsInputs"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="md-form-modified">
-                            <ng-select [items]="atcCodes | async"
-                                       bindLabel="description"
-                                       placeholder="Grupa farmacoterapeutică"
-                                       formControlName="atcCode"
-                                       [loading]="loadingAtcCodes"
-                                       [typeahead]="atcCodesInputs">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.code}} <br/>
-                                    <small class="form-text text-muted">{{item.description}}</small>
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Populaţie subiecţi SC"
-                                       formControlName="subjectsSC">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrare"
-                                       formControlName="administratingMode" required>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-            </div>
-
-            <div [formGroup]="referenceProductFormn">
-                <h5 class="text-center font-weight-bold">MIC Referință</h5>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Nume" formControlName="name">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <ng-select [items]="manufacturersRfPr | async"
-                                       bindLabel="description"
-                                       placeholder="Producatorul"
-                                       formControlName="manufacture"
-                                       [loading]="loadingManufacturerRfPr"
-                                       [typeahead]="manufacturerInputsRfPr"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Concentrație" formControlName="dose" required>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </div>
-                <div class="gradient-card-header bg-sidebar border-gradient">
-                    <div class="container-fluid">
-                        <!-- Title -->
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="card-header-title white-text">Substanţe active</div>
-                            </div>
-                            <div class="col-6">
-                                <div class="text-right fap text-white">
-                                    <i *ngIf="this.isValidRefProduct" (click)="addRefProdActiveSubstanceDialog()"
-                                       class="fa fa-plus-circle fa-lg fa-mt"
-                                       aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Card content -->
-                <div class="card-body card-body-cascade">
-                    <table class="table table-widths text-center">
-                        <thead class="bg-sidebar white-text">
-                        <tr>
-                            <th scope="col">Denumire</th>
-                            <th scope="col">Cod CAS</th>
-                            <th scope="col">Concentratie</th>
-                            <th scope="col">Unitate de masură</th>
-                            <th scope="col">Producător</th>
-                            <th scope="col">Ţară producător</th>
-                            <th scope="col">Adresă producător</th>
-                            <th scope="col">Actiuni</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let substance of refProdActiveSubstances;let i = index">
-                            <th scope="row">{{ substance.activeSubstance.description }}</th>
-                            <td>{{ substance.activeSubstance.code }}</td>
-                            <td>{{ substance.quantity }}</td>
-                            <td>{{ substance.unitsOfMeasurement.description }}</td>
-                            <td>{{ substance.manufacture.description }}</td>
-                            <td>{{ substance.manufacture.country.description }}</td>
-                            <td>{{ substance.manufacture.address }}</td>
-                            <td>
-                                <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
-                                        (click)="removeRefProdActiveSubstance(i)"
-                                        mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <ng-select [items]="farmFormsRfPr | async"
-                                       bindLabel="description"
-                                       placeholder="Forma farmaceutica"
-                                       formControlName="pharmaceuticalForm"
-                                       [loading]="loadingFarmFormsRfPr"
-                                       [typeahead]="farmFormsInputsRfPr"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <ng-select [items]="atcCodesRfPr | async"
-                                       bindLabel="description"
-                                       placeholder="Grupa farmacoterapeutică"
-                                       formControlName="atcCode"
-                                       [loading]="loadingAtcCodesRfPr"
-                                       [typeahead]="atcCodesInputsRfPr"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.code}} <br/>
-                                    <small class="form-text text-muted">{{item.description}}</small>
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrare"
-                                       formControlName="administratingMode" required>
-                            </mat-form-field>
-                        </div>
+                    <div *ngIf="mediacalInstitutionsList.length === 0" class="text-center text-muted mt-3"> Nu sunt
+                        inregistrari gasite!
                     </div>
                 </div>
             </div>
             <hr>
 
-            <div [formGroup]="placeboFormn">
-                <h5 class="text-center font-weight-bold">MIC Placebo</h5>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Nume" formControlName="name">
-                            </mat-form-field>
+            <br>
+            <h5 class="text-center font-weight-bold">Lista medicamente</h5>
+            <div class="gradient-card-header bg-sidebar border-gradient">
+                <div class="container-fluid">
+                    <!-- Title -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card-header-title white-text">MIC Testat</div>
                         </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <ng-select [items]="manufacturersPlacebo | async"
-                                       bindLabel="description"
-                                       placeholder="Producatorul"
-                                       formControlName="manufacture"
-                                       [loading]="loadingManufacturerPlacebo"
-                                       [typeahead]="manufacturerInputsPlacebo"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <ng-select [items]="farmFormsPlacebo | async"
-                                       bindLabel="description"
-                                       placeholder="Forma farmaceutica"
-                                       formControlName="pharmaceuticalForm"
-                                       [loading]="loadingFarmFormsPlacebo"
-                                       [typeahead]="farmFormsInputsPlacebo"
-                                       required="true">
-                                <ng-template ng-option-tmp let-item="item">
-                                    {{item.description}}
-                                </ng-template>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="md-form-modified">
-                            <mat-form-field class="w-100">
-                                <input type="text" matInput placeholder="Calea de administrare"
-                                       formControlName="administratingMode">
-                            </mat-form-field>
+                        <div class="col-6">
+                            <div class="text-right fap text-white">
+                                <i mdbTooltip="Adauga MIC Testat" placement="top"
+                                   class="fa fa-plus-circle fa-lg fa-mt"
+                                   aria-hidden="true" (click)="addMedicament(ctMedTypes.MicTestat)"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- Card header -->
+            <div class="card-body card-body-cascade">
+                <div class="container-fluid">
+                    <div class="row bg-sidebar white-text text-center">
+                        <div class="col">Nume</div>
+                        <div class="col">Producătorul</div>
+                        <div class="col">Concentrație</div>
+                        <div class="col">Forma farmaceutică</div>
+                        <div class="col">Grupa farmacoterapeutică</div>
+                        <div class="col">Populaţie subiecţi SC</div>
+                        <div class="col">Calea de administrare</div>
+                        <div class="col">Actiuni</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card content -->
+            <div class="container-fluid">
+                <div class="row text-center align-items-center"
+                     *ngFor="let medicament of medicamentList; let i = index">
+                    <div class="col">{{medicament.name}}</div>
+                    <div class="col">{{medicament.manufacture?.description}}</div>
+                    <div class="col">{{medicament.dose}}</div>
+                    <div class="col">{{medicament.pharmaceuticalForm?.description}}</div>
+                    <div class="col">{{medicament.atcCode?.description}}</div>
+                    <div class="col">{{medicament.subjectsSC}}</div>
+                    <div class="col">{{medicament.administratingMode}}</div>
+                    <div class="col">
+                        <button type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="editMedicament(ctMedTypes.MicTestat, medicament, i)"
+                                mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="deleteMedicament(ctMedTypes.MicTestat, i)"
+                                mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="medicamentList.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!
+            </div>
             <hr>
 
+            <div class="gradient-card-header bg-sidebar border-gradient">
+                <div class="container-fluid">
+                    <!-- Title -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card-header-title white-text">MIC Referință</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right fap text-white">
+                                <i mdbTooltip="Adauga MIC Referință" placement="top"
+                                   class="fa fa-plus-circle fa-lg fa-mt"
+                                   aria-hidden="true" (click)="addMedicament(ctMedTypes.MicReferance)"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card header -->
+            <div class="card-body card-body-cascade">
+                <div class="container-fluid">
+                    <div class="row bg-sidebar white-text text-center">
+                        <div class="col">Nume</div>
+                        <div class="col">Producătorul</div>
+                        <div class="col">Concentrație</div>
+                        <div class="col">Forma farmaceutică</div>
+                        <div class="col">Grupa farmacoterapeutică</div>
+                        <div class="col">Calea de administrare</div>
+                        <div class="col">Actiuni</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card content -->
+            <div class="container-fluid">
+                <div class="row text-center align-items-center"
+                     *ngFor="let refProduct of refProductList; let i = index">
+                    <div class="col">{{refProduct.name}}</div>
+                    <div class="col">{{refProduct.manufacture?.description}}</div>
+                    <div class="col">{{refProduct.dose}}</div>
+                    <div class="col">{{refProduct.pharmaceuticalForm?.description}}</div>
+                    <div class="col">{{refProduct.atcCode?.description}}</div>
+                    <div class="col">{{refProduct.administratingMode}}</div>
+                    <div class="col">
+                        <button type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="editMedicament(ctMedTypes.MicReferance, refProduct, i)"
+                                mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="deleteMedicament(ctMedTypes.MicReferance, i)"
+                                mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="refProductList.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!
+            </div>
+            <hr>
+
+            <div class="gradient-card-header bg-sidebar border-gradient">
+                <div class="container-fluid">
+                    <!-- Title -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card-header-title white-text">MIC Placebo</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-right fap text-white">
+                                <i mdbTooltip="Adauga MIC Placebo" placement="top"
+                                   class="fa fa-plus-circle fa-lg fa-mt"
+                                   aria-hidden="true" (click)="addMedicament(ctMedTypes.MicPlacebo)"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card header -->
+            <div class="card-body card-body-cascade">
+                <div class="container-fluid">
+                    <div class="row bg-sidebar white-text text-center">
+                        <div class="col">Nume</div>
+                        <div class="col">Producătorul</div>
+                        <div class="col">Forma farmaceutică</div>
+                        <div class="col">Calea de administrare</div>
+                        <div class="col">Actiuni</div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row text-center align-items-center" *ngFor="let placebo of placeboList; let i = index">
+                    <div class="col">{{placebo.name}}</div>
+                    <div class="col">{{placebo.manufacture?.description}}</div>
+                    <div class="col">{{placebo.pharmaceuticalForm?.description}}</div>
+                    <div class="col">{{placebo.administratingMode}}</div>
+                    <div class="col">
+                        <button type="button" class="btn btn-mdb-color waves-light btn-sm waves-light"
+                                (click)="editMedicament(ctMedTypes.MicPlacebo, placebo, i)"
+                                mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="deleteMedicament(ctMedTypes.MicPlacebo, i)"
+                                mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="placeboList.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!
+            </div>
+            <hr>
+
+            <br>
+            <h5 class="text-center font-weight-bold">Taxe și plăți</h5>
             <app-payment-clinical-trial [registrationRequest]="reqReqInitData"></app-payment-clinical-trial>
 
         </div>
