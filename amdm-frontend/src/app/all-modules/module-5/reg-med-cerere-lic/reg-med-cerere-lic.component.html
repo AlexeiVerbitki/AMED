@@ -205,7 +205,7 @@
 					<div class="md-form">
 						<input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
 						       formControlName="persResDepCereriiFirstname">
-						<label for="persResDepCereriiFirstname">Nume persoana responsabilă <span class="text-danger">*</span></label>
+						<label for="persResDepCereriiFirstname">Nume persoană depunătoare <span class="text-danger">*</span></label>
 
 					</div>
 					<div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiFirstname').valid">
@@ -217,7 +217,7 @@
 					<div class="md-form">
 						<input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
 						       formControlName="persResDepCereriiLastname">
-						<label for="persResDepCereriiLastname">Prenume persoana responsabilă <span class="text-danger">*</span></label>
+						<label for="persResDepCereriiLastname">Prenume persoană depunătoare <span class="text-danger">*</span></label>
 
 					</div>
 					<div *ngIf="rFormSubbmitted && !rForm.get('persResDepCereriiLastname').valid">
@@ -231,7 +231,7 @@
 						<input id="idnp" mdbInputDirective type="text" class="form-control"
 							   formControlName="idnp" maxlength="13"
 						>
-						<label for="idnp">IDNP</label>
+						<label for="idnp">Act de identitate</label>
 					</div>
 				</div>
 
@@ -275,6 +275,20 @@
 							<mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
 							<mat-datepicker touchUi #picker3 [disabled]="false"></mat-datepicker>
 						</mat-form-field>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="md-form">
+	                    <textarea type="text" id="reqSubject" class="md-textarea form-control" mdbInputDirective rows="1"
+								  formControlName="regSubject"></textarea>
+						<label for="reqSubject">Subiectul cererii<span class="text-danger">*</span></label>
+					</div>
+					<div *ngIf="rFormSubbmitted && rForm.get('regSubject').invalid">
+						<small class="text-muted"><strong class="text-danger">Subiectul cererii trebuie introdus</strong>
+						</small>
 					</div>
 				</div>
 			</div>

@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -56,7 +55,7 @@ public class DrugCheckDecisionsEntity
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "drug_check_decision_id")
     private Set<DrugImportExportEntity> drugImportExports = new HashSet<>();
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "nm_ec_agent_id")
     private NmEconomicAgentsEntity economicAgent;
     @Basic
@@ -83,5 +82,11 @@ public class DrugCheckDecisionsEntity
     @Basic
     @Column(name = "status")
     private String status;
+    @Basic
+    @Column(name = "nr_sia_geap")
+    private String nrSiaGeap;
+    @Basic
+    @Column(name = "date_sia_geap")
+    private Date dateSiaGeap;
 
 }

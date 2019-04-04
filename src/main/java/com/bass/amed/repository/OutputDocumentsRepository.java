@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OutputDocumentsRepository extends JpaRepository<OutputDocumentsEntity, Integer>
 {
@@ -43,4 +44,6 @@ public interface OutputDocumentsRepository extends JpaRepository<OutputDocuments
     @Modifying
     @Query("UPDATE OutputDocumentsEntity p SET p.jobScheduled = :scheduled WHERE p.id = :id")
     void setJobScheduled(@Param("id") Integer id, @Param("scheduled") Boolean scheduled);
+
+    Optional<OutputDocumentsEntity> findByNumberAndDocType_Category(String number,String category);
 }

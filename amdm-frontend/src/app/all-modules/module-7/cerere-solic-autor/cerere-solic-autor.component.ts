@@ -3,7 +3,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Document} from '../../../models/document';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {AdministrationService} from '../../../shared/service/administration.service';
-import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
@@ -19,8 +18,9 @@ import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.
 import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 import {LocalityService} from '../../../shared/service/locality.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
-import {CpcdAuthLangComponent} from '../cpcd-auth-lang/cpcd-auth-lang.component';
 import {CpcdRejectLetterComponent} from '../cpcd-reject-letter/cpcd-reject-letter.component';
+import {LicenseService} from "../../../shared/service/license/license.service";
+import {AddLicenseFarmacistComponent} from "../../../dialog/add-license-farmacist/add-license-farmacist.component";
 
 @Component({
     selector: 'app-cerere-solic-autor',
@@ -57,6 +57,9 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
     companyExistInTable = false;
     reqReqInitData: any;
     hasNoPreviousData: boolean;
+    farmacistiPerAddress: any[] = [];
+
+    filialWithoutLicense = false;
 
 
     companiiPerIdnoNotSelected: any[] = [];
@@ -75,7 +78,9 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                 private drugDecisionsService: DrugDecisionsService,
                 private localityService: LocalityService,
                 private navbarTitleService: NavbarTitleService,
+                private licenseService: LicenseService,
                 public dialog: MatDialog,
+                public dialogNewPharmacist: MatDialog,
                 public dialogRejectLetter: MatDialog
     ) {
 
@@ -103,6 +108,8 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                 fb.group({
                     'id': null,
                     'registrationRequestId': null,
+                    'nrSiaGeap': [{value: null, disabled: true}],
+                    'dateSiaGeap': [{value: null, disabled: true}],
                     'protocolNr': [null, Validators.required],
                     'protocolDate': null,
                     'drugSubstanceTypesId': [],
@@ -113,6 +120,7 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                     'psihotrop': [{value: null, disabled: false}],
                     'stupefiant': [{value: null, disabled: false}],
                     'farmDir': [{value: null, disabled: true}, Validators.required],
+                    'farmDirWithoutLicense': [{value: null}, Validators.required],
                     'nmEconomicAgents': [[]],
                     'economicAgent': [null, Validators.required],
                     'decision': null,
@@ -126,7 +134,6 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
 
-
         this.subscriptions.push(
             this.drugSubstanceTypesService.getDrugSubstanceTypesList().subscribe(data => {
                     this.drugSubstanceTypes = data;
@@ -134,20 +141,6 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                 }
             )
         );
-
-
-        // this.currentDate = new Date();
-        // this.cerereSolicAutorForm.get('dataReg').setValue(this.currentDate);
-
-        // this.subscriptions.push(
-        //     this.administrationService.generateDocNr().subscribe(data => {
-        //             this.generatedDocNrSeq = data;
-        //             this.cerereSolicAutorForm.get('requestNumber').setValue(this.generatedDocNrSeq);
-        //         }
-        //     )
-        // );
-
-
         this.onChanges();
     }
 
@@ -158,7 +151,7 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                         this.reqReqInitData = data;
                         if (this.reqReqInitData.type.code === 'ATAC') {
                             this.navbarTitleService.showTitleMsg('Cerere de solicitare a autorizatiei de activitate cu precursori/psihotrope/stupefiante');
-                        } else  if (this.reqReqInitData.type.code === 'MACPS') {
+                        } else if (this.reqReqInitData.type.code === 'MACPS') {
                             this.navbarTitleService.showTitleMsg('Cerere de modificare a autorizarii de activitate cu precursori/psihotrope/stupefiante');
                         } else if (this.reqReqInitData.type.code === 'DACPS') {
                             this.navbarTitleService.showTitleMsg('Cerere de solicitare a duplicatului autorizatiei de activitate cu precursori/psihotrope/stupefiante');
@@ -210,11 +203,13 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                         this.retrieveFilials(data.company.idno);
 
                         //populate decision
-
                         if (data.drugCheckDecisions && data.drugCheckDecisions[0]) {
                             const drugCheckDecision = data.drugCheckDecisions[0];
+
                             this.cerereSolicAutorForm.get('drugCheckDecision.id').setValue(drugCheckDecision.id);
                             this.cerereSolicAutorForm.get('drugCheckDecision.registrationRequestId').setValue(drugCheckDecision.registrationRequestId);
+                            this.cerereSolicAutorForm.get('drugCheckDecision.nrSiaGeap').setValue(drugCheckDecision.nrSiaGeap);
+                            this.cerereSolicAutorForm.get('drugCheckDecision.dateSiaGeap').setValue(drugCheckDecision.dateSiaGeap ? new Date(drugCheckDecision.dateSiaGeap) : null);
                             this.cerereSolicAutorForm.get('drugCheckDecision.protocolNr').setValue(drugCheckDecision.protocolNr);
                             this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').setValue(drugCheckDecision.protocolDate ? new Date(drugCheckDecision.protocolDate) : null);
                             this.cerereSolicAutorForm.get('drugCheckDecision.economicAgent').setValue(drugCheckDecision.economicAgent);
@@ -302,7 +297,11 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
         });
 
         this.cerereSolicAutorForm.get('drugCheckDecision.economicAgent').valueChanges.subscribe(val => {
+            console.log('val', val);
+            this.filialWithoutLicense = false;
+
             if (val) {
+                this.farmacistiPerAddress = val.agentPharmaceutist;
                 this.cerereSolicAutorForm.get('drugCheckDecision.region').setValue(null);
                 this.cerereSolicAutorForm.get('drugCheckDecision.locality').setValue(null);
                 this.cerereSolicAutorForm.get('drugCheckDecision.street').setValue(null);
@@ -311,18 +310,29 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                 //Find previous details
                 let oldDetails = null;
 
-                if ((this.reqReqInitData.type.code === 'MACPS' || this.reqReqInitData.type.code === 'DACPS') && (!this.reqReqInitData.drugCheckDecisions || !this.reqReqInitData.drugCheckDecisions[0] || !this.reqReqInitData.drugCheckDecisions[0].economicAgent)) {
-                        if (this.reqReqInitData.type.code === 'DACPS') {
-                            this.cerereSolicAutorForm.get('drugCheckDecision.reasonDecision').setValue(null);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.expireDate').setValue(null);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.decision').setValue(null);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.protocolNr').setValue(null);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').setValue(null);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.precursor').setValue(null);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.psihotrop').setValue(null);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.stupefiant').setValue(null);
+                if (val.licenseId) {
+                    this.subscriptions.push(this.licenseService.loadActiveLicenseById(val.licenseId).subscribe(() => {
+                            this.filialWithoutLicense = false;
+                        },
+                        () => this.filialWithoutLicense = true));
+                }
+                else {
+                    this.filialWithoutLicense = true;
+                }
 
-                        }
+
+                if ((this.reqReqInitData.type.code === 'MACPS' || this.reqReqInitData.type.code === 'DACPS') && (!this.reqReqInitData.drugCheckDecisions || !this.reqReqInitData.drugCheckDecisions[0] || !this.reqReqInitData.drugCheckDecisions[0].economicAgent)) {
+                    if (this.reqReqInitData.type.code === 'DACPS') {
+                        this.cerereSolicAutorForm.get('drugCheckDecision.reasonDecision').setValue(null);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.expireDate').setValue(null);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.decision').setValue(null);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.protocolNr').setValue(null);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.protocolDate').setValue(null);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.precursor').setValue(null);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.psihotrop').setValue(null);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.stupefiant').setValue(null);
+
+                    }
                     this.subscriptions.push(this.drugDecisionsService.searchLastRequest(val.id).subscribe(data => {
                         if (data) {
                             oldDetails = data;
@@ -338,6 +348,7 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                     this.completeFilialData(val, oldDetails);
                 }
             } else {
+                this.farmacistiPerAddress = [];
                 this.cerereSolicAutorForm.get('drugCheckDecision.region').setValue(null);
                 this.cerereSolicAutorForm.get('drugCheckDecision.locality').setValue(null);
                 this.cerereSolicAutorForm.get('drugCheckDecision.street').setValue(null);
@@ -373,14 +384,18 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                             const result = lst.filter(af => af.selectionDate !== null).reduce(function (prev, curr) {
                                 return prev.selectionDate < curr.selectionDate ? curr : prev;
                             });
-
                             this.cerereSolicAutorForm.get('drugCheckDecision.farmDir').setValue(result.fullName);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.region').setValue(data.stateName);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.locality').setValue(data.description);
-                            this.cerereSolicAutorForm.get('drugCheckDecision.street').setValue(val.street);
-                        } else {
-                            this.errorHandlerService.showError('Aceasta filiala nu are farmacist diriginte');
                         }
+                        else{
+                            this.cerereSolicAutorForm.get('drugCheckDecision.farmDirWithoutLicense').setValue(null);
+                        }
+
+                        this.cerereSolicAutorForm.get('drugCheckDecision.region').setValue(data.stateName);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.locality').setValue(data.description);
+                        this.cerereSolicAutorForm.get('drugCheckDecision.street').setValue(val.street);
+                        // else {
+                        //     this.errorHandlerService.showError('Aceasta filiala nu are diriginte');
+                        // }
 
                         if (this.reqReqInitData.type.code === 'MACPS' && oldDetails) {
                             //populate data from previous values
@@ -492,11 +507,13 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
 
         this.drugCheckDecisions = [];
         let drugDecision;
-        if (this.reqReqInitData.type.code === 'DACPS') {
+        // if (this.reqReqInitData.type.code === 'DACPS') {
             drugDecision = this.cerereSolicAutorForm.getRawValue().drugCheckDecision;
-        } else {
-            drugDecision = this.cerereSolicAutorForm.get('drugCheckDecision').value;
-        }
+        // } else {
+        //     drugDecision = this.cerereSolicAutorForm.get('drugCheckDecision').value;
+        // }
+
+        drugDecision.economicAgent.agentPharmaceutist = this.farmacistiPerAddress;
 
         if (step === 'F') {
             modelToSubmit.currentStep = 'F';
@@ -504,7 +521,7 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
 
             drugDecision.status = 'F';
         }
-        else{
+        else {
             drugDecision.status = 'A';
         }
 
@@ -642,7 +659,7 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                 }
                 )
             );
-        } else  if (document.docType.category == 'SR') {
+        } else if (document.docType.category == 'SR') {
             const data = {
                 requestDate: this.cerereSolicAutorForm.get('data').value,
                 requestNumber: this.cerereSolicAutorForm.get('requestNumber').value,
@@ -660,14 +677,14 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
 
 
             const dialogRef2 = this.dialogRejectLetter.open(CpcdRejectLetterComponent, {
-                data : {
-                    details : data,
+                data: {
+                    details: data,
                     parentWindow: window
                 },
                 hasBackdrop: false,
-                disableClose : false,
-                autoFocus : true,
-                panelClass : 'custom-dialog-container'
+                disableClose: false,
+                autoFocus: true,
+                panelClass: 'custom-dialog-container'
             });
 
             dialogRef2.afterClosed().subscribe(result => {
@@ -834,6 +851,25 @@ export class CerereSolicAutorComponent implements OnInit, OnDestroy {
                 }
             )
         );
+    }
+
+    newFarmacist() {
+        console.log( this.cerereSolicAutorForm.get('drugCheckDecision.economicAgent').value);
+        const dialogRef2 = this.dialogNewPharmacist.open(AddLicenseFarmacistComponent, {
+            data: {
+                // No Data
+                // saveHere : true,
+                // ecAgentId: this.cerereSolicAutorForm.get('drugCheckDecision.economicAgent').value.id,
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result.success) {
+                this.farmacistiPerAddress = [...this.farmacistiPerAddress, result.farmacist];
+                this.cerereSolicAutorForm.get('drugCheckDecision.farmDirWithoutLicense').setValue(result.farmacist);
+            }
+        });
     }
 
 

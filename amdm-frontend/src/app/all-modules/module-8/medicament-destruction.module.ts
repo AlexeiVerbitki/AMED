@@ -15,6 +15,7 @@ import {PaymentModule} from '../../payment/payment.module';
 import { DrugsDestroyActualComponent } from './drugs-destroy-actual/drugs-destroy-actual.component';
 import {AnnihilationMedDialogComponent} from '../../dialog/annihilation-med-dialog/annihilation-med-dialog.component';
 import {PipeModule} from '../../shared/pipe/pipe.module';
+import {EcAgentModule} from "../../administration/economic-agent/ec-agent.module";
 
 @NgModule({
     imports: [
@@ -27,6 +28,7 @@ import {PipeModule} from '../../shared/pipe/pipe.module';
         DocumentModule,
         PaymentModule,
         PipeModule,
+        EcAgentModule
     ],
     entryComponents: [
         AnnihilationMedDialogComponent

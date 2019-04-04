@@ -93,6 +93,8 @@ export class DeclarationImportExportComponent implements OnInit, OnDestroy {
             'partnerCompany': [{value: null, disabled: true}],
             'expireDate': [{value: null, disabled: true}],
             'customsPost': [{value: null, disabled: true}],
+            'nrSiaGeap': [{value: null, disabled: true}],
+            'dateSiaGeap': [{value: null, disabled: true}],
         });
     }
 
@@ -106,6 +108,10 @@ export class DeclarationImportExportComponent implements OnInit, OnDestroy {
         this.cerereImpExpForm.get('partnerCompany').setValue(data.drugCheckDecisions[0].partnerCompany);
         this.cerereImpExpForm.get('expireDate').setValue(new Date(data.drugCheckDecisions[0].expireDate));
         this.cerereImpExpForm.get('customsPost').setValue(data.drugCheckDecisions[0].customsPost);
+
+        this.cerereImpExpForm.get('nrSiaGeap').setValue(data.drugCheckDecisions[0].nrSiaGeap);
+        this.cerereImpExpForm.get('dateSiaGeap').setValue(data.drugCheckDecisions[0].dateSiaGeap ? new Date(data.drugCheckDecisions[0].dateSiaGeap) : null);
+
 
 
         this.selectedSubstancesTable = data.drugCheckDecisions[0].drugImportExports;

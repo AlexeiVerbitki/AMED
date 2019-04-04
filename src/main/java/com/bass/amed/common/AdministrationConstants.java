@@ -68,7 +68,8 @@ public interface AdministrationConstants {
             "drug_units_conversion_rates",
             "nm_reports",
             "nm_report_types",
-            "nm_med_inst_subdivisions"
+            "nm_med_inst_subdivisions",
+            "nm_departments"
     };
     String SQL_GET_ALL_BY_TABLE = "SELECT * FROM %s";
     String SQL_DELETE_TABLE = "DELETE FROM %s WHERE ID = :id";

@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Document} from '../../../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
@@ -15,7 +15,6 @@ import {LoaderService} from '../../../shared/service/loader.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {AddExpertComponent} from '../../../dialog/add-expert/add-expert.component';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
-import {AddLaboratorStandardsComponent} from '../../../dialog/add-laborator-standards/add-laborator-standards.component';
 import {AddDivisionComponent} from '../../../dialog/add-division/add-division.component';
 
 @Component({
@@ -43,8 +42,9 @@ export class ExpertiComponent implements OnInit, OnDestroy {
     machets: any[] = [];
     registrationRequestMandatedContacts: any[] = [];
     oaAttached = false;
+    oaIncluded = false;
     expertList: any[] = [];
-    standarts: any[];
+    standarts: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -70,6 +70,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             'assignedUser': [''],
             'companyValue': [''],
             'division': [null],
+            'standard' : [null],
             'labResponse': [null],
             'divisionBonDePlata': [null],
             'medicament':
@@ -196,6 +197,9 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                                     machets: entry.instructions.filter(t => t.type == 'M'),
                                     approved: entry.approved
                                 });
+                                if (entry.approved) {
+                                    this.oaIncluded = true;
+                                }
                             }
                         }
                         this.expertForm.get('divisionBonDePlata').setValue(this.getConcatenatedDivision());
@@ -414,12 +418,12 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (this.instructions.length == 0) {
+        if (this.expertForm.get('type').value.code != 'MERG' && this.expertForm.get('type').value.code != 'MERS' && this.instructions.length == 0) {
             this.errorHandlerService.showError('Nici o informatie nu a fost adaugata');
             return;
         }
 
-        if (this.machets.length == 0) {
+        if (this.expertForm.get('type').value.code != 'MERG' && this.expertForm.get('type').value.code != 'MERS' && this.machets.length == 0) {
             this.errorHandlerService.showError('Nici o macheta nu a fost adaugata');
             return;
         }
@@ -437,11 +441,11 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                     findMachet = true;
                 }
             }
-            if (!findInstr) {
+            if (this.expertForm.get('type').value.code != 'MERG' && this.expertForm.get('type').value.code != 'MERS' && !findInstr) {
                 this.errorHandlerService.showError('Exista divizari fara informatii.');
                 return;
             }
-            if (!findMachet) {
+            if (this.expertForm.get('type').value.code != 'MERG' && this.expertForm.get('type').value.code != 'MERS' &&!findMachet) {
                 this.errorHandlerService.showError('Exista divizari fara machete.');
                 return;
             }
@@ -463,31 +467,31 @@ export class ExpertiComponent implements OnInit, OnDestroy {
         this.loadingService.show();
         this.formSubmitted = false;
 
-        const x = this.modelToSubmit;
+        const regData = this.modelToSubmit;
 
         const usernameDB = this.authService.getUserName();
-        x.currentStep = 'F';
-        x.endDate = new Date();
-        x.assignedUser = usernameDB;
+        regData.currentStep = 'F';
+        regData.endDate = new Date();
+        regData.assignedUser = usernameDB;
 
-        x.requestHistories.push({
+        regData.requestHistories.push({
             startDate: this.expertForm.get('data').value, endDate: new Date(),
             username: usernameDB, step: 'X'
         });
 
-        x.requestHistories.push({
+        regData.requestHistories.push({
             startDate: new Date(),
             username: usernameDB, step: 'F'
         });
 
-        x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
+        regData.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
-        x.documents = this.documents;
-        x.outputDocuments = this.outputDocuments;
-        x.laboratorReferenceStandards = this.standarts;
-        x.expertList = this.expertList;
+        regData.documents = this.documents;
+        regData.outputDocuments = this.outputDocuments;
+        regData.laboratorReferenceStandards = this.standarts;
+        regData.expertList = this.expertList;
 
-        for (const med of x.medicaments) {
+        for (const med of regData.medicaments) {
             med.atcCode = this.expertForm.get('medicament.atcCode').value;
             const div = this.divisions.find(t => t.description == med.division);
             if (div.approved) {
@@ -520,7 +524,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(x).subscribe(data => {
+        this.subscriptions.push(this.requestService.addMedicamentRequest(regData).subscribe(data => {
                 this.loadingService.hide();
                 this.router.navigate(['dashboard/homepage']);
             }, error => this.loadingService.hide())
@@ -618,7 +622,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
-
+        this.errorHandlerService.showSuccess('');
     }
 
     dd() {
@@ -653,14 +657,18 @@ export class ExpertiComponent implements OnInit, OnDestroy {
         element.approved = value.checked;
     }
 
-    addToAuthorizationOrder() {
-        const rl = this.documents.find(r => r.docType.category == 'RL');
-        const lab = this.outputDocuments.find(r => r.docType.category == 'LAB');
-        if (lab && !rl) {
-            this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
-            return;
-        }
+    removeFromAuthorizationOrder() {
+        const ids: any[] = [];
+        this.divisions.forEach(t => ids.push(t.id));
+        this.subscriptions.push(this.requestService.removeMedicamentsFromAuthorizationOrder(ids).subscribe(data => {
+                this.loadingService.hide();
+                this.errorHandlerService.showSuccess('Medicamentele au fost extrase din ordinul de autorizare');
+                this.oaIncluded = false;
+            }, error => this.loadingService.hide())
+        );
+    }
 
+    addToAuthorizationOrder() {
         this.formSubmitted = true;
 
         if (this.expertForm.invalid) {
@@ -697,6 +705,8 @@ export class ExpertiComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.requestService.setMedicamentApproved(ids).subscribe(data => {
                 this.loadingService.hide();
+                this.errorHandlerService.showSuccess('Medicamentele au fost incluse in ordinul de autorizare');
+                this.oaIncluded = true;
             }, error => this.loadingService.hide())
         );
     }
@@ -714,24 +724,24 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             if (result) {
                 this.loadingService.show();
 
-                const x = this.modelToSubmit;
+                const regData = this.modelToSubmit;
 
                 const usernameDB = this.authService.getUserName();
-                x.currentStep = 'E';
-                x.assignedUser = usernameDB;
+                regData.currentStep = 'E';
+                regData.assignedUser = usernameDB;
 
-                x.requestHistories.push({
+                regData.requestHistories.push({
                     startDate: this.expertForm.get('data').value, endDate: new Date(),
                     username: usernameDB, step: 'X'
                 });
 
-                x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
+                regData.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
-                x.documents = this.documents;
-                x.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'CA');
-                x.expertList = this.expertList;
+                regData.documents = this.documents;
+                regData.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'CA');
+                regData.expertList = this.expertList;
 
-                for (const med of x.medicaments) {
+                for (const med of regData.medicaments) {
                     med.atcCode = this.expertForm.get('medicament.atcCode').value;
                     const div = this.divisions.find(t => t.description == med.division);
                     med.approved = false;
@@ -760,7 +770,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                     }
                 }
 
-                this.subscriptions.push(this.requestService.addMedicamentRequest(x).subscribe(data => {
+                this.subscriptions.push(this.requestService.addMedicamentRequest(regData).subscribe(data => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module/medicament-registration/evaluate/' + this.modelToSubmit.id]);
                     }, error => this.loadingService.hide())
@@ -770,34 +780,34 @@ export class ExpertiComponent implements OnInit, OnDestroy {
 
     }
 
-    save() {
+    save(showSuccess) {
         this.loadingService.show();
 
-        const x = this.modelToSubmit;
+        const regData = this.modelToSubmit;
 
         const usernameDB = this.authService.getUserName();
-        x.currentStep = 'X';
-        x.assignedUser = usernameDB;
-        x.medicamentName = this.expertForm.get('medicament.commercialName').value;
+        regData.currentStep = 'X';
+        regData.assignedUser = usernameDB;
+        regData.medicamentName = this.expertForm.get('medicament.commercialName').value;
 
-        x.requestHistories.push({
+        regData.requestHistories.push({
             startDate: this.expertForm.get('data').value, endDate: new Date(),
             username: usernameDB, step: 'X'
         });
 
-        x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
+        regData.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
         const rl = this.outputDocuments.find(r => r.docType.category == 'RL');
         if (rl) {
             rl.responseReceived = this.expertForm.get('labResponse').value;
         }
 
-        x.documents = this.documents;
-        x.outputDocuments = this.outputDocuments;
-        x.laboratorReferenceStandards = this.standarts;
-        x.expertList = this.expertList;
+        regData.documents = this.documents;
+        regData.outputDocuments = this.outputDocuments;
+        regData.laboratorReferenceStandards = this.standarts;
+        regData.expertList = this.expertList;
 
-        for (const med of x.medicaments) {
+        for (const med of regData.medicaments) {
             med.atcCode = this.expertForm.get('medicament.atcCode').value;
             const div = this.divisions.find(t => t.description == med.division);
 
@@ -833,18 +843,21 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             }
         }
 
-        this.subscriptions.push(this.requestService.addMedicamentRequest(x).subscribe(data => {
+        this.subscriptions.push(this.requestService.addMedicamentRequest(regData).subscribe(data => {
                 this.loadingService.hide();
+                if (showSuccess) {
+                    this.errorHandlerService.showSuccess('Datele au fost salvate.');
+                }
             }, error => this.loadingService.hide())
         );
     }
 
     manufacturesStr(substance: any) {
         if (substance && substance.manufactures) {
-            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '')
+            let str = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '')
                 + ' ' + s.manufacture.address + 'NRQW').toString();
-            s = s.replace(/NRQW/gi, ';');
-            return s.replace(';,', '; ');
+            str = str.replace(/NRQW/gi, ';');
+            return str.replace(';,', '; ');
         }
         return '';
     }
@@ -1020,31 +1033,16 @@ export class ExpertiComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = false;
 
-        const dialogConfig2 = new MatDialogConfig();
-
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.width = '600px';
-
-        const dialogRef = this.dialog.open(AddLaboratorStandardsComponent, dialogConfig2);
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && result.response) {
-                this.subscriptions.push(this.requestService.laboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
-                        this.outputDocuments.push({
-                            name: 'Solicitare desfasurare analize de laborator',
-                            docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                            status: 'Urmeaza a fi inclus in actul de predare-primire',
-                            date: new Date()
-                        });
-                        this.standarts = result.standards;
-                        this.save();
-                    }, error => console.log(error))
-                );
-            }
-        });
+        this.subscriptions.push(this.requestService.laboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
+                this.outputDocuments.push({
+                    name: 'Solicitare desfasurare analize de laborator',
+                    docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                    status: 'Urmeaza a fi inclus in actul de predare-primire',
+                    date: new Date()
+                });
+                this.save(false);
+            }, error => console.log(error))
+        );
 
     }
 
@@ -1073,8 +1071,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                                     this.outputDocuments.splice(index, 1);
                                 }
                             });
-                            this.standarts = [];
-                            this.save();
+                            this.save(false);
                         }, error => console.log(error))
                     );
                     return;
@@ -1115,7 +1112,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
         dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
-        dialogConfig2.data = {division : division, disabledMainFields : true};
+        dialogConfig2.data = {division: division, disabledMainFields: true};
 
         const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
 
@@ -1126,6 +1123,17 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                 this.divisions[index].samplesExpirationDate = result.samplesExpirationDate;
             }
         });
+    }
+
+    addStandard() {
+        if (this.expertForm.get('standard').value) {
+            this.standarts.push({description: this.expertForm.get('standard').value});
+            this.expertForm.get('standard').setValue(null);
+        }
+    }
+
+    removeStandard(index) {
+        this.standarts.splice(index, 1);
     }
 
 }

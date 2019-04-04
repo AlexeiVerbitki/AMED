@@ -22,8 +22,6 @@ import com.bass.amed.utils.AmountUtils;
 import com.bass.amed.utils.NumberToWordsConverter;
 import com.bass.amed.utils.SecurityUtils;
 import com.bass.amed.utils.Utils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -58,8 +56,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -1076,11 +1074,20 @@ public class DocumentsController {
         storageService.remove(document.getPath());
         List<RegistrationRequestsEntity> requests = regRequestRepository.findRequestsByLabNumber(document.getNumber());
         Set<Integer> ids = new HashSet<>();
+        Set<Integer> actIds = new HashSet<>();
         for (RegistrationRequestsEntity req : requests) {
             ids.add(req.getId());
+            Optional<OutputDocumentsEntity> outDocument = req.getOutputDocuments().stream().filter(t->t.getDocType().getCategory().equals("LAB")).findAny();
+            if(outDocument.isPresent()) {
+                actIds.add(outDocument.get().getId());
+            }
         }
         regRequestRepository.setLabNumber(ids, null);
         outputDocumentsRepository.deleteById(document.getId());
+        for(Integer id : actIds)
+        {
+            outputDocumentsRepository.deleteById(id);
+        }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -1203,6 +1210,7 @@ public class DocumentsController {
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+            saveBonDePlata(seq, jasperPrint);
 
             List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(bonDePlataDTO.getRequestId());
 
@@ -1213,6 +1221,9 @@ public class DocumentsController {
                     order.setNumber(String.valueOf(seq.getId()));
                     order.setCurrency(bonDePlataDTO.getCurrency());
                     order.setAmountExchanged(AmountUtils.round(order.getQuantity() * order.getAmount() / coeficient, 2));
+                    if("BS".equals(order.getServiceCharge().getCategory())) {
+                        order.setNumber(null);
+                    }
                     paymentOrderRepository.save(order);
                     jobSchedulerComponent.jobUnschedule("/wait-evaluation-medicament-registration", bonDePlataDTO.getRequestId());
                 }
@@ -1223,6 +1234,20 @@ public class DocumentsController {
 
         return ResponseEntity.ok().header("Content-Type", "application/pdf")
                 .header("Content-Disposition", "inline; filename=bonDePlata.pdf").body(bytes);
+    }
+
+    private void saveBonDePlata(PaymentOrderNumberSequence seq, JasperPrint jasperPrint) throws CustomException {
+        //save to storage
+        String docPath = storageService.storePDFFile(jasperPrint, "bonuri_de_plata/Bon de plata Nr " + String.valueOf(seq.getId()) + ".pdf");
+
+        // save in db
+        OutputDocumentsEntity outputDocumentsEntity = new OutputDocumentsEntity();
+        outputDocumentsEntity.setNumber(String.valueOf(seq.getId()));
+        outputDocumentsEntity.setName("Bon de plata Nr " + String.valueOf(seq.getId()) + ".pdf");
+        outputDocumentsEntity.setDocType(documentTypeRepository.findByCategory("BON").orElse(new NmDocumentTypesEntity()));
+        outputDocumentsEntity.setDate(new Timestamp(new Date().getTime()));
+        outputDocumentsEntity.setPath(docPath);
+        outputDocumentsRepository.save(outputDocumentsEntity);
     }
 
     @RequestMapping(value = "/view-bon-de-plata-suplimentar", method = RequestMethod.POST)
@@ -1271,6 +1296,9 @@ public class DocumentsController {
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            //save to storage
+            saveBonDePlata(seq, jasperPrint);
 
             List<PaymentOrdersEntity> details = paymentOrderRepository.findByregistrationRequestId(bonDePlataDTO.getRequestId());
 
@@ -2856,7 +2884,7 @@ public class DocumentsController {
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("invoice_date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(new Date()));
+            parameters.put("invoice_date", new SimpleDateFormat(Constants.Layouts.POINT_DATE_FORMAT).format(new Date()));
             parameters.put("nr_invoice", seq.getId().toString());
             parameters.put("payer", ecAgent.getLongName());
             parameters.put("payer_address", ecAgent.getLegalAddress());
@@ -2872,6 +2900,9 @@ public class DocumentsController {
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            //save to storage
+            saveBonDePlata(seq, jasperPrint);
         } catch (IOException | JRException e) {
             throw new CustomException(e.getMessage(), e);
         }
@@ -2953,6 +2984,10 @@ public class DocumentsController {
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
+
+            //save to storage
+            saveBonDePlata(seq, jasperPrint);
+
         } catch (IOException | JRException e) {
             throw new CustomException(e.getMessage(), e);
         }

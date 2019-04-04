@@ -681,9 +681,9 @@
                             <th scope="col">Valuta</th>
                             <th scope="col">Suma</th>
                             <!--<th scope="col">Ţara şi adresa producătorului materiei prime</th>-->
-                            <th scope="col">Termen de valabilitate</th>
+                            <th *ngIf="importData?.importAuthorizationEntity.medType==1" scope="col">Termen de valabilitate</th>
                             <th scope="col">Codul Vamal</th>
-                            <th scope="col">Sursa</th>
+                            <th *ngIf="importData?.importAuthorizationEntity.medType==2" scope="col">Sursa</th>
                             <th scope="col">Actiuni</th>
 
                             <!--<th scope="col">Actiuni</th>-->
@@ -701,9 +701,9 @@
                             <td>{{ unitOfImport?.currency?.shortDescription}}</td>
                             <td>{{ unitOfImport?.summ | number : '1.2-2'}}</td>
                             <!--<td>{{ unitOfImport?.producer.address }}, {{ unitOfImport?.producer.country.description }}</td>-->
-                            <td>{{ unitOfImport?.expirationDate | date:'mediumDate' }}</td>
+                            <td *ngIf="importData?.importAuthorizationEntity.medType==1"> {{ unitOfImport?.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport?.customsCode?.code }}</td>
-                            <td>{{ unitOfImport?.importSources?.name }}</td>
+                            <td *ngIf="importData?.importAuthorizationEntity.medType==2"> {{ unitOfImport?.importSources?.name }}</td>
 
 
                             <td [ngStyle]="{'width': '200px'}">

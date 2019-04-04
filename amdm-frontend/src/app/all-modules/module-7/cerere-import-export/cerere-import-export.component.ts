@@ -95,6 +95,8 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
                     'id': null,
                     'protocolNr': [null, Validators.required],
                     'protocolDate': Date,
+                    'nrSiaGeap': [{value: null, disabled: true}],
+                    'dateSiaGeap': [{value: null, disabled: true}],
                     'drugImportExports': [[]],
                     'drugSubstanceTypesId': [],
                     'registrationRequestId': null,
@@ -180,9 +182,10 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
 
                             this.cerereImpExpForm.get('scopeAuthorization').setValue(rs1);
 
-
                             this.cerereImpExpForm.get('drugCheckDecision.id').setValue(data.drugCheckDecisions[0].id);
                             this.cerereImpExpForm.get('drugCheckDecision.registrationRequestId').setValue(data.drugCheckDecisions[0].registrationRequestId);
+                            this.cerereImpExpForm.get('drugCheckDecision.nrSiaGeap').setValue(data.drugCheckDecisions[0].nrSiaGeap);
+                            this.cerereImpExpForm.get('drugCheckDecision.dateSiaGeap').setValue(data.drugCheckDecisions[0].dateSiaGeap ? new Date(data.drugCheckDecisions[0].dateSiaGeap) : null);
                             this.cerereImpExpForm.get('drugCheckDecision.protocolNr').setValue(data.drugCheckDecisions[0].protocolNr);
                             this.cerereImpExpForm.get('drugCheckDecision.protocolDate').setValue(data.drugCheckDecisions[0].protocolDate ? new Date(data.drugCheckDecisions[0].protocolDate) : null);
                             this.cerereImpExpForm.get('drugCheckDecision.expireDate').setValue(data.drugCheckDecisions[0].expireDate ? new Date(data.drugCheckDecisions[0].expireDate) : null);
@@ -477,8 +480,11 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
 
         modelToSubmit.assignedUser = this.authService.getUserName();
         this.drugCheckDecisions = [];
-        const drugDec = this.cerereImpExpForm.get('drugCheckDecision').value;
-        drugDec.authorizationType = this.cerereImpExpForm.get('authorizationType').value.value;
+        const drugDec = this.cerereImpExpForm.getRawValue().drugCheckDecision;
+        if (this.cerereImpExpForm.get('authorizationType').value)
+        {
+            drugDec.authorizationType = this.cerereImpExpForm.get('authorizationType').value.value;
+        }
         if (this.cerereImpExpForm.get('scopeAuthorization').valid) {
             drugDec.scopeAuthorization = this.cerereImpExpForm.get('scopeAuthorization').value.value;
         }

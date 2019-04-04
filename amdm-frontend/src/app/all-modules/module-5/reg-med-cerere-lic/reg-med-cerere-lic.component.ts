@@ -108,6 +108,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             'reasonSuspension': '',
             'reasonCancel': '',
             'idnp': '',
+            'regSubject': ['', Validators.required],
         });
 
 
@@ -175,6 +176,7 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
         modelToSubmit.license = licenseModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
         modelToSubmit.documents = this.docs;
+        modelToSubmit.regSubject = this.rForm.get('regSubject').value;
         // modelToSubmit.company = {id: this.rForm.get('compGet').value.id};
 
 
@@ -422,11 +424,6 @@ export class RegMedCerereLicComponent implements OnInit, OnDestroy {
             }
         });
     }
-
-
-
-
-
 
     ngOnDestroy() {
         this.navbarTitleService.showTitleMsg('');

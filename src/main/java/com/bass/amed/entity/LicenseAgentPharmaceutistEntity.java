@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Data
 @Entity
-@Table(name = "license_agent_pharmaceutist", schema = "amed", catalog = "")
+@Table(name = "license_agent_pharmaceutist", schema = "amed")
 public class LicenseAgentPharmaceutistEntity
 {
     @Id
@@ -24,4 +24,6 @@ public class LicenseAgentPharmaceutistEntity
     @Basic
     @Column(name = "full_name")
     private String fullName;
+    @Transient
+    private Integer ecAgentId;
 }

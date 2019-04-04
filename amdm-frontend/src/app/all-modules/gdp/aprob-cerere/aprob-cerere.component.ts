@@ -71,10 +71,14 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
     datePipe = new DatePipe('en-US');
 
+    minDate = new Date();
+
     gdpInspection = {
         groupLeaderId: null,
-        certificateBasedOnTheInspection: null,
         autoDistributionOperations: null,
+        certificateTermsOfValidity: null,
+        certificateRestrictions: null,
+        certificateNr: null,
         id: null,
         inspectors: [],
         subsidiaries: [],
@@ -103,7 +107,9 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             'mandatedLastname': [null],
             'periods': fb.array([]),
             'autoDistributionOperations': [null, Validators.required],
-            'certificateBasedOnTheInspection': [null, Validators.required],
+            'certificateTermsOfValidity': [null, Validators.required],
+            'certificateRestrictions': [null, Validators.required],
+            'certificateNr': [null, Validators.required],
         });
 
         this.decisionForm = fb.group({
@@ -118,7 +124,6 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             'requestStatus': [null],
             'startDate': {disabled: true, value: new Date()},
             'currentStep': ['A'],
-            'gdpCertificateNr': [null],
             'responsiblePerson': fb.group({
                 'idnp': [{value: null, disabled: true}],
                 'mandatedFirstname': [{value: null, disabled: true}],
@@ -230,8 +235,10 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
                     this.normalizeSubsidiaryList(this.gdpInspection.subsidiaries.map(l => l.subsidiary));
                 }
 
-                this.inspectorForm.get('certificateBasedOnTheInspection').setValue(this.gdpInspection.certificateBasedOnTheInspection);
                 this.inspectorForm.get('autoDistributionOperations').setValue(this.gdpInspection.autoDistributionOperations);
+                this.inspectorForm.get('certificateRestrictions').setValue(this.gdpInspection.certificateRestrictions);
+                this.inspectorForm.get('certificateNr').setValue(this.gdpInspection.certificateNr);
+                this.inspectorForm.get('certificateTermsOfValidity').setValue(new Date(this.gdpInspection.certificateTermsOfValidity));
 
                 this.documents = data.documents;
                 this.documentAdded(null);
@@ -287,19 +294,21 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
     normalizeSubsidiaryList(list) {
         list.forEach(cis => {
-            cis.companyType = cis.type.description;
+            cis.companyType = cis.type ? cis.type.description : '';
             if (cis.locality) {
-                const localityState = cis.locality.stateName ? (cis.locality.stateName + ', ') : '';
-                const localityDesc = cis.locality.description ? (cis.locality.description + ', ') : '';
-                cis.address = localityState + localityDesc + (cis.street ? cis.street : '');
+                cis.address = cis.locality.stateName ? cis.locality.stateName : '' ;
+                cis.address += cis.address ? ',' : '';
+                cis.address += cis.locality.description ? cis.locality.description : '';
+                cis.address += cis.address ? ',' : '';
+                cis.address += cis.street ? cis.street : '';
             }
 
-            let activitiesStr;
+            let activitiesStr = '';
             cis.activities.forEach(r => {
                 if (activitiesStr) {
-                    activitiesStr += (r.description ? (', ' + r.description) : '');
+                    activitiesStr += ', ' + (r.description ? r.description : '');
                 } else {
-                    activitiesStr = (r.description ? r.description : '');
+                    activitiesStr = r.description ? r.description : '';
                 }
             });
             cis.activitiesStr = activitiesStr;
@@ -307,9 +316,9 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             let pharmaceutist;
             cis.agentPharmaceutist.forEach(r => {
                 if (pharmaceutist) {
-                    pharmaceutist += (r.fullName ? ', ' + r.fullName : '');
+                    pharmaceutist += ', ' + r.fullName;
                 } else {
-                    pharmaceutist = (r.fullName ? r.fullName : '');
+                    pharmaceutist = r.fullName;
                 }
             });
             cis.selectedPharmaceutist = pharmaceutist;
@@ -410,7 +419,9 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
         modelToSubmit.gdpInspection.subsidiaries = subsidiaryIds;
 
         modelToSubmit.gdpInspection.autoDistributionOperations = this.inspectorForm.get('autoDistributionOperations').value;
-        modelToSubmit.gdpInspection.certificateBasedOnTheInspection = this.inspectorForm.get('certificateBasedOnTheInspection').value;
+        modelToSubmit.gdpInspection.certificateTermsOfValidity = this.inspectorForm.get('certificateTermsOfValidity').value;
+        modelToSubmit.gdpInspection.certificateRestrictions = this.inspectorForm.get('certificateRestrictions').value;
+        modelToSubmit.gdpInspection.certificateNr = this.inspectorForm.get('certificateNr').value;
 
         modelToSubmit.type.code = onlySave ? 'AGDP' : this.decisionForm.get('decision').value.code;
 
@@ -433,7 +444,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
     documentAdded($event) {
         this.documents.forEach(d => {
             if (d.docType.category == 'GDP') {
-                d.number = this.rForm.get('gdpCertificateNr').value;
+                d.number = this.inspectorForm.get('certificateNr').value;
                 return;
             }
         });
@@ -458,6 +469,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
 
     viewDoc(document: any) {
         const report = this.documents.find(d => d.docType.category == 'RI');
+        const ordinGDP = this.documents.find(d => d.docType.category == 'OGD');
 
         if (!report) {
             this.errorHandlerService.showError('Încărcați mai întâi raportul de inspecție');
@@ -470,17 +482,19 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             this.subscriptions.push(this.gdpService.viewAccompanyingLetter(this.createAccompanyingLetterDTO(report.number)).subscribe(this.showGeneratedDocCallback, this.errorCatchCallback));
 
         } else if (document.docType.category == 'GDP') {
-            if (this.inspectorForm.get('autoDistributionOperations').invalid || this.inspectorForm.get('certificateBasedOnTheInspection').invalid) {
+            if (this.inspectorForm.get('autoDistributionOperations').invalid || this.inspectorForm.get('certificateTermsOfValidity').invalid || this.inspectorForm.get('certificateRestrictions').invalid) {
                 this.loadingService.hide();
-                this.errorHandlerService.showError('Trebuie să indicați operațiunile de distribuție autorizate și nr certificatului bazat pe inspecție');
+                this.errorHandlerService.showError('Trebuie să indicați operațiunile de distribuție autorizate, restricțiile și termenul de valabilitate a certificatului');
                 return;
             } else {
-                this.subscriptions.push(this.gdpService.generateCertificateNumber().subscribe(data => {
-                    this.rForm.get('gdpCertificateNr').setValue(data[0]);
-                    console.log('generatedCertificateNumber', this.rForm.get('gdpCertificateNr').value);
-                    this.subscriptions.push(this.gdpService.viewGDPCertificate(this.createGDPCertificateDTO(report)).subscribe(this.showGeneratedDocCallback, this.errorCatchCallback));
-                }));
-
+                if(this.inspectorForm.get('certificateNr').invalid) {
+                    this.subscriptions.push(this.gdpService.generateCertificateNumber().subscribe(data => {
+                        this.inspectorForm.get('certificateNr').setValue(data[0]);
+                        this.subscriptions.push(this.gdpService.viewGDPCertificate(this.createGDPCertificateDTO(ordinGDP)).subscribe(this.showGeneratedDocCallback, this.errorCatchCallback));
+                    }));
+                } else {
+                    this.subscriptions.push(this.gdpService.viewGDPCertificate(this.createGDPCertificateDTO(ordinGDP)).subscribe(this.showGeneratedDocCallback, this.errorCatchCallback));
+                }
             }
         }
     }
@@ -527,8 +541,10 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
         let distributionAddress = '';
 
         this.gdpInspection.subsidiaries.forEach(s => {
-            distributionAddress += s.subsidiary.address + ', ';
+            distributionAddress += s.subsidiary.address + '(' + s.subsidiary.companyType + ')' + ', ';
         });
+
+        const inspectReport = this.documents.find(d => d.docType.category == 'RI');
 
         this.gdpInspection.periods.sort((a, b) => {
             if (a.fromDate < b.fromDate) { return -1; }
@@ -536,9 +552,10 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             return 0;
         });
         const lastInspectionDate = (this.datePipe.transform(this.gdpInspection.periods[0].fromDate, 'dd/MM/yyyy') + ' - ' + this.datePipe.transform(this.gdpInspection.periods[0].toDate, 'dd/MM/yyyy'));
+        const certificateTermsOfValidity = (this.datePipe.transform(this.inspectorForm.get('certificateTermsOfValidity').value, 'dd/MM/yyyy'));
 
         return {
-            nr: this.rForm.get('gdpCertificateNr').value,
+            nr: this.inspectorForm.get('certificateNr').value,
             date: '',
             wholesaleDistributor: this.rForm.get('company.name').value,
             distributionAddress: distributionAddress,
@@ -548,10 +565,11 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
             licenseStartDate: this.datePipe.transform(this.rForm.get('company.dataEliberariiLic').value, 'dd/MM/yyyy'),
             licenseEndDate:  this.datePipe.transform(this.rForm.get('company.dataExpirariiLic').value, 'dd/MM/yyyy'),
             autorizatedDistribution: this.inspectorForm.get('autoDistributionOperations').value,
-            certificateBasedOnTheInspection: this.inspectorForm.get('certificateBasedOnTheInspection').value,
+            certificateBasedOnTheInspection: inspectReport.number,
+            restriction: this.inspectorForm.get('certificateRestrictions').value,
             lastInspectionDate: lastInspectionDate,
             dateOfIssueCertificate: this.datePipe.transform(new Date(), 'dd/MM/yyyy'),
-            maximYearAfterInspection: '2 ',
+            maximYearAfterInspection: certificateTermsOfValidity,
         };
     }
 

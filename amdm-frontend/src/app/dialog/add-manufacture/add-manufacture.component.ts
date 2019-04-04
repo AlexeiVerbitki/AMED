@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {AdministrationService} from '../../shared/service/administration.service';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-manufacture',
@@ -13,10 +14,13 @@ export class AddManufactureComponent implements OnInit {
 
   private subscriptions: Subscription[] = [];
   aForm: FormGroup;
-  manufactures: any[];
-  loadingManufacture = false;
+  //manufactures: any[];
+  //loadingManufacture = false;
   formSubmitted: boolean;
   wasManufactureAdded = false;
+  manufacturesAsync: Observable<any[]>;
+  loadingManufactureAsync = false;
+  manufacturesInputsAsync = new Subject<string>();
 
   constructor(    private fb: FormBuilder,
                   public dialogRef: MatDialogRef<AddManufactureComponent>,
@@ -32,15 +36,25 @@ export class AddManufactureComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadingManufacture = true;
-    this.subscriptions.push(
-        this.administrationService.getAllManufactures().subscribe(data => {
-                this.manufactures = data;
-                this.loadingManufacture = false;
-            },
-            error => {console.log(error);  this.loadingManufacture = false; }
-        )
-    );
+    this.manufacturesAsync =
+        this.manufacturesInputsAsync.pipe(
+            filter((result: string) => {
+              if (result && result.length > 0) {
+                return true;
+              }
+            }),
+            debounceTime(400),
+            distinctUntilChanged(),
+            tap((val: string) => {
+              this.loadingManufactureAsync = true;
+
+            }),
+            flatMap(term =>
+                this.administrationService.getManufacturersByName(term).pipe(
+                    tap(() => this.loadingManufactureAsync = false)
+                )
+            )
+        );
   }
 
   checkActiveSubstanceManufacture() {

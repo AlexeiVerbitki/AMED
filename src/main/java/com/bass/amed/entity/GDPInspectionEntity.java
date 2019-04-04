@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Data
@@ -25,12 +26,20 @@ public class GDPInspectionEntity {
     private Integer groupLeaderId;
 
     @Basic
-    @Column(name = "inspection_certificate_nr")
-    private String certificateBasedOnTheInspection;
+    @Column(name = "certificate_restrictions")
+    private String certificateRestrictions;
+
+    @Basic
+    @Column(name = "certificate_nr")
+    private String certificateNr;
 
     @Basic
     @Column(name = "auto_distribution_operations")
     private String autoDistributionOperations;
+
+    @Basic
+    @Column(name = "certificate_terms_of_validity")
+    private Timestamp certificateTermsOfValidity;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(name = "GDP_INSPECTORS", joinColumns = {

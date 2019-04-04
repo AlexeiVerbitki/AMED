@@ -834,7 +834,14 @@ public class RequestController
     public ResponseEntity<Void> saveMedicamentRequest(@RequestBody List<Integer> ids) throws CustomException
     {
         LOGGER.debug("Approve medicament");
-        MedicamentEntity medicamentEntity = medicamentRepository.findById(ids.get(0)).orElse(new MedicamentEntity());
+        MedicamentEntity medicamentEntity = null;
+        for(Integer id : ids) {
+            medicamentEntity = medicamentRepository.findById(id).orElse(new MedicamentEntity());
+            if(medicamentEntity.getOaNumber()!=null && !medicamentEntity.getOaNumber().isEmpty())
+            {
+                throw new CustomException("Ordinul de autorizare a fost deja emis.");
+            }
+        }
         RegistrationRequestsEntity registrationRequestsEntity = requestRepository.findById(medicamentEntity.getRequestId()).orElse(new RegistrationRequestsEntity());
 
         RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
@@ -848,6 +855,32 @@ public class RequestController
         registrationRequestsEntity.getMedicaments().stream().forEach(t -> allMedicamentIds.add(t.getId()));
         medicamentRepository.approveMedicament(allMedicamentIds, false);
         medicamentRepository.approveMedicament(ids, true);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/remove-medicaments-from-authorization-order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ResponseEntity<Void> removeMedicamentsFromAO(@RequestBody List<Integer> ids) throws CustomException
+    {
+        LOGGER.debug("Remove medicaments from authorization order");
+        MedicamentEntity medicamentEntity = null;
+        for(Integer id : ids) {
+            medicamentEntity = medicamentRepository.findById(id).orElse(new MedicamentEntity());
+            if(medicamentEntity.getOaNumber()!=null && !medicamentEntity.getOaNumber().isEmpty())
+            {
+                throw new CustomException("Ordinul de autorizare a fost deja emis.");
+            }
+        }
+        RegistrationRequestsEntity registrationRequestsEntity = requestRepository.findById(medicamentEntity.getRequestId()).orElse(new RegistrationRequestsEntity());
+
+        RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
+        historyEntity.setUsername(SecurityUtils.getCurrentUser().orElse(""));
+        historyEntity.setStep("ROA");
+        historyEntity.setStartDate(new Timestamp(new Date().getTime()));
+        historyEntity.setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        registrationRequestsEntity.getRequestHistories().add(historyEntity);
+
+        medicamentRepository.approveMedicament(ids, false);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -1345,17 +1378,7 @@ public class RequestController
             em.detach(oldRequest);
             em.close();
         }
-
-        //        PricesEntity updatedPrice = request.getPrice();
-        //        PricesEntity price = priceRepository.findOneById(updatedPrice.getId());
-        //        price.setType(updatedPrice.getType());
-        //        price.setValue(updatedPrice.getValue());
-        //        price.setMdlValue(updatedPrice.getMdlValue());
-        //        price.setReferencePrices(updatedPrice.getReferencePrices());
-
-        //        request.getDocuments().removeIf(r -> r.getId() == 2236);
-
-        //        request.setPrice(price);
+		
         try
         {
             requestRepository.save(request);

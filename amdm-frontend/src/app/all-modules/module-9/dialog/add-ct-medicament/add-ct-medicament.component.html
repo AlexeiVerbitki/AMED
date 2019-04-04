@@ -117,8 +117,9 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let substance of medActiveSubstances;let i = index">
-                    <th scope="row">{{ substance.activeSubstance.description }}</th>
-                    <td>{{ substance.activeSubstance.code }}</td>
+                    <th scope="row" *ngIf="substance.activeSubstance">{{ substance.activeSubstance.description }}</th>
+                    <th scope="row" *ngIf="!substance.activeSubstance">{{ substance.actSubstName }}</th>
+                    <td>{{ substance.activeSubstance?.code }}</td>
                     <td>{{ substance.quantity }}</td>
                     <td>{{ substance.unitsOfMeasurement.description }}</td>
                     <td>{{ substance.manufacture.description }}</td>

@@ -107,7 +107,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
                 'provenance': ['', Validators.required],
                 'sponsor': ['', Validators.required],
                 'phase': ['', Validators.required],
-                'eudraCtNr': ['eudraCtNr', Validators.required],
+                'eudraCtNr': [''],
                 'code': ['', Validators.required],
                 'medicalInstitutions': [],
                 'trialPopNat': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],

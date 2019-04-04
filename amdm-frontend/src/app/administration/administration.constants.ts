@@ -66,4 +66,5 @@ export const NomenclatureConstants = [
     {nr: 65, title: 'Rapoarte', name: 'nm_reports'},
     {nr: 66, title: 'Tipuri de rapoarte', name: 'nm_report_types'},
     {nr: 67, title: 'Subdiviziuni la institutii medicale', name: 'nm_med_inst_subdivisions'},
+    {nr: 68, title: 'Secții', name: 'nm_departments'},
 ];

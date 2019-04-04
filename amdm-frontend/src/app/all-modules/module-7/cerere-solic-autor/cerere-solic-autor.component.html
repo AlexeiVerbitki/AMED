@@ -4,7 +4,7 @@
     <form [formGroup]='cerereSolicAutorForm'>
 
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="md-form">
                     <input id="requestNumber" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber"
@@ -14,7 +14,7 @@
                     </label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data inregistrarii" required
@@ -24,6 +24,24 @@
                     </mat-form-field>
                 </div>
             </div>
+            <div class="col-lg-2">
+                <div class="md-form" formGroupName="drugCheckDecision">
+                    <input id="nrCereriiSiaGeap" mdbInputDirective type="text" class="form-control"
+                           formControlName="nrSiaGeap">
+                    <label for="nrCereriiSiaGeap">Nr. cererii SIA GEAP</label>
+                </div>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="md-form-modified" formGroupName="drugCheckDecision">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data SIA GEAP" formControlName="dateSiaGeap">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <div class="md-form">
@@ -71,7 +89,7 @@
             </div>
 
 
-            <div class="col-md-2">
+            <div class="col-md-1">
                 <div class="md-form" formGroupName="drugCheckDecision">
                     <input id="region" mdbInputDirective type="text" class="form-control"
                            formControlName="region">
@@ -92,13 +110,50 @@
                     <label for="street">Strada</label>
                 </div>
             </div>
-            <div class="col-md-2">
+
+            <div class="col-md-3" *ngIf="!filialWithoutLicense">
                 <div class="md-form" formGroupName="drugCheckDecision">
                     <input id="farmDir" mdbInputDirective type="text" class="form-control"
                            formControlName="farmDir">
-                    <label for="farmDir">Farmacist diriginte<span class="text-danger">*</span></label>
+                    <label for="farmDir">Diriginte<span class="text-danger">*</span></label>
                 </div>
             </div>
+
+            <div class="col-md-3" *ngIf="filialWithoutLicense">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="md-form-modified-select" formGroupName="drugCheckDecision">
+                            <ng-select class="custom" [items]="farmacistiPerAddress"
+                                       bindLabel="fullName"
+                                       placeholder="Diriginte"
+                                       formControlName="farmDirWithoutLicense"
+                                       [required]="true"
+
+                            >
+                                <ng-template ng-option-tmp let-item="item">
+                                    <div>{{item.fullName}}</div>
+                                    <small class="form-text text-muted">{{item.selectionDate| date: 'dd/MM/yyyy
+                                        HH:mm:ss'}}
+                                    </small>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                        <div *ngIf="formSubmitted && cerereSolicAutorForm.get('drugCheckDecision.farmDirWithoutLicense').invalid">
+                            <small class="text-muted"><strong class="text-danger">Dirigintele trebuie introdus</strong>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="md-form">
+                            <button class="btn btn-mdb-color btn-sm" mdbTooltip="Diriginte nou"
+                                    (click)="newFarmacist()"><i
+                                    class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="col-md-4" formGroupName="drugCheckDecision">
                 <div class="row">
                     <div class="col-md-4">
@@ -108,12 +163,12 @@
                     </div>
                     <div class="col-md-4">
                         <div class="md-form">
-                        <mat-checkbox formControlName="psihotrop">Psihotrope</mat-checkbox>
+                            <mat-checkbox formControlName="psihotrop">Psihotrope</mat-checkbox>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="md-form">
-                        <mat-checkbox formControlName="stupefiant">Stupefiante</mat-checkbox>
+                            <mat-checkbox formControlName="stupefiant">Stupefiante</mat-checkbox>
                         </div>
                     </div>
                 </div>
@@ -133,7 +188,7 @@
         </div>
 
         <hr>
-        <h5 class="text-center font-weight-bold" >Decizia</h5>
+        <h5 class="text-center font-weight-bold">Decizia</h5>
 
         <div class="row">
             <div class="col-md-6">
@@ -187,9 +242,9 @@
 
             <div class="col-md-9">
                 <div class="md-form" formGroupName="drugCheckDecision">
-                   <!-- <input id="reason" mdbInputDirective type="text" class="form-control">
-                    <label for="reason">Motivul refuzului
-                    </label>-->
+                    <!-- <input id="reason" mdbInputDirective type="text" class="form-control">
+                     <label for="reason">Motivul refuzului
+                     </label>-->
                     <textarea type="text" id="reasonDecision" class="md-textarea form-control" mdbInputDirective
                               rows="2" formControlName="reasonDecision"></textarea>
                     <label for="reasonDecision">Motivul refuzului</label>
@@ -199,7 +254,7 @@
 
         <hr>
         <app-payment [requestId]="cerereSolicAutorForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"
-                      [processModule]="'CPCD'"></app-payment>
+                     [processModule]="'CPCD'"></app-payment>
         <div *ngIf="formSubmitted && paymentTotal < 0">
             <small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
         </div>

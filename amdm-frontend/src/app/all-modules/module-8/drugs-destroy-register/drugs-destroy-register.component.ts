@@ -12,6 +12,7 @@ import {AnnihilationService} from '../../../shared/service/annihilation/annihila
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
+import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
 
 @Component({
     selector: 'app-drugs-destroy-register',
@@ -110,6 +111,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             'nrProcurii1': [null],
             'dataProcurii1': [{value: null, disabled: true}],
             'idnp': '',
+            'regSubject': ['', Validators.required],
 
         });
 
@@ -158,6 +160,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         modelToSubmit.initiator = this.authService.getUserName();
         modelToSubmit.assignedUser = this.authService.getUserName();
         modelToSubmit.documents = this.docs;
+        modelToSubmit.regSubject = this.mForm.get('regSubject').value;
 
         modelToSubmit.registrationRequestMandatedContacts = [{mandatedLastname : this.mForm.get('persResDepCereriiLastname').value,
             mandatedFirstname : this.mForm.get('persResDepCereriiFirstname').value,
@@ -181,6 +184,22 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             )
         );
 
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
     }
 
     ngOnDestroy() {

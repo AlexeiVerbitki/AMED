@@ -59,7 +59,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
             this.title = 'Solicitare înlăturare deficinețe Nr ' + this.reqForm.get('docNumber').value;
 
         } else if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA_EMPTY') {
-            this.reqForm.get('docNumber').setValue('SL-' + this.dataDialog.requestNumber);
+            this.reqForm.get('docNumber').setValue('SL-' + this.dataDialog.requestNumber + '-' + this.dataDialog.nrOrdDoc);
             this.title = 'Scrisoare de solicitare date aditionale Nr ' + this.reqForm.get('docNumber').value;
 
         } else if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA_GMP') {
@@ -228,6 +228,7 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
                 break;
             }
             case  'REQUEST_ADDITIONAL_DATA' :
+            case  'REQUEST_ADDITIONAL_DATA_EMPTY' :
             case  'REQUEST_ADDITIONAL_DATA_GMP' :
                 {
                 response = {

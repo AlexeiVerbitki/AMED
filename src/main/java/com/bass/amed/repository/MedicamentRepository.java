@@ -36,9 +36,11 @@ public interface MedicamentRepository extends JpaRepository<MedicamentEntity, In
 
     Optional<List<MedicamentEntity>> findAllById(Integer id);
 
-
     @Query(value = "SELECT commercial_name FROM medicament m WHERE id = ?1", nativeQuery = true)
     Optional<String> getCommercialNameById(int id);
+
+    @Query(value = "SELECT distinct request_id FROM medicament m WHERE code in (?1)", nativeQuery = true)
+    List<Integer> getRequestIdsByMedicamentCodes(List<String> codes);
 
     @Query(value = "SELECT * FROM medicament m WHERE (upper(m.name) like upper(CONCAT(?1, '%'))or m.code like (CONCAT(?1, '%'))) and m.status = ?2", nativeQuery
             = true)

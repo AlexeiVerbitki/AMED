@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AdministrationService} from '../shared/service/administration.service';
 import {Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
@@ -8,6 +8,7 @@ import {ConfirmationDialogComponent} from '../dialog/confirmation-dialog.compone
 import {DocumentService} from '../shared/service/document.service';
 import {SuccessOrErrorHandlerService} from '../shared/service/success-or-error-handler.service';
 import {SelectCurrencyBonPlataDialogComponent} from '../dialog/select-currency-bon-plata-dialog/select-currency-bon-plata-dialog.component';
+import {UploadFileService} from '../shared/service/upload/upload-file.service';
 
 @Component({
     selector: 'app-payment',
@@ -41,6 +42,7 @@ export class PaymentComponent implements OnInit {
 
     constructor(private administrationService: AdministrationService,
                 private dialog: MatDialog,
+                private uploadService: UploadFileService,
                 private documentService: DocumentService,
                 private errorHandlerService: SuccessOrErrorHandlerService,
                 private loadingService: LoaderService) {
@@ -267,41 +269,90 @@ export class PaymentComponent implements OnInit {
         }
     }
 
+    viewBonDePlataForAll() {
+        this.getBonPathByNumber(this.bonDePlataList[0].number);
+    }
+
+    viewBonDePlataSuplimentar(bonDePlata) {
+        this.getBonPathByNumber(bonDePlata.number);
+    }
+
+    getBonPathByNumber(bonNumber) {
+        this.subscriptions.push(this.administrationService.getPathByDocNumberAndTypeCode(bonNumber, 'BON').subscribe(path => {
+            this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                    const file = new Blob([data], {type: 'application/pdf'});
+                    const fileURL = URL.createObjectURL(file);
+                    window.open(fileURL);
+                },
+                error => {
+                    console.log(error);
+                }
+                )
+            );
+        }));
+    }
+
+    checkBeforeGenerateBonForAllTaxes() {
+        if (this.bonDePlataList[0] && this.bonDePlataList[0].number) {
+            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                data: {
+                    message: 'Sunteti sigur(a) ca doriti sa generati alt bon de palta? Bonul de plata curent va fi sters.',
+                    confirm: false
+                }
+            });
+
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.generateBonDePlataForAll();
+                }
+            });
+        } else {
+            this.generateBonDePlataForAll();
+        }
+    }
+
     generateBonDePlataForAll() {
+        if (this.requestDet && this.requestDet.type && (this.requestDet.type.code == 'MERG' || this.requestDet.type.code == 'MERS')) {
+            this.generateBonForMedicamentRegistration();
+            return;
+        }
         if (this.bonDePlataList.length != 0) {
             if (!this.checkProducator) {
                 this.generateBonCommonParameters('', null);
             } else {
-
-                if (this.checkProducator) {
-                    if ((!this.requestDet.medicament.commercialName && !this.requestDet.medicament.commercialNameTo) ||
-                        (!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
-                        (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
-                        !this.requestDet.divisionBonDePlata) {
-                        this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
-                        return;
-                    }
-                }
-                const dialogConfig2 = new MatDialogConfig();
-
-                dialogConfig2.disableClose = false;
-                dialogConfig2.autoFocus = true;
-                dialogConfig2.hasBackdrop = true;
-
-                dialogConfig2.width = '600px';
-
-                dialogConfig2.data = {company : this.requestDet.company};
-
-                const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
-                dialogRef.afterClosed().subscribe(result => {
-                    if(result) {
-                        this.generateBonCommonParameters(result.currency, result.company);
-                    }
-                });
+                this.generateBonForMedicamentRegistration();
             }
         } else {
             this.errorHandlerService.showError('Nu a fost introdusa nici o taxa spre achitare');
         }
+    }
+
+    generateBonForMedicamentRegistration() {
+        if (this.checkProducator) {
+            if ((!this.requestDet.medicament.commercialName && !this.requestDet.medicament.commercialNameTo) ||
+                (!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
+                (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
+                !this.requestDet.divisionBonDePlata) {
+                this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
+                return;
+            }
+        }
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {company: this.requestDet.company};
+
+        const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.generateBonCommonParameters(result.currency, result.company);
+            }
+        });
     }
 
     generateBonCommonParameters(currency: string, company: any) {
@@ -309,7 +360,6 @@ export class PaymentComponent implements OnInit {
         let observable;
         if (this.process && this.process === 'NIMICIRE') {
             const nimicireList = this.bonDePlataList.filter(bdp => bdp.serviceCharge.category === 'BN');
-            console.log(nimicireList);
             if (nimicireList.length !== 1) {
                 this.errorHandlerService.showError('Trebuie sa exista o singura taxa pentru nimicirea medicamentelor.');
                 this.loadingService.hide();
@@ -375,45 +425,53 @@ export class PaymentComponent implements OnInit {
 
     generateSingleBonDePlata(bonDePlata: any) {
 
+        if (this.requestDet && this.requestDet.type && (this.requestDet.type.code == 'MERG' || this.requestDet.type.code == 'MERS')) {
+            this.generateSingleBonForMedicamentRegistration(bonDePlata);
+            return;
+        }
+
         if (!this.checkProducator) {
             this.generateSingleBonCommonParameters(bonDePlata, '');
         } else {
+            this.generateSingleBonForMedicamentRegistration(bonDePlata);
+        }
+    }
 
-            if (this.checkProducator) {
-                if ((!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
-                    (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
-                    !this.requestDet.divisionBonDePlata) {
-                    this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
-                    return;
-                }
-            }
-
-            if (bonDePlata.serviceCharge.category == 'BS') {
-                this.generateSingleBonCommonParameters(bonDePlata, 'MDL');
+    generateSingleBonForMedicamentRegistration(bonDePlata) {
+        if (this.checkProducator) {
+            if ((!this.requestDet.medicament.pharmaceuticalForm && !this.requestDet.medicament.pharmaceuticalFormTo) ||
+                (!this.requestDet.medicament.dose && !this.requestDet.medicament.doseTo) ||
+                !this.requestDet.divisionBonDePlata) {
+                this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
                 return;
             }
-
-            const dialogConfig2 = new MatDialogConfig();
-
-            dialogConfig2.disableClose = false;
-            dialogConfig2.autoFocus = true;
-            dialogConfig2.hasBackdrop = true;
-
-            dialogConfig2.width = '600px';
-
-            dialogConfig2.data = {company : this.requestDet.company};
-
-            const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
-            dialogRef.afterClosed().subscribe(result => {
-                this.generateSingleBonCommonParameters(bonDePlata, result.currency);
-            });
         }
+
+        if (bonDePlata.serviceCharge.category == 'BS') {
+            this.generateSingleBonCommonParameters(bonDePlata, 'MDL');
+            return;
+        }
+
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+
+        dialogConfig2.width = '600px';
+
+        dialogConfig2.data = {company: this.requestDet.company};
+
+        const dialogRef = this.dialog.open(SelectCurrencyBonPlataDialogComponent, dialogConfig2);
+        dialogRef.afterClosed().subscribe(result => {
+            this.generateSingleBonCommonParameters(bonDePlata, result.currency);
+        });
     }
 
     generateSingleBonCommonParameters(bonDePlata: any, currency: string) {
         this.loadingService.show();
         let observable;
-        if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'gdp' || this.process === 'GMP' )) {
+        if (this.process && (this.process === 'LICENTA' || this.process === 'CPCD' || this.process === 'gdp' || this.process === 'GMP')) {
             const modelToSubmit = {
                 requestId: this.requestIdP,
                 paymentOrders: [bonDePlata],

@@ -4,11 +4,13 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="md-form-modified">
-					<ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufactures" [loading]="loadingManufacture"
+					<ng-select id="proSubsActiv" name="proSubsActiv" [items]="manufacturesAsync | async" [loading]="loadingManufactureAsync"
+							   [typeahead]="manufacturesInputsAsync"
 					           bindLabel="description"
-					           placeholder="Producător *"
+					           placeholder="Producător"
 					           (ngModelChange)="checkActiveSubstanceManufacture()"
-					           formControlName="manufacture">
+					           formControlName="manufacture"
+							   required="true">
 						<ng-template ng-option-tmp let-item="item">
 							{{item.description}} <br/>
 							<small class="form-text text-muted">{{item.address}}</small>

@@ -85,6 +85,7 @@ public class GDPController
         parameters.put("lastInspectionDate", gdpCertificateDTO.getLastInspectionDate());
         parameters.put("dateOfIssueCertificate", gdpCertificateDTO.getDateOfIssueCertificate());
         parameters.put("maximYearAfterInspection", gdpCertificateDTO.getMaximYearAfterInspection());
+        parameters.put("restriction", gdpCertificateDTO.getRestriction());
         parameters.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
         return generateDoc("layouts/GDP certificat.jrxml", parameters);
     }

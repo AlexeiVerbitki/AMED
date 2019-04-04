@@ -36,6 +36,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   onReportTypeChange(event) {
+    this.eForm.get('report').setValue(null);
     this.reports = [];
     if (event) {
       this.subscriptions.push(this.administrationService.getAllReportsByReportType(event.id).subscribe(data => {

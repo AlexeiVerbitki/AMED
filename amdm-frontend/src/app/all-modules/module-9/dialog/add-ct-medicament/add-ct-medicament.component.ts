@@ -8,6 +8,7 @@ import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/ope
 import {AdministrationService} from '../../../../shared/service/administration.service';
 import {ActiveSubstanceDialogComponent} from '../../../../dialog/active-substance-dialog/active-substance-dialog.component';
 import {CtMedType} from '../../../../shared/enum/ct-med-type.enum';
+import {AddCtActSubstComponent} from '../add-ct-act-subst/add-ct-act-subst.component';
 
 @Component({
     selector: 'app-add-ct-medicament',
@@ -20,6 +21,7 @@ export class AddCtMedicamentComponent implements OnInit, OnDestroy {
     medActiveSubstances: any[] = [];
     pageTitle: string;
     public ctMedTypes = CtMedType;
+    public ctMedType: CtMedType;
     isMicPlacebo = false;
 
     manufacturers: Observable<any[]>;
@@ -51,11 +53,13 @@ export class AddCtMedicamentComponent implements OnInit, OnDestroy {
             'atcCode': [null],
             'administratingMode': [null],
             'activeSubstances': [null],
-            'subjectsSC': [null]
+            'subjectsSC': [null],
+            'isNew': [null]
         });
 
         console.log('dataDialog', this.dataDialog);
         this.pageTitle = this.dataDialog.pageTitle;
+        this.ctMedType = this.dataDialog.ctMedType;
         if (this.dataDialog.ctMedType == this.ctMedTypes.MicTestat) {
             this.addMedForm.get('administratingMode').setValidators(Validators.required);
             this.addMedForm.get('subjectsSC').setValidators(Validators.required);
@@ -171,17 +175,23 @@ export class AddCtMedicamentComponent implements OnInit, OnDestroy {
         // dialogConfig2.height = '650px';
         dialogConfig2.width = '600px';
 
-        const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        dialogConfig2.data = {
+            ctMedType: this.ctMedType
+        };
+
+        // const dialogRef = this.dialog.open(ActiveSubstanceDialogComponent, dialogConfig2);
+        const dialogRef = this.dialog.open(AddCtActSubstComponent, dialogConfig2);
 
         this.subscriptions.push(
             dialogRef.afterClosed().subscribe(result => {
                 console.log('result', result);
-                if (result !== null && result !== undefined && result.response) {
+                if (result) {
                     this.medActiveSubstances.push({
                         activeSubstance: result.activeSubstance,
-                        quantity: result.activeSubstanceQuantity,
-                        unitsOfMeasurement: result.activeSubstanceUnit,
-                        manufacture: result.manufactures[0].manufacture
+                        actSubstName: result.actSubstName,
+                        quantity: result.quantity,
+                        unitsOfMeasurement: result.unitsOfMeasurement,
+                        manufacture: result.manufacture[0].manufacture
                     });
                     console.log('this.medActiveSubstances', this.medActiveSubstances);
                 }

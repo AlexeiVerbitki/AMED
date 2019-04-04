@@ -20,4 +20,5 @@ public class GDPCertificateDTO
     private String lastInspectionDate;
     private String dateOfIssueCertificate;
     private String maximYearAfterInspection;
+    private String restriction;
 }

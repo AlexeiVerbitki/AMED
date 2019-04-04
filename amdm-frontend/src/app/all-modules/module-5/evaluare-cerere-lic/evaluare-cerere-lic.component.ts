@@ -15,8 +15,8 @@ import {LicenseDecisionDialogComponent} from '../../../dialog/license-decision-d
 import {catchError, debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
-import {AddLicenseFarmacistComponent} from '../add-license-farmacist/add-license-farmacist.component';
 import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
+import {AddLicenseFarmacistComponent} from "../../../dialog/add-license-farmacist/add-license-farmacist.component";
 
 @Component({
     selector: 'app-evaluare-cerere-lic',

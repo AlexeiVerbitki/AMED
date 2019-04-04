@@ -14,6 +14,7 @@ import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-e
 import {ClinicalTrialService} from '../../../shared/service/clinical-trial.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 enum Pages {
     CLAP = '3',
@@ -46,6 +47,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
     showClinicTrail = false;
     protected clinicalTrailInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
+    enabledAddEcButton = true;
 
     constructor(private fb: FormBuilder,
                 private dialog: MatDialog,
@@ -73,7 +75,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'registrationRequestMandatedContacts': this.fb.group({
                 'mandatedFirstname': [null, Validators.required],
                 'mandatedLastname': [null, Validators.required],
-                'idnp': [null, Validators.required],
+                'idnp': [null],
                 'phoneNumber': [null],
                 'email': [null, Validators.email],
                 'requestMandateNr': [null],
@@ -115,8 +117,10 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         if ($event.checked) {
             this.registerClinicalTrailForm.get('company').reset();
             this.registerClinicalTrailForm.get('company').disable();
+            this.enabledAddEcButton = false;
         } else {
             this.registerClinicalTrailForm.get('company').enable();
+            this.enabledAddEcButton = true;
         }
     }
 
@@ -251,6 +255,22 @@ export class RegCerereComponent implements OnInit, OnDestroy {
         }
     }
 
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
+    }
+
     dysplayInvalidControl(form: FormGroup) {
         const ctFormControls = form['controls'];
         for (const control of Object.keys(ctFormControls)) {
@@ -271,20 +291,24 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (formModel.registrationRequestMandatedContacts.idnp.length < 13) {
+        console.log('idnp', formModel.registrationRequestMandatedContacts.idnp);
+        if (formModel.registrationRequestMandatedContacts.idnp && formModel.registrationRequestMandatedContacts.idnp.length < 13) {
             this.errorHandlerService.showError('IDNP-ul persoanei responsabile contine mai putin de 13 caractere');
             return;
         }
-        this.subscriptions.push(this.clinicTrialService.validIDNP(formModel.registrationRequestMandatedContacts.idnp).subscribe(data => {
-                console.log('validationDate', data);
-                if (!data) {
-                    this.errorHandlerService.showError('IDNP-ul persoanei responsabile este invalid');
-                    return;
-                }
-            }, error => {
-                console.log(error);
-            })
-        );
+
+        if (formModel.registrationRequestMandatedContacts.idnp) {
+            this.subscriptions.push(this.clinicTrialService.validIDNP(formModel.registrationRequestMandatedContacts.idnp).subscribe(data => {
+                    console.log('validationDate', data);
+                    if (!data) {
+                        this.errorHandlerService.showError('IDNP-ul persoanei responsabile este invalid');
+                        return;
+                    }
+                }, error => {
+                    console.log(error);
+                })
+            );
+        }
 
         if (formModel.flowControl === 'CLAP') {
             this.loadingService.show();

@@ -134,4 +134,13 @@ export class LicenseService {
         return this.http.get('/api/license/generate-registration-request-number', {});
     }
 
+    loadActiveLicenseById(id: any): Observable<any> {
+        return this.http.get('/api/license/load-active-license-by-id', {params : { id : id} });
+    }
+
+
+    newPharmaceutist (model: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/license/new-pharmaceutist', model, {observe: 'response'});
+    }
+
 }

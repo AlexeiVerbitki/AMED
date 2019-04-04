@@ -40,6 +40,10 @@ export class GDPService {
         return this.administrationService.getAllDocTypes();
     }
 
+    viewRequestNew(model: any): Observable<any> {
+        return this.documentService.viewRequestNew(model);
+    }
+
     getMedicamentById(id: string): any {
         return this.medicamentService.getMedicamentById(id);
     }

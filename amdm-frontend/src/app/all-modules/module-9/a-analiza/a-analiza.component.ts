@@ -103,7 +103,7 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
                 'provenance': ['', Validators.required],
                 'sponsor': ['', Validators.required],
                 'phase': ['', Validators.required],
-                'eudraCtNr': ['', Validators.required],
+                'eudraCtNr': [''],
                 'code': ['', Validators.required],
                 'medicalInstitutions': [],
                 'trialPopNat': ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
@@ -602,16 +602,12 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         console.log('Submit data', formModel);
 
         if (this.analyzeClinicalTrailForm.invalid) {
-            this.dysplayInvalidControl(this.analyzeClinicalTrailForm['controls'].clinicalTrails['controls']);
+            // this.dysplayInvalidControl(this.analyzeClinicalTrailForm['controls'].clinicalTrails['controls']);
+            this.dysplayInvalidControl(this.analyzeClinicalTrailForm.get('clinicalTrails') as FormGroup);
             this.errorHandlerService.showError('Datele studiului clinic contine date invalide');
             return;
         }
 
-        if (this.mediacalInstitutionsList.length == 0) {
-            this.dysplayInvalidControl(this.addMediacalInstitutionForm);
-            this.errorHandlerService.showError('Unitatea medicală pentru desfășurarea studiului nu a fost aleasa');
-            return;
-        }
         const docDistrib = this.docs.find(doc => doc.docType.category == 'DDC');
         if (!docDistrib) {
             this.errorHandlerService.showError('Dispozitia de distribuire nu este atashata');
@@ -627,13 +623,11 @@ export class AAnalizaComponent implements OnInit, OnDestroy {
         }
 
         if (this.mediacalInstitutionsList.length == 0) {
-            this.dysplayInvalidControl(this.addMediacalInstitutionForm);
             this.errorHandlerService.showError('Unitatea medicală pentru desfășurarea studiului nu a fost aleasa');
             return;
         }
 
         if (this.medicamentList.length == 0) {
-            this.dysplayInvalidControl(this.addMediacalInstitutionForm);
             this.errorHandlerService.showError('MIC testat pentru desfășurarea studiului nu a fost adaugată');
             return;
         }

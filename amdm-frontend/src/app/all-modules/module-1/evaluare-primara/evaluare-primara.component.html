@@ -77,6 +77,55 @@
 				</div>
 			</div>
 		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Istoric medicament</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Card content -->
+		<div class="card-body card-body-cascade" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Numar cerere</th>
+					<th scope="col">Tip cerere</th>
+					<th scope="col">Data</th>
+					<th scope="col">Numar de inregistrare</th>
+					<th scope="col">Motiv refuz</th>
+					<th scope="col">Documente</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let history of medicamentHystory;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ history.requestNumber }}</td>
+					<td>{{ history.requestType }}</td>
+					<td>{{ history.date | date: 'dd/MM/yyyy' }}</td>
+					<td>{{ history.registrationNumber }}</td>
+					<td>{{ history.motiv }}</td>
+					<td>
+						<button *ngIf="history.certificat" mdbTooltip="Certificat de autorizare al medicamentului" type="button" class="btn btn-mdb-color btn-sm waves-light"
+								(click)="loadFile(history.certificat)" mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+						</button>
+						<button *ngIf="history.ordinDeAutorizare" mdbTooltip="Ordin de autorizare al medicamentului" type="button" class="btn btn-mdb-color btn-sm waves-light"
+								(click)="loadFile(history.ordinDeAutorizare)" mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+						</button>
+						<button *ngIf="history.ordinDeIntrerupere" mdbTooltip="Ordin de intrerupere a procedurii de autorizare a medicamentului" type="button" class="btn btn-mdb-color btn-sm waves-light"
+								(click)="loadFile(history.ordinDeIntrerupere)" mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -347,12 +396,14 @@
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
 				<div class="md-form-modified">
-					<ng-select id="denumireaAutProd" name="denumireaAutProd" [items]="manufactureAuthorizations"
+					<ng-select id="denumireaAutProd" name="denumireaAutProd" [items]="manufactureAuthorizationsAsync | async"
 					           bindLabel="description"
 					           placeholder="Deţinătorul certificatului de inregistrare *"
 					           (ngModelChange)="fillAutorizationHolderDetails()"
-					           [loading]="loadingManufacture"
-					           formControlName="authorizationHolder">
+					           [loading]="loadingManufactureAsync"
+							   [typeahead]="manufacturesAuthorizationsInputsAsync"
+					           formControlName="authorizationHolder"
+							   required="true">
 						<ng-template ng-option-tmp let-item="item">
 							{{item.description}} <br/>
 							<small class="form-text text-muted">{{item.address}}</small>
@@ -431,9 +482,64 @@
 		<hr>
 		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [canUpload]="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')" [divisions]="divisions" [instructions]="instructions" [nrCerere]="eForm.get('requestNumber').value"></app-instruction>
 		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [canUpload]="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')" [divisions]="divisions" [machets]="machets" [nrCerere]="eForm.get('requestNumber').value"></app-macheta>
-		<app-payment #payment [requestDetails]="this.eForm.value" [checkProducator]="true" [manufactures]="manufacturesTable" [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
+		<app-payment #payment [requestDetails]="this.eForm.getRawValue()" [checkProducator]="!eForm.get('type').value || (eForm.get('type').value.code!='MERG' && eForm.get('type').value.code!='MERS')" [manufactures]="manufacturesTable" [requestId]="this.eForm.get('id').value" (totalValueChanged)="paymentTotalUpdate($event)"></app-payment>
 		<div *ngIf="formSubmitted && paymentTotal<0">
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
+		</div>
+		<hr>
+		<div class="row" >
+			<div class="col-12">
+				<div class="md-form">
+					<input id="standard" mdbInputDirective type="text" class="form-control" formControlName="standard">
+					<label for="standard">Standart de referinta</label>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('standard').invalid">
+					<small class="text-muted"><strong class="text-danger">Standartul de referinta trebuie introdus</strong></small>
+				</div>
+			</div>
+		</div>
+		<div class="md-form-modified">
+			<div class="gradient-card-header bg-sidebar border-gradient">
+				<div class="container-fluid">
+					<!-- Title -->
+					<div class="row">
+						<div class="col-9">
+							<div class="card-header-title white-text">Standarte de referinta</div>
+						</div>
+						<div class="col-3">
+							<div class="text-right fap text-white">
+								<i (click)="addStandard()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Card content -->
+			<div class="card-body card-body-cascade">
+				<table class="table table-widths text-center">
+					<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Nr.</th>
+						<th scope="col">Denumire</th>
+						<th scope="col">Actiuni</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr *ngFor="let standard of standarts;let i = index">
+						<td>{{ i + 1 }}</td>
+						<td>{{ standard.description }}</td>
+						<td class="align-middle">
+							<a role="button" class="text-danger" (click)="removeStandard(i)">
+								<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+							</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div *ngIf="standarts.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
 		</div>
 		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
@@ -455,7 +561,6 @@
 					</div>
 				</div>
 			</div>
-
 		</div>
 
 		<!-- Card content -->
@@ -529,7 +634,7 @@
 		<!--</div>-->
 		<hr>
 		<div class="text-center">
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save(true)">Salvare date</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
 			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
 		</div>

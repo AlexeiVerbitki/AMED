@@ -355,12 +355,14 @@
 		<div class="row" formGroupName="medicament">
 			<div class="col-md-4">
 				<div class="md-form-modified">
-					<ng-select id="denumireaAutProd" name="denumireaAutProd" [items]="manufactureAuthorizations"
-					           bindLabel="description"
-					           placeholder="Deţinătorul certificatului de inregistrare *"
-					           (ngModelChange)="fillAutorizationHolderDetails()"
-					           [loading]="loadingManufacture"
-					           formControlName="authorizationHolderTo">
+					<ng-select id="denumireaAutProd" name="denumireaAutProd" [items]="manufactureAuthorizationsAsync | async"
+							   bindLabel="description"
+							   placeholder="Deţinătorul certificatului de inregistrare *"
+							   (ngModelChange)="fillAutorizationHolderDetails()"
+							   [loading]="loadingManufactureAsync"
+							   [typeahead]="manufacturesAuthorizationsInputsAsync"
+							   formControlName="authorizationHolderTo"
+							   required="true">
 						<ng-template ng-option-tmp let-item="item">
 							{{item.description}} <br/>
 							<small class="form-text text-muted">{{item.address}}</small>

@@ -1,4 +1,16 @@
-<h2 mat-dialog-title class="text-center">Selectați inspectorii</h2>
+<div class="row row-align-center">
+    <div class="col-10">
+        <div class="md-form">
+            <h2 mat-dialog-title class="text-center">Selectați inspectorii</h2>
+        </div>
+    </div>
+    <div class="col-2">
+        <div class="md-form">
+            <input id="search" mdbInputDirective type="text" class="form-control" (keyup)="applyFilter($event.target.value)">
+            <label for="search">Căutare</label>
+        </div>
+    </div>
+</div>
 <mat-dialog-content class="mat-typography">
     <div class="table-width">
         <div class="example-container">
@@ -41,6 +53,10 @@
                     <td mat-cell *matCellDef="let x" mdbTooltip="{{x.code}}" placement="top">{{x.code}}</td>
                 </ng-container>
 
+                <ng-container matColumnDef="departament">
+                    <th class="header rgba-header font-td" mat-header-cell *matHeaderCellDef>Secția</th>
+                    <td mat-cell *matCellDef="let x" mdbTooltip="{{x.departament?.description}}" placement="top">{{x.departament?.description}}</td>
+                </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
                 <tr mat-row *matRowDef="let x; columns: columnsToDisplay"></tr>

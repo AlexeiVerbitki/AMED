@@ -26,6 +26,8 @@ import {PaymentClinicalTrialModule} from '../../payment-clinical-trial/payment-c
 import {AddCtExpertComponent} from './dialog/add-ct-expert/add-ct-expert.component';
 import {InvestigatorsDialogComponent} from './dialog/investigators-dialog/investigators-dialog.component';
 import {AddCtMedicamentComponent} from './dialog/add-ct-medicament/add-ct-medicament.component';
+import {AddCtActSubstComponent} from './dialog/add-ct-act-subst/add-ct-act-subst.component';
+import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 
 
 @NgModule({
@@ -39,7 +41,8 @@ import {AddCtMedicamentComponent} from './dialog/add-ct-medicament/add-ct-medica
         MDBBootstrapModule.forRoot(),
         DocumentModule,
         PaymentModule,
-        PaymentClinicalTrialModule
+        PaymentClinicalTrialModule,
+        EcAgentModule
     ],
     schemas: [],
     entryComponents: [
@@ -47,11 +50,12 @@ import {AddCtMedicamentComponent} from './dialog/add-ct-medicament/add-ct-medica
         MedInstInvestigatorsDialogComponent,
         AddCtExpertComponent,
         InvestigatorsDialogComponent,
-        AddCtMedicamentComponent
+        AddCtMedicamentComponent,
+        AddCtActSubstComponent
     ],
     declarations: [RegCerereComponent, AEvaluareaPrimaraComponent, AAnalizaComponent, AdditionalDataDialogComponent, AIntrerupereComponent, AAprobareComponent,
         BEvaluarePrimaraComponent, MedInstInvestigatorsDialogComponent, BAprobareComponent, BIntrerupereComponent, CNotificareComponent, AddCtExpertComponent,
-        InvestigatorsDialogComponent, AddCtMedicamentComponent],
+        InvestigatorsDialogComponent, AddCtMedicamentComponent, AddCtActSubstComponent],
 
     providers: [UploadFileService, RequestService, ClinicalTrialService],
 })

@@ -32,6 +32,14 @@ export class MedicamentService {
         return this.http.post<any>('/api/medicaments/interrupt-process', details, {observe: 'response'});
     }
 
+    saveDetailsFromCartelaMedicament(details: any): Observable<any> {
+        return this.http.post<any>('/api/medicaments/save-cartela-medicament', details, {observe: 'response'});
+    }
+
+    getMedicamentHistory(codes: any): Observable<any> {
+        return this.http.post<any>('/api/medicaments/medicament-history', codes, {observe: 'response'});
+    }
+
     getMedicamentByRegisterNumber(registerNumber: any): Observable<any> {
         let Params = new HttpParams();
         Params = Params.set('registerNumber', registerNumber);

@@ -16,10 +16,11 @@ import {LicenseService} from '../../shared/service/license/license.service';
 import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 import {CpcdAuthLangComponent} from './cpcd-auth-lang/cpcd-auth-lang.component';
 import {MatDialogModule} from '@angular/material';
-import { CpcdRejectLetterComponent } from './cpcd-reject-letter/cpcd-reject-letter.component';
-import { DeclarationImportExportComponent } from './declaration-import-export/declaration-import-export.component';
-import { AddDeclarationDialogComponent } from './add-declaration-dialog/add-declaration-dialog.component';
-import { AddActiveSubstanceDialogComponent } from './add-active-substance-dialog/add-active-substance-dialog.component';
+import {CpcdRejectLetterComponent} from './cpcd-reject-letter/cpcd-reject-letter.component';
+import {DeclarationImportExportComponent} from './declaration-import-export/declaration-import-export.component';
+import {AddDeclarationDialogComponent} from './add-declaration-dialog/add-declaration-dialog.component';
+import {AddActiveSubstanceDialogComponent} from './add-active-substance-dialog/add-active-substance-dialog.component';
+import {AddLicenseFarmacistModule} from "../../dialog/add-license-farmacist/add-license-farmacist.module";
 
 @NgModule({
     imports: [
@@ -33,9 +34,10 @@ import { AddActiveSubstanceDialogComponent } from './add-active-substance-dialog
         CollapseModule,
         DocumentModule,
         PaymentModule,
-        EcAgentModule
+        EcAgentModule,
+        AddLicenseFarmacistModule
     ],
-    declarations: [ CerereImportExportComponent, CerereSolicAutorComponent, RegDrugControl, CpcdAuthLangComponent, CpcdRejectLetterComponent, DeclarationImportExportComponent, AddDeclarationDialogComponent, AddActiveSubstanceDialogComponent],
+    declarations: [CerereImportExportComponent, CerereSolicAutorComponent, RegDrugControl, CpcdAuthLangComponent, CpcdRejectLetterComponent, DeclarationImportExportComponent, AddDeclarationDialogComponent, AddActiveSubstanceDialogComponent],
     providers: [UploadFileService, RequestService, LicenseService],
     entryComponents: [CpcdAuthLangComponent, CpcdRejectLetterComponent, AddDeclarationDialogComponent, AddActiveSubstanceDialogComponent],
 

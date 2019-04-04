@@ -53,7 +53,7 @@ public interface Constants
     enum AUDIT_SUBCATEGORIES
     {
         MODULE_1, MODULE_2, MODULE_3, MODULE_4, MODULE_5, MODULE_6, MODULE_7, MODULE_8, MODULE_9, MODULE_10,
-        MODULE_11, MODULE_12
+        MODULE_11, MODULE_12, CARTELA_MEDICAMENT
     }
 
     interface ClinicTrailStep

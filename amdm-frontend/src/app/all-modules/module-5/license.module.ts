@@ -13,10 +13,10 @@ import {EliberareCerereLicComponent} from './eliberare-cerere-lic/eliberare-cere
 import {DocumentModule} from '../../document/document.module';
 import {PaymentModule} from '../../payment/payment.module';
 import {LicenseDecisionDialogComponent} from '../../dialog/license-decision-dialog/license-decision-dialog.component';
-import {AddLicenseFarmacistComponent} from './add-license-farmacist/add-license-farmacist.component';
 import {MatDialogModule} from '@angular/material';
 import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 import {ViewCompletedLicenseComponent} from './view-completed-license/view-completed-license.component';
+import {AddLicenseFarmacistModule} from "../../dialog/add-license-farmacist/add-license-farmacist.module";
 
 @NgModule({
     imports: [
@@ -30,17 +30,16 @@ import {ViewCompletedLicenseComponent} from './view-completed-license/view-compl
         DocumentModule,
         PaymentModule,
         EcAgentModule,
+        AddLicenseFarmacistModule
     ],
     schemas: [],
     entryComponents: [
         LicenseDecisionDialogComponent,
-        AddLicenseFarmacistComponent,
     ],
     declarations: [RegMedCerereLicComponent,
         EvaluareCerereLicComponent,
         EliberareCerereLicComponent,
         LicenseDecisionDialogComponent,
-        AddLicenseFarmacistComponent,
         ViewCompletedLicenseComponent
     ],
     providers: [UploadFileService, LicenseService,

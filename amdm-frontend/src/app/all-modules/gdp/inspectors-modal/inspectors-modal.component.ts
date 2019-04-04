@@ -16,7 +16,7 @@ export class InspectorsModalComponent implements OnInit, AfterViewInit, OnDestro
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     dataSource = new MatTableDataSource<any>();
-    columnsToDisplay = ['selected', 'lastname', 'firstname', 'scienceDegree', 'profession', 'code'];
+    columnsToDisplay = ['selected', 'lastname', 'firstname', 'scienceDegree', 'profession', 'code', 'departament'];
 
     private subscriptions: Subscription[] = [];
 
@@ -33,6 +33,14 @@ export class InspectorsModalComponent implements OnInit, AfterViewInit, OnDestro
 
     selectRow(elem: any, row: any) {
         row.selected = elem.checked;
+    }
+
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+
+        if (this.dataSource.paginator) {
+            this.dataSource.paginator.firstPage();
+        }
     }
 
     ngOnInit() {

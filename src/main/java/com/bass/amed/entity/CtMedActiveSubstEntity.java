@@ -8,6 +8,7 @@ import java.util.Objects;
 public class CtMedActiveSubstEntity {
     private Integer id;
     private NmActiveSubstancesEntity activeSubstance;
+    private String actSubstName;
     private Double quantity;
     private NmUnitsOfMeasurementEntity unitsOfMeasurement;
     private NmManufacturesEntity manufacture;
@@ -24,7 +25,7 @@ public class CtMedActiveSubstEntity {
     }
 
     @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "active_substance_id" )
+    @JoinColumn( name = "active_substance_id")
     public NmActiveSubstancesEntity getActiveSubstance() {
         return activeSubstance;
     }
@@ -32,6 +33,12 @@ public class CtMedActiveSubstEntity {
     public void setActiveSubstance(NmActiveSubstancesEntity activeSubstance) {
         this.activeSubstance = activeSubstance;
     }
+
+    @Basic
+    @Column(name = "act_subst_name")
+    public String getActSubstName() { return actSubstName; }
+
+    public void setActSubstName(String actSubstName) { this.actSubstName = actSubstName;}
 
     @Basic
     @Column(name = "quantity")
@@ -66,6 +73,7 @@ public class CtMedActiveSubstEntity {
     public void asign(CtMedAmendActiveSubstEntity entity)
     {
         this.activeSubstance = entity.getActiveSubstance();
+        this.actSubstName = entity.getActSubstName();
         this.quantity = entity.getQuantity();
         this.unitsOfMeasurement = entity.getUnitsOfMeasurement();
         this.manufacture = entity.getManufacture();
@@ -78,6 +86,7 @@ public class CtMedActiveSubstEntity {
         CtMedActiveSubstEntity that = (CtMedActiveSubstEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(activeSubstance, that.activeSubstance) &&
+                Objects.equals(actSubstName, that.actSubstName) &&
                 Objects.equals(quantity, that.quantity) &&
                 Objects.equals(unitsOfMeasurement, that.unitsOfMeasurement) &&
                 Objects.equals(manufacture, that.manufacture);
@@ -86,6 +95,6 @@ public class CtMedActiveSubstEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, activeSubstance, quantity, unitsOfMeasurement, manufacture);
+        return Objects.hash(id, activeSubstance, actSubstName, quantity, unitsOfMeasurement, manufacture);
     }
 }

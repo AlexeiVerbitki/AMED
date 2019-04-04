@@ -12,7 +12,12 @@ export class AdministrationService {
     }
 
     removeNomenclatureRow(nomenclatureNr: string, id: string): Observable<any> {
-        return this.http.get('/api/administration/remove-nomenclature-row', {params: {id: id, nomenclature: nomenclatureNr}});
+        return this.http.get('/api/administration/remove-nomenclature-row', {
+            params: {
+                id: id,
+                nomenclature: nomenclatureNr
+            }
+        });
     }
 
     updateNomenclatureRow(nomenclatureNr: string, nomenclature: any): Observable<HttpResponse<any>> {
@@ -401,7 +406,10 @@ export class AdministrationService {
     }
 
     synchronizeRolesWithAuthorities(rolesWithRights: any): Observable<string> {
-        return this.http.post('/api/administration/sync-roles-with-authorities', rolesWithRights, {observe: 'body', responseType: 'text'});
+        return this.http.post('/api/administration/sync-roles-with-authorities', rolesWithRights, {
+            observe: 'body',
+            responseType: 'text'
+        });
     }
 
     getMedInstSubdivisionsByMedInstId(id: string): Observable<any> {
@@ -414,5 +422,9 @@ export class AdministrationService {
 
     getAllReportsByReportType(reportTypeId): Observable<any> {
         return this.http.get('/api/administration/all-reports-by-report-type', {params: {id: reportTypeId}});
+    }
+
+    getPathByDocNumberAndTypeCode(number, typeCode): Observable<any> {
+        return this.http.get('/api/administration/get-path-by-doc-number-and-request-id', {params: {number: number, typeCode: typeCode},  responseType: 'text'});
     }
 }

@@ -18,6 +18,7 @@ export class AddDivisionComponent implements OnInit {
   wasDivisionAdded: boolean;
   wasVolumeAdded: boolean;
   maxDate = new Date();
+  onlyMainFields = false;
 
   constructor(    private fb: FormBuilder,
                   public dialogRef: MatDialogRef<AddDivisionComponent>,
@@ -51,6 +52,10 @@ export class AddDivisionComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    if (this.dataDialog.onlyMainFields) {
+      this.onlyMainFields = this.dataDialog.onlyMainFields;
+    }
     this.subscriptions.push(
         this.administrationService.getAllUnitsOfMeasurement().subscribe(data => {
               this.volumeUnitsOfMeasurement = data;
@@ -61,7 +66,7 @@ export class AddDivisionComponent implements OnInit {
                 this.dForm.get('samplesNumber').setValue(this.dataDialog.division.samplesNumber);
                 this.dForm.get('serialNr').setValue(this.dataDialog.division.serialNr);
                 this.dForm.get('samplesExpirationDate').setValue(this.dataDialog.division.samplesExpirationDate);
-                if(this.dataDialog.disabledMainFields) {
+                if (this.dataDialog.disabledMainFields) {
                     this.dForm.get('volumeQuantityMeasurement').disable();
                     this.dForm.get('volume').disable();
                     this.dForm.get('division').disable();

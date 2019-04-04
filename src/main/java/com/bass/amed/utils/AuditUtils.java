@@ -1084,9 +1084,6 @@ public final class AuditUtils
 
     public static void auditGDPInspection(List<AuditLogEntity> dummyEntities, GDPInspectionEntity oldGDP, GDPInspectionEntity newGDP, Integer reqId) {
         addAuditLog(dummyEntities, "gdp id", oldGDP.getId(), newGDP.getId(), newGDP.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_12);
-        addAuditLog(dummyEntities, "gdp nr certificat de inspectie", oldGDP.getCertificateBasedOnTheInspection(), newGDP.getCertificateBasedOnTheInspection(), newGDP.getId(), reqId,
-                Constants.AUDIT_SUBCATEGORIES.MODULE_12);
-
         addAuditLog(dummyEntities, "gdp operatii de distributie", oldGDP.getAutoDistributionOperations(), newGDP.getAutoDistributionOperations(), newGDP.getId(), reqId,
                 Constants.AUDIT_SUBCATEGORIES.MODULE_12);
         addAuditLog(dummyEntities, "gdp sef de grup id", oldGDP.getGroupLeaderId(), newGDP.getGroupLeaderId(), newGDP.getId(), reqId, Constants.AUDIT_SUBCATEGORIES.MODULE_12);

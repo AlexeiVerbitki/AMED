@@ -40,7 +40,7 @@
 				<textElement textAlignment="Left">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nr. ________ din ___/___/______"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Certificat Nr. " + $P{nr}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="60" width="529" height="30" uuid="30570afb-e818-48c9-a274-9c09c7393701"/>
@@ -179,7 +179,7 @@ Autoritatea competentă AGENŢIA MEDICAMENTULUI ŞI DISPOZITIVELOR MEDICALE conf
 				<textElement>
 					<font fontName="DejaVu Sans" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Acest certificat reflectă statutul locului de distribuție la data inspecției menționată mai sus și nu mai poate fi luat în consideraţie dacă de la data acestei inspecţii au trecut mai mult de " + $P{maximYearAfterInspection} + "ani. Autenticitatea acestui certificat poate fi verificată la Agenția Medicamentului şi Dispozitivelor Medicale, Republica Moldova."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Acest certificat reflectă statutul locului de distribuție la data inspecției menționată mai sus și nu mai poate fi luat în consideraţie după data de " + $P{maximYearAfterInspection} + ". Autenticitatea acestui certificat poate fi verificată la Agenția Medicamentului şi Dispozitivelor Medicale, Republica Moldova."]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="220">
@@ -195,7 +195,7 @@ Autoritatea competentă AGENŢIA MEDICAMENTULUI ŞI DISPOZITIVELOR MEDICALE conf
 				<textElement>
 					<font fontName="DejaVu Sans" size="11" isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Prezentul certificat este eliberat pentru activitățile de distribuție a medicamentelor și nu se referă la alte activități ale companiei, care nu au fost subiectul inspecției GDP. Orice modificări efectuate în cadrul companiei, care au impact asupra condițiilor de eliberare a prezentului certificat, trebuie să fie comunicate la Inspectoratul GMP și GDP, AMDM, pentru evaluarea necesității unei certificări repetate."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Prezentul certificat este eliberat pentru activitățile de distribuție a medicamentelor și nu se referă la alte activități ale companiei, care nu au fost subiectul inspecției GDP. Orice modificări efectuate în cadrul companiei, care au impact asupra condițiilor de eliberare a prezentului certificat, trebuie să fie comunicate secţiei autorizare activitate farmaceutică GMP, GDP şi GPP, AMDM, pentru evaluarea necesității unei certificări repetate."]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="167" width="535" height="18" uuid="5bd1292e-0c7e-4d84-9a7c-5b9018076cc4"/>

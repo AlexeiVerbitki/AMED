@@ -128,6 +128,7 @@ public class ClinicalTrailsPaymentController {
 
             JRBeanCollectionDataSource bonDePlataStudiuClinicDataset = new JRBeanCollectionDataSource(servTaxList);
 
+            //TODO: Bug, perf fizica nu este acoperit.
             NmEconomicAgentsEntity nmEconomicAgentsEntity = economicAgentsRepository.getParentForIdno(ctPayNote.getEconomicAgent().getIdno()).get();
             String date = new SimpleDateFormat(Constants.Layouts.POINT_DATE_FORMAT).format(ctPayNote.getPayOrder().getDate());
 

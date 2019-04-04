@@ -338,10 +338,13 @@
 						<td scope="row">{{ a.description }}</td>
 						<td scope="row">{{ a.number }}</td>
 						<td scope="row">{{ a.status }}</td>
-						<td *ngIf="a.docType?.category == 'OGD'">
+						<td *ngIf="a.docType?.category == 'OGD' || a.docType?.category == 'SL'">
 							<button mdbTooltip="Generare document" class="btn btn-mdb-color btn-sm waves-light"
 							        mdbWavesEffect [disabled]="false" (click)="viewDoc(a)"><i
 									class="fa fa-puzzle-piece fa-lg" aria-hidden="true"></i></button>
+							<button *ngIf="a.docType.category=='SL'"
+							        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i
+									class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 						</td>
 					</tr>
 					</tbody>

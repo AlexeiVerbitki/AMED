@@ -913,10 +913,10 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
 
     manufacturesStr(substance: any) {
         if (substance && substance.manufactures) {
-            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '')
+            let str = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' ' + (s.manufacture.country ? s.manufacture.country.description : '')
                 + ' ' + s.manufacture.address + 'NRQW').toString();
-            s = s.replace(/NRQW/gi, ';');
-            return s.replace(';,', '; ');
+            str = str.replace(/NRQW/gi, ';');
+            return str.replace(';,', '; ');
         }
         return '';
     }
@@ -1148,7 +1148,6 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                                     this.outputDocuments.splice(index, 1);
                                 }
                             });
-                            this.standarts = [];
                             this.save();
                         }, error => console.log(error))
                     );

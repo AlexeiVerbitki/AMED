@@ -242,24 +242,53 @@
 		</div>
 
 
-		<div class="col-md-3">
-			<div class="md-form-modified" [formGroup]='decisionForm'>
-				<ng-select class="w-100"
-				           [items]="decisions"
-				           [required]="true"
-				           formControlName="decision"
-				           bindLabel="description"
-				           (change)="onDecisionChange($event)"
-				           placeholder="Decizia luată">
-				</ng-select>
-				<div *ngIf="formSubmitted && decisionForm.get('decision').invalid">
-					<small class="text-muted"><strong class="text-danger">Selectați decizia luată</strong>
+		<div class="row">
+			<div class="col-md-3">
+				<div class="md-form-modified" [formGroup]='decisionForm'>
+					<ng-select class="w-100"
+					           [items]="decisions"
+					           [required]="true"
+					           formControlName="decision"
+					           bindLabel="description"
+					           (change)="onDecisionChange($event)"
+					           placeholder="Decizia luată">
+					</ng-select>
+					<div *ngIf="formSubmitted && decisionForm.get('decision').invalid">
+						<small class="text-muted"><strong class="text-danger">Selectați decizia luată</strong>
+						</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="col" [formGroup]="inspectorForm" *ngIf="decisionForm.get('decision').valid && decisionForm.get('decision').value.id == 1">
+				<div class="md-form">
+					<input id="restrictions" mdbInputDirective type="text" class="form-control"
+					       formControlName="certificateRestrictions">
+					<label for="restrictions">Restricțiile certificatului<strong class="text-danger">*</strong></label>
+				</div>
+				<div class="mb-2" *ngIf="formSubmitted && inspectorForm.get('certificateRestrictions').invalid">
+					<small class="text-muted"><strong class="text-danger">Adăugați Nr. certificatului</strong>
 					</small>
 				</div>
 			</div>
 		</div>
 
 		<div class="row" [formGroup]="inspectorForm" *ngIf="decisionForm.get('decision').valid && decisionForm.get('decision').value.id == 1">
+			<div class="col-3">
+				<div class="md-form-modified">
+					<mat-form-field class="w-100">
+						<input disabled id="dataValid" [min]="minDate" matInput [matDatepicker]="picker34" formControlName="certificateTermsOfValidity"
+						       placeholder="Termen de valabilitate a certificatului" >
+						<mat-datepicker-toggle matSuffix [for]="picker34"></mat-datepicker-toggle>
+						<mat-datepicker touchUi #picker34 [disabled]="false"></mat-datepicker>
+					</mat-form-field>
+				</div>
+				<div class="mb-2" *ngIf="formSubmitted && inspectorForm.get('certificateTermsOfValidity').invalid">
+					<small class="text-muted"><strong class="text-danger">Adăugați Termenul de valabilitate a certificatului</strong>
+					</small>
+				</div>
+			</div>
+
 			<div class="col">
 				<div class="md-form">
 					<input id="autoDistribution" mdbInputDirective type="text" class="form-control"
@@ -268,18 +297,6 @@
 				</div>
 				<div class="mb-2" *ngIf="formSubmitted && inspectorForm.get('autoDistributionOperations').invalid">
 					<small class="text-muted"><strong class="text-danger">Adăugați operațiunile de distribuție autorizate</strong>
-					</small>
-				</div>
-			</div>
-
-			<div class="col">
-				<div class="md-form">
-					<input id="certificateBasedOnTheInspection" mdbInputDirective type="text" class="form-control"
-					       formControlName="certificateBasedOnTheInspection">
-					<label for="certificateBasedOnTheInspection">Nr. certificatului eliberat în baza inspecției<strong class="text-danger">*</strong></label>
-				</div>
-				<div class="mb-2" *ngIf="formSubmitted && inspectorForm.get('certificateBasedOnTheInspection').invalid">
-					<small class="text-muted"><strong class="text-danger">Adăugați Nr. certificatului</strong>
 					</small>
 				</div>
 			</div>

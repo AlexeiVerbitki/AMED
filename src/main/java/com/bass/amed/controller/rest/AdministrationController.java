@@ -130,6 +130,8 @@ public class AdministrationController {
     private NmReportRepository nmReportRepository;
     @Autowired
     private NmReportTypeRepository nmReportTypeRepository;
+    @Autowired
+    private OutputDocumentsRepository outputDocumentsRepository;
 
     @RequestMapping(value = "/generate-doc-nr")
     public ResponseEntity<Integer> generateDocNr() {
@@ -788,6 +790,13 @@ public class AdministrationController {
     public ResponseEntity<List<NmReport>> retrieveReportsByTypeId(String id) {
         LOGGER.debug("Retrieve reports by type id" + id);
         return new ResponseEntity<>(nmReportRepository.findNmReportsByReportType_Id(Integer.valueOf(id)), HttpStatus.OK);
+    }
+
+    @RequestMapping("/get-path-by-doc-number-and-request-id")
+    public ResponseEntity<String> getPathByDocNumberAndRequestId(String number,String typeCode) {
+        LOGGER.debug("Retrieve doc path by doc type category " + typeCode + "and number "+ number);
+        OutputDocumentsEntity outDoc = outputDocumentsRepository.findByNumberAndDocType_Category(number,typeCode).orElse(new OutputDocumentsEntity());
+        return new ResponseEntity<>(outDoc.getPath(), HttpStatus.OK);
     }
 
 }

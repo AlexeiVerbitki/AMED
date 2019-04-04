@@ -19,24 +19,29 @@ public class CtMedAmendActiveSubstEntity {
     @Column(name = "med_amend_id")
     private Integer ctMedAmendId;
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "activ_subst_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "activ_subst_id")
     private NmActiveSubstancesEntity activeSubstance;
+
+    @Basic
+    @Column(name = "act_subst_name")
+    private String actSubstName;
 
     @Basic
     @Column(name = "quantity")
     private Double quantity;
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "units_of_meas_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "units_of_meas_id")
     private NmUnitsOfMeasurementEntity unitsOfMeasurement;
 
-    @OneToOne( fetch = FetchType.EAGER, cascade = { CascadeType.DETACH} )
-    @JoinColumn( name = "manufacture_id" )
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "manufacture_id")
     private NmManufacturesEntity manufacture;
 
-    public void asign(CtMedActiveSubstEntity entity){
+    public void asign(CtMedActiveSubstEntity entity) {
         this.activeSubstance = entity.getActiveSubstance();
+        this.actSubstName = entity.getActSubstName();
         this.quantity = entity.getQuantity();
         this.unitsOfMeasurement = entity.getUnitsOfMeasurement();
         this.manufacture = entity.getManufacture();
@@ -47,8 +52,10 @@ public class CtMedAmendActiveSubstEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CtMedAmendActiveSubstEntity that = (CtMedAmendActiveSubstEntity) o;
-        return Objects.equals(ctMedAmendId, that.ctMedAmendId) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(ctMedAmendId, that.ctMedAmendId) &&
                 Objects.equals(activeSubstance, that.activeSubstance) &&
+                Objects.equals(actSubstName, that.actSubstName) &&
                 Objects.equals(quantity, that.quantity) &&
                 Objects.equals(unitsOfMeasurement, that.unitsOfMeasurement) &&
                 Objects.equals(manufacture, that.manufacture);
@@ -56,6 +63,7 @@ public class CtMedAmendActiveSubstEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ctMedAmendId, activeSubstance, quantity, unitsOfMeasurement, manufacture);
+
+        return Objects.hash(id, ctMedAmendId, activeSubstance, actSubstName, quantity, unitsOfMeasurement, manufacture);
     }
 }

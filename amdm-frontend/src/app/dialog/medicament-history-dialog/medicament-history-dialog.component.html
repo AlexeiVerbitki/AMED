@@ -1,4 +1,55 @@
 <div class="mat-dialog-content">
+<div class="gradient-card-header bg-sidebar border-gradient">
+	<div class="container-fluid">
+		<!-- Title -->
+		<div class="row">
+			<div class="col-6">
+				<div class="card-header-title white-text">Istoric medicament</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Card content -->
+<div class="card-body card-body-cascade">
+	<table class="table table-widths text-center">
+		<thead class="bg-sidebar white-text">
+		<tr>
+			<th scope="col">Nr.</th>
+			<th scope="col">Numar cerere</th>
+			<th scope="col">Tip cerere</th>
+			<th scope="col">Data</th>
+			<th scope="col">Numar de inregistrare</th>
+			<th scope="col">Motiv refuz</th>
+			<th scope="col">Documente</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr *ngFor="let history of medicamentHystory;let i = index">
+			<td>{{ i + 1 }}</td>
+			<td>{{ history.requestNumber }}</td>
+			<td>{{ history.requestType }}</td>
+			<td>{{ history.date | date: 'dd/MM/yyyy' }}</td>
+			<td>{{ history.registrationNumber }}</td>
+			<td>{{ history.motiv }}</td>
+			<td>
+				<button *ngIf="history.certificat" mdbTooltip="Certificat de autorizare al medicamentului" type="button" class="btn btn-mdb-color btn-sm waves-light"
+						(click)="loadFile(history.certificat)" mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+				</button>
+				<button *ngIf="history.ordinDeAutorizare" mdbTooltip="Ordin de autorizare al medicamentului" type="button" class="btn btn-mdb-color btn-sm waves-light"
+						(click)="loadFile(history.ordinDeAutorizare)" mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+				</button>
+				<button *ngIf="history.ordinDeIntrerupere" mdbTooltip="Ordin de intrerupere a procedurii de autorizare a medicamentului" type="button" class="btn btn-mdb-color btn-sm waves-light"
+						(click)="loadFile(history.ordinDeIntrerupere)" mdbWavesEffect><i class="fa fa-file-text fa-lg" aria-hidden="true"></i>
+				</button>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+</div>
+
+<div class="mat-dialog-content">
 	<div class="gradient-card-header bg-sidebar border-gradient">
 		<div class="container-fluid">
 			<div class="row">

@@ -32,7 +32,6 @@ export class XchangeInfoComponent implements OnInit, OnDestroy {
     getPrevMonthAVGCurrencies() {
         this.subscriptions.push(this.priceService.getPrevMonthAVGCurrencies().subscribe(data => {
             this.currencies = data;
-            console.log('currencies', this.currencies);
             this.changed.emit(this.currencies);
         }));
     }

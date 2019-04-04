@@ -45,7 +45,7 @@
                 <!--<a routerLink="/dashboard/doc-management" class="pl-3 nav-link waves-light" mdbWavesEffect><i class="fa fa-lock fa-lg" aria-hidden="true"></i> Gestionare documente</a>-->
                 <!--</li>-->
                 <li class="nav-item" [routerLinkActive]="['active']"
-                    *ngIf="checkRole('scr_module_2') || checkRole('scr_admin')">
+                    *ngIf="checkRole('scr_module_6') || checkRole('scr_module_2') || checkRole('scr_admin')">
                     <a routerLink="/dashboard/management/medicaments" class="pl-3 nav-link waves-light"
                        mdbWavesEffect><i class="fa fa-medkit fa-lg" aria-hidden="true"></i> Cartela medicament</a>
                 </li>
@@ -140,7 +140,7 @@
                        mdbWavesEffect><i class="fa fa-tasks fa-lg" aria-hidden="true"></i></a>
                 </li>
                 <li class="nav-item" [routerLinkActive]="['active']"
-                    *ngIf="checkRole('scr_module_2') || checkRole('scr_admin')">
+                    *ngIf="checkRole('scr_module_6') || checkRole('scr_module_2') || checkRole('scr_admin')">
                     <a mdbTooltip="Cartela medicament" placement="right" routerLink="/dashboard/management/medicaments"
                        class="pl-3 nav-link waves-light"
                        mdbWavesEffect><i class="fa fa-medkit fa-lg" aria-hidden="true"></i></a>

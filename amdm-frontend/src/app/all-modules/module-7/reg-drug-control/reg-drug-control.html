@@ -3,7 +3,7 @@
         <!--<h3 class="text-center my-3 font-weight-bold">Inregistrare cerere</h3>-->
         <hr>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-3">
                 <div class="md-form">
                     <input id="nrCererii" mdbInputDirective type="text" class="form-control"
                            formControlName="requestNumber" [attr.disabled]="true">
@@ -11,7 +11,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-3">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker" placeholder="Data" formControlName="data">
@@ -20,13 +20,32 @@
                     </mat-form-field>
                 </div>
             </div>
+
+            <div class="col-lg-3">
+                <div class="md-form">
+                    <input id="nrCereriiSiaGeap" mdbInputDirective type="text" class="form-control"
+                           formControlName="requestNumberSiaGeap">
+                    <label for="nrCereriiSiaGeap">Nr. cererii SIA GEAP</label>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input matInput [matDatepicker]="picker2" placeholder="Data SIA GEAP"
+                               formControlName="dataSiaGeap">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
         </div>
         <hr>
         <app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value"
                       [dcTypes]="docTypes"></app-document>
-       <!-- <div *ngIf="formSubmitted && documents.length==0">
-            <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
-        </div>-->
+        <!-- <div *ngIf="formSubmitted && documents.length==0">
+             <small class="text-muted"><strong class="text-danger">Nici un document nu a fost incarcat</strong></small>
+         </div>-->
 
         <div class="row">
             <div class="col-md-6">
@@ -49,6 +68,12 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-1">
+                <div class="md-form">
+                    <button class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou" (click)="newAgent()"><i
+                            class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -57,7 +82,7 @@
                 <div class="md-form">
                     <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedFirstname">
-                    <label for="persResDepCereriiFirstname">Nume persoana responsabilă <span
+                    <label for="persResDepCereriiFirstname">Nume persoană depunătoare <span
                             class="text-danger">*</span></label>
 
                 </div>
@@ -71,7 +96,7 @@
                 <div class="md-form">
                     <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedLastname">
-                    <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span
+                    <label for="persResDepCereriiLastname">Prenume persoană depunătoare <span
                             class="text-danger">*</span></label>
 
                 </div>
@@ -87,7 +112,7 @@
                 <div class="md-form">
                     <input id="idnp" mdbInputDirective type="text" class="form-control"
                            formControlName="idnp">
-                    <label for="idnp">IDNP </label>
+                    <label for="idnp">Act de identitate </label>
 
                 </div>
             </div>
@@ -129,7 +154,23 @@
                     </mat-form-field>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <div class="md-form">
+	                    <textarea type="text" id="reqSubject" class="md-textarea form-control" mdbInputDirective rows="1"
+                                  formControlName="regSubject"></textarea>
+                    <label for="reqSubject">Subiectul cererii<span class="text-danger">*</span></label>
+                </div>
+                <div *ngIf="formSubmitted && rForm.get('regSubject').invalid">
+                    <small class="text-muted"><strong class="text-danger">Subiectul cererii trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-12" formGroupName="type">
                 <div class="md-form">
                     <h5 class="text-center font-weight-bold">

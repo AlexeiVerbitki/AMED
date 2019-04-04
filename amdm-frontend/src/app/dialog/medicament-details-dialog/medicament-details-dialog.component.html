@@ -9,14 +9,21 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="name" mdbInputDirective type="text" class="form-control" formControlName="commercialName" [attr.disabled]="true">
-					<label for="name">Denumire comerciala</label>
+					<input id="name1" mdbInputDirective type="text" class="form-control" formControlName="commercialName">
+					<label for="name1">Denumire comerciala</label>
+					<div *ngIf="formSubmitted && !mForm.get('commercialName').value">
+						<small class="text-muted"><strong class="text-danger">Denumirea comerciala a medicamentului trebuie introdusa</strong></small>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="dose" mdbInputDirective type="text" class="form-control" formControlName="dose" [attr.disabled]="true">
-					<label for="dose">Doza</label>
+					<input id="dose1" mdbInputDirective type="text" class="form-control" formControlName="dose">
+					<label for="dose1">Doza</label>
+					<div *ngIf="formSubmitted && !mForm.get('dose').value">
+						<small class="text-muted"><strong class="text-danger">Doza trebuie introdusa</strong></small>
+					</div>
+
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -26,9 +33,26 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div *ngIf="!checkRole('scr_admin')" class="md-form">
 					<input id="atcCode" mdbInputDirective type="text" class="form-control" formControlName="atcCode" [attr.disabled]="true">
 					<label for="atcCode">Cod ATC</label>
+				</div>
+				<div *ngIf="checkRole('scr_admin')" class="md-form-modified">
+					<ng-select [items]="atcCodes | async"
+							   bindLabel="code"
+							   placeholder="Cod ATC"
+							   formControlName="atcCode"
+							   [loading]="loadingAtcCodes"
+							   [typeahead]="atcCodesInputs"
+							   required="true">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.code}} <br/>
+							<small class="form-text text-muted">{{item.description}}</small>
+						</ng-template>
+					</ng-select>
+					<div *ngIf="formSubmitted && mForm.get('atcCode').invalid">
+						<small class="text-muted"><strong class="text-danger">Codul ATC trebuie introdus</strong></small>
+					</div>
 				</div>
 			</div>
 			<div class="col-4">
@@ -50,66 +74,135 @@
 				</div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form" *ngIf="!checkRole('scr_admin')">
 					<input id="pharmaceuticalFormType" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalFormType" [attr.disabled]="true">
 					<label for="pharmaceuticalFormType">Tip forma farmaceutica</label>
 				</div>
+                <div class="md-form-modified" *ngIf="checkRole('scr_admin')">
+                    <ng-select id="pharmaceuticalFormTypes" name="pharmaceuticalFormTypes" [items]="pharmaceuticalFormTypes" bindLabel="description"
+                               placeholder="Tip forma farmaceutica" (ngModelChange)="loadPharmaceuticalForms()" formControlName="pharmaceuticalFormType"
+                               required="true">
+                    </ng-select>
+                    <div *ngIf="formSubmitted && mForm.get('pharmaceuticalFormType').invalid">
+                        <small class="text-muted"><strong class="text-danger">Tipul trebuie selectat</strong></small>
+                    </div>
+                </div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form" *ngIf="!checkRole('scr_admin')">
 					<input id="pharmaceuticalForm" mdbInputDirective type="text" class="form-control" formControlName="pharmaceuticalForm" [attr.disabled]="true">
 					<label for="pharmaceuticalForm">Denumire forma farmaceutica</label>
 				</div>
+                <div class="md-form-modified" *ngIf="checkRole('scr_admin')">
+                    <ng-select id="pharmaceuticalForms" name="pharmaceuticalForms" [items]="pharmaceuticalForms" bindLabel="description"
+                               placeholder="Denumire forma farmaceutica" formControlName="pharmaceuticalForm" required="true">
+                    </ng-select>
+                    <div *ngIf="formSubmitted && mForm.get('pharmaceuticalForm').invalid">
+                        <small class="text-muted"><strong class="text-danger">Denumirea trebuie selectata</strong></small>
+                    </div>
+                </div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form" *ngIf="!checkRole('scr_admin')">
 					<input id="group" mdbInputDirective type="text" class="form-control" formControlName="group" [attr.disabled]="true">
 					<label for="group">Grupa medicament</label>
 				</div>
+                <div class="md-form-modified" *ngIf="checkRole('scr_admin')">
+                    <ng-select id="groups" name="group" [items]="groups" bindLabel="description"
+                               placeholder="Grupa medicament" formControlName="group" required="true">
+                    </ng-select>
+                    <div *ngIf="formSubmitted && mForm.get('group').invalid">
+                        <small class="text-muted"><strong class="text-danger">Grupa medicament trebuie selectata</strong></small>
+                    </div>
+                </div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form" *ngIf="!checkRole('scr_admin')">
 					<input id="prescription" mdbInputDirective type="text" class="form-control" formControlName="prescription" [attr.disabled]="true">
 					<label for="prescription">Eliberare receta</label>
 				</div>
+                <div class="md-form-modified" *ngIf="checkRole('scr_admin')">
+                    <ng-select id="prescriptions" name="prescription" [items]="prescriptions" bindLabel="description"
+                               placeholder="Eliberare reţetă" formControlName="prescription" required="true">
+                    </ng-select>
+                    <div *ngIf="formSubmitted && mForm.get('prescription').invalid">
+                        <small class="text-muted"><strong class="text-danger">Tipul eliberarii recetei trebuie selectat</strong></small>
+                    </div>
+                </div>
 			</div>
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form" *ngIf="!checkRole('scr_admin')">
 					<input id="internationalMedicamentName" mdbInputDirective type="text" class="form-control" formControlName="internationalMedicamentName" [attr.disabled]="true">
 					<label for="prescription">Denumirea internationala</label>
 				</div>
+                <div class="md-form-modified" *ngIf="checkRole('scr_admin')">
+                    <ng-select id="internationalName" name="internationalName" [items]="internationalNames"
+                               bindLabel="description"
+                               placeholder="Denumirea internationala *"
+                               formControlName="internationalMedicamentName">
+                    </ng-select>
+                    <div *ngIf="formSubmitted && mForm.get('internationalMedicamentName').invalid">
+                        <small class="text-muted"><strong class="text-danger">Denumirea comuna internationala trebuie selectata</strong></small>
+                    </div>
+                </div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
-					<input id="termenVal" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity" [attr.disabled]="true">
-					<label for="termenVal">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
+					<input id="termenVal1" mdbInputDirective type="number" class="form-control" formControlName="termsOfValidity">
+					<label for="termenVal1">Termen de valabilitate (luni) <span class="text-danger">*</span></label>
+				</div>
+				<div *ngIf="formSubmitted && mForm.get('termsOfValidity').invalid">
+					<small class="text-muted"><strong class="text-danger">Termenul de valabilitate trebuie introdus</strong></small>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-8">
-				<div class="md-form">
+				<div class="md-form" *ngIf="!checkRole('scr_admin')">
 					<input id="medType2" mdbInputDirective type="text" class="form-control" formControlName="medTypesValues" [attr.disabled]="true">
 					<label for="medType2">Tip cerere</label>
 				</div>
+                <div class="md-form-modified" *ngIf="checkRole('scr_admin')">
+                    <ng-select id="medType21" name="medType2" [items]="medicamentTypes2" bindLabel="description" [multiple]="true"
+                               placeholder="Tip cerere" formControlName="medTypesValues">
+                    </ng-select>
+                </div>
 			</div>
 			<div class="col-md-2">
 				<div class="md-form">
-					<mat-checkbox [checked]="mForm.get('originale').value" [disabled]="true">Original</mat-checkbox>
+					<mat-checkbox #clasificareMedicament (change)="checkClasificareMedicament(clasificareMedicament)" [checked]="mForm.get('originale').value" [disabled]="!checkRole('scr_admin')">Original</mat-checkbox>
 				</div>
 			</div>
 			<div class="col-md-2">
 				<div class="md-form">
-					<mat-checkbox [checked]="mForm.get('orphan').value" [disabled]="true">Orfan</mat-checkbox>
+					<mat-checkbox #orfanMedicament (change)="checkOrphanMedicament(orfanMedicament)" [checked]="mForm.get('orphan').value" [disabled]="!checkRole('scr_admin')">Orfan</mat-checkbox>
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-4">
-				<div class="md-form">
+				<div class="md-form" *ngIf="!checkRole('scr_admin')">
 					<input id="authorizationHolder" mdbInputDirective type="text" class="form-control" formControlName="authorizationHolder" [attr.disabled]="true">
 					<label for="authorizationHolder">Deţinătorul certificatului de inregistrare</label>
 				</div>
+                <div class="md-form-modified" *ngIf="checkRole('scr_admin')">
+					<ng-select id="denumireaAutProd" name="denumireaAutProd" [items]="manufactureAuthorizationsAsync | async"
+							   bindLabel="description"
+							   placeholder="Deţinătorul certificatului de inregistrare *"
+							   (ngModelChange)="fillAutorizationHolderDetails()"
+							   [loading]="loadingManufactureAsync"
+							   [typeahead]="manufacturesAuthorizationsInputsAsync"
+							   formControlName="authorizationHolder"
+							   required="true">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.description}} <br/>
+							<small class="form-text text-muted">{{item.address}}</small>
+						</ng-template>
+					</ng-select>
+                    <div *ngIf="formSubmitted && mForm.get('authorizationHolder').invalid">
+                        <small class="text-muted"><strong class="text-danger">Deţinătorul certificatului de inregistrare trebuie selectat</strong></small>
+                    </div>
+                </div>
 			</div>
 			<div class="col-md-4">
 				<div class="md-form">
@@ -163,6 +256,7 @@
 					<th scope="col">Numărul de unități</th>
 					<th scope="col">Volum</th>
 					<th scope="col">Unitate de masura (volum)</th>
+					<th scope="col" *ngIf="checkRole('scr_admin')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -171,7 +265,12 @@
 					<td>{{ division.code }}</td>
 					<td>{{ division.description }}</td>
 					<td>{{ division.volume }}</td>
-					<td>{{ division.volumeQuantityMeasurement }}</td>
+					<td>{{ division.volumeQuantityMeasurement?.description }}</td>
+					<td *ngIf="checkRole('scr_admin')">
+						<button type="button" class="btn btn-mdb-color btn-sm waves-light"
+								(click)="editDivision(division,i)" mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
 				</tr>
 				</tbody>
 			</table>
@@ -196,6 +295,7 @@
 					<th scope="col">Unitate de masură</th>
 					<th scope="col">Producători</th>
 					<th scope="col">Numărul compoziției</th>
+					<th scope="col" *ngIf="checkRole('scr_admin')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -206,6 +306,10 @@
 					<td>{{ substance.unitsOfMeasurement.description }}</td>
 					<td>{{ manufacturesStr(substance)}}</td>
 					<td>{{ substance.compositionNumber }}</td>
+					<td *ngIf="checkRole('scr_admin')">
+						<button class="btn btn-mdb-color waves-light btn-sm waves-light" (click)="editSubstance(substance,i)"
+								mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+					</td>
 				</tr>
 				</tbody>
 			</table>
@@ -216,6 +320,11 @@
 				<div class="row">
 					<div class="col-6">
 						<div class="card-header-title white-text">Excipienti</div>
+					</div>
+					<div class="col-6" *ngIf="checkRole('scr_admin')">
+						<div class="text-right fap text-white">
+							<i (click)="addAuxiliarySubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -228,6 +337,7 @@
 					<th scope="col">Nr.</th>
 					<th scope="col">Denumire</th>
 					<th scope="col">Numărul compoziției</th>
+					<th scope="col" *ngIf="checkRole('scr_admin')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -235,6 +345,10 @@
 					<td>{{ i+1 }}</td>
 					<th scope="row">{{ substance.auxSubstance.description }}</th>
 					<td>{{ substance.compositionNumber }}</td>
+					<td *ngIf="checkRole('scr_admin')">
+						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeAuxiliarySubstance(i)"
+								mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
 				</tr>
 				</tbody>
 			</table>
@@ -247,6 +361,11 @@
 					<div class="col-6">
 						<div class="card-header-title white-text">Producatori</div>
 					</div>
+					<div class="col-6" *ngIf="checkRole('scr_admin')">
+						<div class="text-right fap text-white">
+							<i (click)="addManufacture()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -257,7 +376,9 @@
 					<th scope="col">Denumire</th>
 					<th scope="col">Tara</th>
 					<th scope="col">Adresa</th>
+					<th scope="col">Comentariu</th>
 					<th scope="col">Producator produs finit</th>
+					<th scope="col" *ngIf="checkRole('scr_admin')">Actiuni</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -265,13 +386,25 @@
 					<td>{{ manufacture.manufacture.description }}</td>
 					<td>{{ manufacture.manufacture.country.description }}</td>
 					<td>{{ manufacture.manufacture.address }}</td>
+					<td>{{ manufacture.comment }}</td>
 					<th scope="row">
-						<mat-checkbox [checked]="manufacture.producatorProdusFinit" [disabled]="true"></mat-checkbox>
+						<mat-checkbox #checkBoxProducatorProdusFinit [checked]="manufacture.producatorProdusFinit" (change)="checkProducatorProdusFinit(manufacture,checkBoxProducatorProdusFinit)" [disabled]="!checkRole('scr_admin')"></mat-checkbox>
 					</th>
+					<td *ngIf="checkRole('scr_admin')">
+						<button class="btn btn-dark-red-color waves-light btn-sm waves-light" (click)="removeManufacture(i)"
+								mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+					</td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
+		<div *ngIf="formSubmitted && manufacturesTable.length==0">
+			<small class="text-muted"><strong class="text-danger">Nici un producator nu a fost adaugat</strong></small>
+		</div>
+		<div *ngIf="formSubmitted && produsFinitInvalid">
+			<small class="text-muted"><strong class="text-danger">Nu a fost selectat producatorul produsului finit</strong></small>
+		</div>
+
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<div class="row">
@@ -377,12 +510,17 @@
 				</tbody>
 			</table>
 		</div>
+		<div *ngIf="formSubmitted">
+			<small class="text-muted"><strong class="text-danger">Exista cimpuri mandatorii necompletate</strong></small>
+		</div>
 	</form>
 </div>
 <div class="text-center">
 	<div mat-dialog-actions>
 		<div class="w-100">
-			<button class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="confirm()">Ok</button>
+			<button *ngIf="!checkRole('scr_admin')" class="btn btn-dark-green-color btn-sm-bl btn-sm" (click)="confirm()">Ok</button>
+			<button *ngIf="checkRole('scr_admin')" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button *ngIf="checkRole('scr_admin')" class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
 		</div>
 	</div>
 </div>

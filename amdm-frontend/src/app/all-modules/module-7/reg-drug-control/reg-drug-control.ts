@@ -15,6 +15,7 @@ import {TaskService} from '../../../shared/service/task.service';
 import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
+import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
 
 @Component({
     selector: 'app-reg-drug-control', templateUrl: './reg-drug-control.html', styleUrls: ['./reg-drug-control.css']
@@ -59,6 +60,8 @@ export class RegDrugControl implements OnInit, OnDestroy {
         this.rForm = fb.group({
             'data': {disabled: true, value: null},
             'requestNumber': [null],
+            'dataSiaGeap': null,
+            'requestNumberSiaGeap': null,
             'startDate': [new Date()],
             'endDate': [''],
             'currentStep': ['R'],
@@ -72,7 +75,8 @@ export class RegDrugControl implements OnInit, OnDestroy {
             'phoneNumber': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
             'email': [null, Validators.email],
             'requestMandateNr': [null],
-            'requestMandateDate': [null]
+            'requestMandateDate': [null],
+            'regSubject': ['', Validators.required],
         });
     }
 
@@ -118,7 +122,7 @@ export class RegDrugControl implements OnInit, OnDestroy {
     nextStep() {
         this.formSubmitted = true;
 
-        if (!this.rForm.valid) {
+        if (this.rForm.invalid) {
             return;
         }
 
@@ -147,6 +151,14 @@ export class RegDrugControl implements OnInit, OnDestroy {
             idnp: this.rForm.get('idnp').value
         }];
         modelToSubmit.currentStep = 'E';
+        modelToSubmit.regSubject = this.rForm.get('regSubject').value;
+
+        let drugCheckDecisions = [{
+            nrSiaGeap: this.rForm.get('requestNumberSiaGeap').value,
+            dateSiaGeap : this.rForm.get('dataSiaGeap').value
+        }];
+
+        modelToSubmit.drugCheckDecisions = drugCheckDecisions;
 
         this.setSelectedRequest();
 
@@ -166,6 +178,22 @@ export class RegDrugControl implements OnInit, OnDestroy {
         } else if (this.rForm.get('type.code').value === 'ATIE') {
             this.model = 'dashboard/module/drug-control/transfer-authorization/';
         }
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
     }
 
 

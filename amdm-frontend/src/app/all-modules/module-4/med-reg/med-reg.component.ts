@@ -269,7 +269,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
 
-                            this.evaluateImportForm.get('data.importAuthorizationEntity.unitOfImportTable.importSources').setErrors(null);
+                            // this.evaluateImportForm.get('data.importAuthorizationEntity.unitOfImportTable.importSources').setErrors(null);
                         }
                     }
 

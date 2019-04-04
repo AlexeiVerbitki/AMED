@@ -5,6 +5,7 @@ import {RequestService} from '../../shared/service/request.service';
 import {MedicamentModificationsDialogComponent} from '../medicament-modifications-dialog/medicament-modifications-dialog.component';
 import {saveAs} from 'file-saver';
 import {UploadFileService} from '../../shared/service/upload/upload-file.service';
+import {MedicamentService} from '../../shared/service/medicament.service';
 
 @Component({
     selector: 'app-medicament-history-dialog',
@@ -17,9 +18,11 @@ export class MedicamentHistoryDialogComponent implements OnInit {
     orders: any[] = [];
     prices: any[] = [];
     initialData: any;
+    medicamentHystory: any[] = [];
 
     constructor(public dialogRef: MatDialogRef<MedicamentHistoryDialogComponent>,
                 private dialog: MatDialog,
+                private medicamentService: MedicamentService,
                 private uploadService: UploadFileService,
                 @Inject(MAT_DIALOG_DATA) public dataDialog: any,
                 private requestService: RequestService) {
@@ -47,6 +50,17 @@ export class MedicamentHistoryDialogComponent implements OnInit {
                     return 0;
                 }
             });
+        }));
+
+        this.loadMedicamentHistory(this.dataDialog.value);
+    }
+
+    loadMedicamentHistory(medicaments: any[]) {
+        this.medicamentHystory = [];
+        const codes: any[] = [];
+        medicaments.forEach(m => codes.push(m.code));
+        this.subscriptions.push(this.medicamentService.getMedicamentHistory(codes).subscribe(data => {
+            this.medicamentHystory = data.body;
         }));
     }
 

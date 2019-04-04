@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
 import {ConfirmationDialogComponent} from '../confirmation-dialog.component';
-import {AddLicenseFarmacistComponent} from '../../all-modules/module-5/add-license-farmacist/add-license-farmacist.component';
+import {AddLicenseFarmacistComponent} from "../add-license-farmacist/add-license-farmacist.component";
 
 @Component({
     selector: 'app-license-decision-dialog',

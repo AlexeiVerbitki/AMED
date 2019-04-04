@@ -22,7 +22,7 @@ import {PaymentComponent} from '../../../payment/payment.component';
 import {AddManufactureComponent} from '../../../dialog/add-manufacture/add-manufacture.component';
 import {AddDivisionComponent} from '../../../dialog/add-division/add-division.component';
 import {MedicamentService} from '../../../shared/service/medicament.service';
-import {AddLaboratorStandardsComponent} from '../../../dialog/add-laborator-standards/add-laborator-standards.component';
+import {saveAs} from 'file-saver';
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -48,7 +48,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     prescriptions: any[] = [];
     internationalNames: any[];
     medicamentTypes2: any[];
-    manufactureAuthorizations: any[];
+    //manufactureAuthorizations: any[];
     docTypes: any[];
     docTypesInitial: any[];
     outDocuments: any[] = [];
@@ -63,10 +63,14 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     loadingAtcCodes = false;
     atcCodesInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
-    loadingManufacture = false;
-    standarts: any[];
+    //loadingManufacture = false;
+    standarts: any[] = [];
     removeExperts = false;
     oldType: any;
+    manufactureAuthorizationsAsync: Observable<any[]>;
+    loadingManufactureAsync = false;
+    manufacturesAuthorizationsInputsAsync = new Subject<string>();
+    medicamentHystory: any[] = [];
 
     constructor(public dialog: MatDialog,
                 private fb: FormBuilder,
@@ -91,8 +95,9 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             'currentStep': ['X'],
             'documents': [],
             'companyValue': [],
-            'initiator': [''],
-            'assignedUser': [''],
+            'initiator': [null],
+            'assignedUser': [null],
+            'standard': [null],
             'medicamentName': [],
             'regnr': [null],
             'medicaments': [[]],
@@ -161,6 +166,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.fillRequestDetails(data);
                         this.initiateMedicamentDetails(data, false);
                         if (data.type && (data.type.code == 'MERG' || data.type.code == 'MERS')) {
+                            this.loadMedicamentHistory(data.medicaments);
                             this.eForm.get('regnr').setValue(data.medicaments[0].registrationNumber);
                             this.disabeFieldsForRepeatedRegistration();
                         }
@@ -203,11 +209,12 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     }
 
     loadMedicamentDetailsByRegNr(regNr: any) {
-        this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+        this.subscriptions.push(this.activatedRoute.params.subscribe(activParams => {
                 this.subscriptions.push(this.requestService.getOldRequestIdByMedicamentRegNr(regNr).subscribe(data2 => {
                         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
                                 this.subscriptions.push(this.requestService.getMedicamentRequest(data2).subscribe(data3 => {
                                         data3.medicaments = data3.medicaments.filter(t => t.status == 'F');
+                                        this.clearAllDetails();
                                         this.initiateMedicamentDetails(data3, true);
                                         this.outDocuments = [];
                                         this.standarts = [];
@@ -217,6 +224,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                                         this.eForm.get('registrationDate').setValue(new Date(data3.medicaments[0].registrationDate));
                                         this.eForm.get('expirationDate').setValue(new Date(data3.medicaments[0].expirationDate));
                                         this.disabeFieldsForRepeatedRegistration();
+                                        this.loadMedicamentHistory(data3.medicaments);
                                     })
                                 );
                             })
@@ -225,6 +233,15 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 );
             })
         );
+    }
+
+    loadMedicamentHistory(medicaments: any[]) {
+        this.medicamentHystory = [];
+        const codes: any[] = [];
+        medicaments.forEach(m => codes.push(m.code));
+        this.subscriptions.push(this.medicamentService.getMedicamentHistory(codes).subscribe(data => {
+            this.medicamentHystory = data.body;
+        }));
     }
 
     disabeFieldsForRepeatedRegistration() {
@@ -296,6 +313,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.displayInstructions();
             this.displayMachets();
             this.eForm.get('medicament.atcCode').setValue(data.medicaments[0].atcCode);
+            this.eForm.get('medicament.authorizationHolder').setValue(data.medicaments[0].authorizationHolder);
             this.eForm.get('medicament.dose').setValue(data.medicaments[0].dose);
             this.eForm.get('medicament.termsOfValidity').setValue(data.medicaments[0].termsOfValidity);
             this.eForm.get('medicament.originale').setValue(data.medicaments[0].originale);
@@ -460,18 +478,25 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             )
         );
 
-        this.loadingManufacture = true;
-        this.subscriptions.push(
-            this.administrationService.getAllManufactures().subscribe(data => {
-                    this.manufactureAuthorizations = data;
-                    if (dataDB.medicaments && dataDB.medicaments.length != 0 && dataDB.medicaments[0].authorizationHolder) {
-                        this.eForm.get('medicament.authorizationHolder').setValue(this.manufactureAuthorizations.find(r => r.id === dataDB.medicaments[0].authorizationHolder.id));
+        this.manufactureAuthorizationsAsync =
+            this.manufacturesAuthorizationsInputsAsync.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 0) {
+                        return true;
                     }
-                    this.loadingManufacture = false;
-                },
-                error => this.loadingManufacture = false
-            )
-        );
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingManufactureAsync = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getManufacturersByName(term).pipe(
+                        tap(() => this.loadingManufactureAsync = false)
+                    )
+                )
+            );
 
         this.subscriptions.push(
             this.taskService.getRequestStepByIdAndCode('1', 'E').subscribe(step => {
@@ -516,6 +541,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         );
+        this.groups = [];
         this.groups = [...this.groups, {value: 'VIT', description: 'Vitale'}];
         this.groups = [...this.groups, {value: 'ES', description: 'Esenţiale'}];
         this.groups = [...this.groups, {value: 'NES', description: 'Nonesenţiale'}];
@@ -527,6 +553,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             this.eForm.get('medicament.group').setValue({value: 'NES', description: 'Nonesenţiale'});
         }
 
+        this.prescriptions = [];
         this.prescriptions = [...this.prescriptions, {value: 1, description: 'Cu prescripţie'}];
         this.prescriptions = [...this.prescriptions, {value: 0, description: 'Fără prescripţie'}];
         this.prescriptions = [...this.prescriptions, {value: 2, description: 'Staţionar'}];
@@ -663,11 +690,11 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (isFormInvalid) {
+        if (this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS' && isFormInvalid) {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
         }
 
-        if (isOutputDocInvalid || isFormInvalid) {
+        if (this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS' && (isOutputDocInvalid || isFormInvalid)) {
             return;
         }
 
@@ -684,13 +711,6 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 this.errorHandlerService.showError('Exista solicitari de date aditionale fara raspuns primit.');
                 return;
             }
-        }
-
-        const rl = this.documents.find(r => r.docType.category == 'RL');
-        const lab = this.outDocuments.find(r => r.docType.category == 'LAB');
-        if (lab && !rl) {
-            this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
-            return;
         }
 
         this.isResponseReceived = true;
@@ -890,32 +910,16 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = false;
 
-        const dialogConfig2 = new MatDialogConfig();
-
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.width = '600px';
-
-        const dialogRef = this.dialog.open(AddLaboratorStandardsComponent, dialogConfig2);
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && result.response) {
-                this.subscriptions.push(this.requestService.laboratorAnalysis(this.eForm.get('id').value).subscribe(data => {
-                        this.outDocuments.push({
-                            name: 'Solicitare desfasurare analize de laborator',
-                            docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                            status: 'Urmeaza a fi inclus in actul de predare-primire',
-                            date: new Date()
-                        });
-                        this.standarts = result.standards;
-                        this.save();
-                    }, error => console.log(error))
-                );
-            }
-        });
-
+        this.subscriptions.push(this.requestService.laboratorAnalysis(this.eForm.get('id').value).subscribe(data => {
+                            this.outDocuments.push({
+                                name: 'Solicitare desfasurare analize de laborator',
+                                docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                                status: 'Urmeaza a fi inclus in actul de predare-primire',
+                                date: new Date()
+                            });
+                            this.save(false);
+                        }, error => console.log(error))
+                    );
     }
 
     isDisabledLabButton(): boolean {
@@ -1084,8 +1088,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                                     this.outDocuments.splice(index, 1);
                                 }
                             });
-                            this.standarts = [];
-                            this.save();
+                            this.save(false);
                         }, error => console.log(error))
                     );
                     return;
@@ -1125,7 +1128,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.payment.manufactureModified();
     }
 
-    save() {
+    save(showSuccess) {
 
         const rl = this.outDocuments.find(r => r.docType.category == 'RL');
         if (rl) {
@@ -1156,6 +1159,9 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 this.initialData = Object.assign({}, data.body);
                 this.initialData.medicaments = Object.assign([], data.body.medicaments);
                 this.loadingService.hide();
+                if (showSuccess) {
+                    this.errorHandlerService.showSuccess('Datele au fost salvate.');
+                }
             }, error => this.loadingService.hide())
         );
     }
@@ -1242,13 +1248,11 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.response) {
-                this.activeSubstancesTable[index] = {
-                    activeSubstance: result.activeSubstance,
-                    quantity: result.activeSubstanceQuantity,
-                    unitsOfMeasurement: result.activeSubstanceUnit,
-                    manufactures: result.manufactures,
-                    compositionNumber: result.compositionNumber
-                };
+                this.activeSubstancesTable[index].activeSubstance = result.activeSubstance;
+                this.activeSubstancesTable[index].quantity = result.activeSubstanceQuantity;
+                this.activeSubstancesTable[index].unitsOfMeasurement = result.activeSubstanceUnit;
+                this.activeSubstancesTable[index].manufactures = result.manufactures;
+                this.activeSubstancesTable[index].compositionNumber = result.compositionNumber;
                 this.fillDose();
             }
         });
@@ -1263,9 +1267,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
-        const disabledMainFields =  this.eForm.get('type').value
-            && (this.eForm.get('type').value.code == 'MERG' || this.eForm.get('type').value.code == 'MERS');
-        dialogConfig2.data = {division : division, disabledMainFields : disabledMainFields};
+        dialogConfig2.data = {division : division, disabledMainFields : false};
 
         const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
 
@@ -1274,16 +1276,18 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 this.divisions[index].samplesNumber = result.samplesNumber;
                 this.divisions[index].serialNr = result.serialNr;
                 this.divisions[index].samplesExpirationDate = result.samplesExpirationDate;
-                if (!disabledMainFields) {
                     this.divisions[index].description = result.division;
                     this.divisions[index].volume = result.volume;
                     this.divisions[index].volumeQuantityMeasurement = result.volumeQuantityMeasurement;
-                }
             }
         });
     }
 
     fillDose() {
+        if (this.activeSubstancesTable.length > 3) {
+            this.eForm.get('medicament.dose').setValue('Combinatie');
+            return;
+        }
         this.activeSubstancesTable.sort((a, b) => {
             return (a.compositionNumber - b.compositionNumber == 0) ? a.activeSubstance.id - b.activeSubstance.id : a.compositionNumber - b.compositionNumber;
         });
@@ -1309,6 +1313,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.navbarTitleService.showTitleMsg('');
         this.subscriptions.forEach(s => s.unsubscribe());
+        this.errorHandlerService.showSuccess('');
     }
 
     fillMedicamentDetails(modelToSubmit: any): void {
@@ -1492,10 +1497,10 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     manufacturesStr(substance: any) {
         if (substance && substance.manufactures) {
-            let s = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' '
+            let str = Array.prototype.map.call(substance.manufactures, s => s.manufacture.description + ' '
                 + (s.manufacture.country ? s.manufacture.country.description : '') + ' ' + s.manufacture.address + 'NRQW').toString();
-            s = s.replace(/NRQW/gi, ';');
-            return s.replace(';,', '; ');
+            str = str.replace(/NRQW/gi, ';');
+            return str.replace(';,', '; ');
         }
         return '';
     }
@@ -1537,21 +1542,37 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     }
 
     typeWasChanged(event) {
-        // if (this.eForm.get('type').value && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
-        //     this.eForm.get('medicament.dose').enable();
-        //     this.eForm.get('medicament.pharmaceuticalFormType').enable();
-        //     this.eForm.get('medicament.pharmaceuticalForm').enable();
-        //     this.eForm.get('medicament.atcCode').enable();
-        //     this.eForm.get('medicament.group').enable();
-        //     this.eForm.get('medicament.prescription').enable();
-        //     this.eForm.get('medicament.internationalMedicamentName').enable();
-        //     this.eForm.get('medicament.medTypesValues').enable();
-        //     this.eForm.get('medicament.authorizationHolder').enable();
-        //     this.eForm.get('medicament.termsOfValidity').enable();
-        // }
         if (event && this.oldType && event.code != 'MEDF' && event.code != this.oldType.code) {
             this.clearAllDetails();
         }
+    }
+
+    loadFile(path: string) {
+        this.subscriptions.push(this.uploadService.loadFile(path).subscribe(data => {
+                this.saveToFileSystem(data, path.substring(path.lastIndexOf('/') + 1));
+            },
+
+            error => {
+                console.log(error);
+            }
+            )
+        );
+    }
+
+    private saveToFileSystem(response: any, docName: string) {
+        const blob = new Blob([response]);
+        saveAs(blob, docName);
+    }
+
+    addStandard() {
+        if (this.eForm.get('standard').value) {
+            this.standarts.push({description: this.eForm.get('standard').value});
+            this.eForm.get('standard').setValue(null);
+        }
+    }
+
+    removeStandard(index) {
+        this.standarts.splice(index, 1);
     }
 }
 

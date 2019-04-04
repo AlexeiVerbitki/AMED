@@ -269,6 +269,10 @@ export class RequestService {
         return this.http.post<any>('/api/medicament-approved', ids, {observe: 'response'});
     }
 
+    removeMedicamentsFromAuthorizationOrder(ids: any): Observable<HttpResponse<any>> {
+        return this.http.post<any>('/api/remove-medicaments-from-authorization-order', ids, {observe: 'response'});
+    }
+
     laboratorAnalysis(requestId: any): Observable<HttpResponse<any>> {
         return this.http.post<any>('/api/laborator-analysis', requestId, {observe: 'response'});
     }

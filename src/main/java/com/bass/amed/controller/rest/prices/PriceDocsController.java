@@ -34,46 +34,16 @@ public class PriceDocsController {
     private static final Logger logger = LoggerFactory.getLogger(PriceDocsController.class);
 
     @Autowired
-    private CurrencyRepository currencyRepository;
-
-    @Autowired
-    private CurrencyHistoryRepository currencyHistoryRepository;
-
-    @Autowired
-    private PriceExpirationReasonRepository priceExpirationReasonRepository;
-
-    @Autowired
-    private PriceTypesRepository priceTypesRepository;
-
-    @Autowired
     PricesManagementRepository pricesManagementRepository;
 
     @Autowired
     ManufactureRepository manufactureRepository;
 
     @Autowired
-    private PriceRepository priceRepository;
-
-    @Autowired
-    private NmPricesRepository nmPricesRepository;
-
-    @Autowired
-    private PricesHistoryRepository pricesHistoryRepository;
-
-    @Autowired
     private PriceEvaluationService priceEvaluationService;
 
     @Autowired
-    private PricesEvaluationRepository pricesEvaluationRepository;
-
-    @Autowired
-    private InvoiceDetailsRepository invoiceDetailsRepository;
-
-    @Autowired
     private PrevYearsPriceAVGInvoiceDetailsRepository prevYearsPriceAVGInvoiceDetailsRepository;
-
-    @Autowired
-    private DocumentsRepository documentsRepository;
 
     @Autowired
     private SysParamsRepository sysParamsRepository;
