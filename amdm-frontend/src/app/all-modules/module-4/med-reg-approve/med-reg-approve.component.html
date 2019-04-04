@@ -412,6 +412,7 @@
                             <!--<th scope="col">Ţara şi adresa producătorului materiei prime</th>-->
                             <th scope="col">Data expirarii</th>
                             <th scope="col">Codul Vamal</th>
+                            <th *ngIf="importData?.importAuthorizationEntity.medType==2" scope="col">Sursa</th>
                             <th scope="col">Aprobat</th>
                             <th scope="col">Actiuni</th>
 
@@ -437,6 +438,7 @@
                             <td>{{ unitOfImport.summ | number : '1.2-2'}}</td>
                             <td>{{ unitOfImport.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport.customsCode?.code }}</td>
+                            <td *ngIf="importData?.importAuthorizationEntity.medType==2"> {{ unitOfImport?.importSources?.name }}</td>
                             <td>
                                 <mat-checkbox [disabled]="true"
                                               [checked]="importData?.importAuthorizationEntity.importAuthorizationDetailsEntityList[i].approved"
