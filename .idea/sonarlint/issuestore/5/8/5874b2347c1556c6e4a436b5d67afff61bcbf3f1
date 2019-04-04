@@ -1,0 +1,6 @@
+
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 69 to the 15 allowed.(¥Ìí¥ýÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 34 to the 15 allowed.(êì²³ÿÿÿÿÿ
+wsquid:S00116"\Rename this field "SpecificationDate" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(˜ÇÞÛÿÿÿÿÿ
+Osquid:UselessImportCheck".Remove this unused import 'java.util.HashSet'.(Ê‚êX
+Rsquid:UselessImportCheck"+Remove this unused import 'java.util.List'.(Õë±Äøÿÿÿÿ

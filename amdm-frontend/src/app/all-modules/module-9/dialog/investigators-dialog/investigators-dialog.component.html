@@ -1,0 +1,97 @@
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="investigForm" #f="ngForm">
+        <div class="row">
+            <div class="col-12">
+                <div class="md-form">
+                    <input type="text" id="instMed" class="form-control" mdbInputDirective
+                           formControlName="subdivision">
+                    <label for="instMed" class="disabled">Subdiviziunea unitatii medicale</label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="md-form-modified" formGroupName="investigator">
+                    <ng-select [items]="investigatorsList"
+                               bindLabel="firstName"
+                               formControlName="nmInvestigator"
+                               placeholder="Investigator">
+                        <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                            {{item.firstName}} {{item.lastName}} {{item.title}}
+                        </ng-template>
+
+                    </ng-select>
+                </div>
+            </div>
+
+            <div class="position-button">
+                <button type="button" class="btn btn-indigo waves-light btn-sm" mdbWavesEffect
+                        [disabled]="isDisabledAddInvestigator" (click)="addInvestigator()">
+                    <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
+                </button>
+            </div>
+        </div>
+        <hr>
+
+        <div class="card-body card-body-cascade">
+            <div class="container-fluid">
+                <div class="row text-center align-items-center">
+                    <div class="col-12 bg-sidebar white-text">
+                        <div class="card-header-title white-text">Lista investigatori</div>
+
+                        <div class="row grey darken-3 white-text">
+                            <div class="col">
+                                <div class="ptc">Nume</div>
+                            </div>
+                            <div class="col">
+                                <div class="ptc">Prenume</div>
+                            </div>
+                            <div class="col">
+                                <div class="ptc">Titlu</div>
+                            </div>
+                            <div class="col">
+                                <div class="ptc">Status</div>
+                            </div>
+                            <div class="col">
+                                <div class="ptc">Actiuni</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row text-center align-items-center">
+                    <div class="col">
+                        <div class="row border-row py-2 align-items-center" *ngFor="let el of collectedDataList; let i = index">
+                            <div class="col border-specs ptc">{{el.nmInvestigator.firstName}}</div>
+                            <div class="col border-specs ptc">{{el.nmInvestigator.lastName}}</div>
+                            <div class="col border-specs ptc">{{el.nmInvestigator.title}}</div>
+                            <div class="col border-specs ptc">
+                                <mat-radio-button [(checked)]="el.isMain" (change)="setTrue(i)">Principal</mat-radio-button>
+                            </div>
+                            <div class="col border-specs ptc">
+                                <button type="button" class="btn btn-dark-red-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                        (click)="removeInvestigator(i,el)"><i class="fa fa-minus fa-2x" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="collectedDataList.length === 0" class="text-center text-muted mt-3">Nu sunt inregistrari!
+                </div>
+
+            </div>
+        </div>
+
+    </form>
+</mat-dialog-content>
+
+<div *ngIf="!isMainSelected" class="text-center">
+    <small class="text-muted"><strong class="text-danger">Investigator principal nu este selectat!</strong></small>
+</div>
+
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-green-color btn-sm waves-light" (click)="submit()">Adauga
+    </button>
+    <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>

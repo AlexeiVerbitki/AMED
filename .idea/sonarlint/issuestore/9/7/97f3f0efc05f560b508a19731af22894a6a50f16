@@ -1,0 +1,276 @@
+
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(İ¶Ùşÿÿÿÿ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(À‚»éşÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(Ù´ƒşÿÿÿÿ
+gsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(»‘á
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(èÙ…ñ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(³ïæ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(öéûşÿÿÿÿÿ
+?squid:S1481"*Remove this unused "first" local variable.(»ºÀƒ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(–•œêúÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(î· Êıÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(°ğÊ‚
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ÀˆÑ·ÿÿÿÿÿ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(˜ˆ—¿øÿÿÿÿ
+S"squid:SwitchLastCaseIsDefaultCheck""Add a default case to this switch.(â’³Ìúÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(»Í³²
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ò£öÿÿÿÿÿ
+Ssquid:S00107"=Method has 10 parameters, which is greater than 7 authorized.(à‹Ì¾
+^squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(×n
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(´ ÒÄ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ï†Ñ©
+_squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ıúÇÃ
+Qsquid:S2589"7Remove this expression which always evaluates to "true"(ÿ±èãøÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(Äÿ¢Úúÿÿÿÿ
+ksquid:S2259"QA "NullPointerException" could be thrown; "gmpAuthorizationsDB" is nullable here.(ÅÕŠæÿÿÿÿÿ
+`squid:S1192"KDefine a constant instead of duplicating this literal "dd/MM/yyyy" 9 times.(¹’÷‰
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(¬Ôşÿÿÿÿ
+`squid:S2259"FA "NullPointerException" could be thrown; "nmPrices" is nullable here.(İ¿Ğİşÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ú°à¬
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ıÏÏğøÿÿÿÿ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Œ™¦‡ùÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ÿ€‰­ıÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(«Œ‚¦øÿÿÿÿ
+ksquid:S1192"QDefine a constant instead of duplicating this literal "numar certificat" 6 times.(Ã¨¤·üÿÿÿÿ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(ï¹•©ıÿÿÿÿ
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(î÷® üÿÿÿÿ
+_squid:S3655"ECall "nmMedicamentTypeEntity.isPresent()" before accessing the value.(»Æ¶íÿÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ÕÒÈ°üÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¾äª—
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(äı¥òûÿÿÿÿ
+esquid:S1192"PDefine a constant instead of duplicating this literal "finiasre cerere" 6 times.(«³ å
+Qsquid:S3655"7Call "Optional#isPresent()" before accessing the value.(¥Î›øÿÿÿÿ
+Msquid:S1854"8Remove this useless assignment to local variable "list".(ùóíª
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ãù·¤øÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(€©‹«üÿÿÿÿ
+Gsquid:S1481"2Remove this unused "customsPoints" local variable.(á œ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(ú¹×ˆüÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(µ‡¶ü
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(±Ôşóúÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¦ÍÎÎ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(†š‹ıÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(½å½Œüÿÿÿÿ
+_squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(Ã½üÏ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(²Ş´»ÿÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ç‰¦¦
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 18 to the 15 allowed.(È”õšÿÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ãüÛşÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(¥üîÊ
+Osquid:S4034":Replace this negation and "anyMatch()" with "noneMatch()".(À²Õ
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(èµûøÿÿÿÿ
+Fsquid:S1612",Replace this lambda with a method reference.(Úúü‹ÿÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(¨–½´øÿÿÿÿ
+M
+squid:S106"9Replace this use of System.out or System.err by a logger.(ÅÑ÷
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 33 to the 15 allowed.(û‘ìŠøÿÿÿÿ
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ÀŒ¶Èşÿÿÿÿ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Î¨ô©ùÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ÔÜëüÿÿÿÿ
+msquid:S1192"XDefine a constant instead of duplicating this literal "data emitere autorizare" 6 times.(ÈÇå
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(¸Éšùÿÿÿÿ
+Fsquid:S1602",Remove useless curly braces around statement(ÄØ‚Éüÿÿÿÿ
+Lsquid:S3655"7Call "Optional#isPresent()" before accessing the value.(Û¾åÇ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(º¶‡Ì
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(ß‡èØıÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Qsquid:S1854"7Remove this useless assignment to local variable "map".(„—‰äûÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(ëÛÄ«øÿÿÿÿ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¸ş¯ùÿÿÿÿ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ë—¥…ùÿÿÿÿ
+squid:S1192"gDefine a constant instead of duplicating this literal "/wait-request-additional-data-response" 4 times.(Ä¹óÊÿÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(üí†§
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 62 to the 15 allowed.(–•œêúÿÿÿÿ
+gsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 49 to the 15 allowed.(—íÏ¡
+Fsquid:S1612",Replace this lambda with a method reference.(Ùú–Êşÿÿÿÿ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ş¤˜íıÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(»Ç‹£ùÿÿÿÿ
+Lsquid:S1135"2Complete the task associated to this TODO comment.(ÿ¾‹Üşÿÿÿÿ
+Zsquid:UnusedPrivateMethod"2Remove this unused private "addDRDocument" method.(ã‡Ùºùÿÿÿÿ
+nsquid:S1192"YDefine a constant instead of duplicating this literal "data expirare certificat" 6 times.(„×‘é
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(É¥öŞúÿÿÿÿ
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(Ä°Æª
+Nsquid:S3655"4Call "optDB.isPresent()" before accessing the value.(ğ‡¼ûÿÿÿÿ
+esquid:S1192"QDefine a constant instead of duplicating this literal "numar autorizare" 6 times.(‰×¤i
+osquid:S1192"UDefine a constant instead of duplicating this literal "/set-expired-request" 8 times.(ö²üŞüÿÿÿÿ
+jsquid:S1854"VRemove this useless assignment to local variable "autorizationImportDataSetArrayList".(ì·±W
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ğÒÒæûÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(Çåˆ‡ıÿÿÿÿ
+Zsquid:S2259"@A "NullPointerException" could be thrown; "em" is nullable here.(Çá³‚ıÿÿÿÿ
+Fsquid:S1612",Replace this lambda with a method reference.(Úúü‹ÿÿÿÿÿ
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(×Ÿ—Şøÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 74 to the 15 allowed.(±Ôşóúÿÿÿÿ
+nsquid:S1192"YDefine a constant instead of duplicating this literal "data expirare autorizare" 6 times.(†€†¬
+fsquid:S2259"QA "NullPointerException" could be thrown; "gmpAuthorizationsDB" is nullable here.(¬Îøˆ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(ÔÜëüÿÿÿÿ
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(º¶‡Ì
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(šµÅşÿÿÿÿ
+Isquid:EmptyStatementUsageCheck"Remove this empty statement.(Åñ­õşÿÿÿÿ
+[squid:S1481"GRemove this unused "autorizationImportDataSetArrayList" local variable.(ì·±W
+Psquid:S1481";Remove this unused "clinicTrialAmendEntity" local variable.(æ­
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(»­ôíşÿÿÿÿ
+_squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ãÔèÔ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(ÕÒÈ°üÿÿÿÿ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(È”õšÿÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Fsquid:S1612",Replace this lambda with a method reference.(šÓœ¥ûÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ÔĞÈİ
+Qsquid:S1854"7Remove this useless assignment to local variable "reg".(ÍŠ°¾şÿÿÿÿ
+`squid:S1192"FDefine a constant instead of duplicating this literal " din " 4 times.(ÿ¿°éıÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(Ä°Æª
+\squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ôğ³
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(ßöëİıÿÿÿÿ
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(Í„ìÀúÿÿÿÿ
+lsquid:S3776"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(Áø²øúÿÿÿÿ
+`squid:S3027"FPut single-quotes around '/' to use the faster "indexOf(char)" method.(Â»¸æûÿÿÿÿ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ÉÎíöûÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(Ö³Â¼ùÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Asquid:S1612",Replace this lambda with a method reference.(¥ä–‘
+^squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(Â×ùJ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(æÛİõûÿÿÿÿ
+Fsquid:S1612",Replace this lambda with a method reference.(šÓœ¥ûÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(‘Öš
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.( šÆºûÿÿÿÿ
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(°˜„
+asquid:UnusedPrivateMethod"9Remove this unused private "addInterruptionOrder" method.(ªòŞöûÿÿÿÿ
+Msquid:S1854"8Remove this useless assignment to local variable "list".(ùóíª
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(›‘Úûÿÿÿÿ
+@squid:S1612",Replace this lambda with a method reference.(î¨\
+Qsquid:S3655"7Call "Optional#isPresent()" before accessing the value.(³Èş–şÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(„¿Âø
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(ÔĞÈİ
+msquid:S1192"XDefine a constant instead of duplicating this literal "compania solicitanta id" 6 times.(×…Ë¿
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(¤åÙ®øÿÿÿÿ
+Fsquid:S1612",Replace this lambda with a method reference.(šÓœ¥ûÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(€‡ú„
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ê”à¢
+fsquid:S2259"QA "NullPointerException" could be thrown; "gmpAuthorizationsDB" is nullable here.(¬Îøˆ
+Fsquid:S1612",Replace this lambda with a method reference.(šÓœ¥ûÿÿÿÿ
+Vsquid:S3457"AFormat specifiers should be used instead of string concatenation.(…µƒè
+fsquid:S2259"QA "NullPointerException" could be thrown; "gmpAuthorizationsDB" is nullable here.(Õôü
+Lsquid:S3655"7Call "Optional#isPresent()" before accessing the value.(İîÊö
+fsquid:S2259"QA "NullPointerException" could be thrown; "gmpAuthorizationsDB" is nullable here.(¬Îøˆ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(˜ ŸÉ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(­±‰É
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(ß‡èØıÿÿÿÿ
+Dsquid:S00108")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ
+Lsquid:S2629"7Use the built-in formatting to construct this argument.(…µƒè
+ksquid:S1192"VDefine a constant instead of duplicating this literal "/set-critical-request" 3 times.(äàŠ 
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(üíüÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(¿ÑÎ“
+Qsquid:S3655"7Call "Optional#isPresent()" before accessing the value.(ò¾Ğªûÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ë¼ü§ùÿÿÿÿ
+_squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(°æ½”
+=squid:S1125"(Remove the literal "true" boolean value.(•ü“À
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Ø’¶¢ıÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Tsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(Ü»f
+Fsquid:S1612",Replace this lambda with a method reference.(Ùú–Êşÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(íŞÖ°
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(÷•ì°øÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Asquid:S1612",Replace this lambda with a method reference.(Â‚°ó
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(äÙ“êùÿÿÿÿ
+=squid:S1125"(Remove the literal "true" boolean value.(¬ú´“
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ëÇµò
+^squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(Ğ¾ªa
+tsquid:S1192"ZDefine a constant instead of duplicating this literal "compania solicitanta nume" 6 times.(¯·«‡ûÿÿÿÿ
+`squid:S1192"KDefine a constant instead of duplicating this literal "tip cerere" 6 times.(Ñ³ïê
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(î· Êıÿÿÿÿ
+Dsquid:S00108")Either remove or fill this block of code.(ÒÌâ–øÿÿÿÿ
+Qsquid:S1854"7Remove this useless assignment to local variable "map".(„—‰äûÿÿÿÿ
+[squid:S3457"AFormat specifiers should be used instead of string concatenation.(¨óÛ£ûÿÿÿÿ
+_squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ıÛğƒ
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(û‘ìŠøÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ËÔ÷Õ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ş’Íúÿÿÿÿ
+psquid:S1192"VDefine a constant instead of duplicating this literal "Request was not found" 9 times.(§ÀÊúÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+=squid:S1125"(Remove the literal "true" boolean value.(•ü“À
+Fsquid:S1612",Replace this lambda with a method reference.(ˆû”¿úÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(İ¶Ùşÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(«ê±ú
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(¡†û
+msquid:S1192"XDefine a constant instead of duplicating this literal "data emitere certificat" 6 times.(•ÿéã
+M
+squid:S106"9Replace this use of System.out or System.err by a logger.(ÊËïò
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(éõôËüÿÿÿÿ
+M
+squid:S106"9Replace this use of System.out or System.err by a logger.(ıêóŸ
+Asquid:S1612",Replace this lambda with a method reference.(Â‚°ó
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(—íÏ¡
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(Ã±­Èûÿÿÿÿ
+_squid:S1854"JRemove this useless assignment to local variable "clinicTrialAmendEntity".(æ­
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ß­”Áúÿÿÿÿ
+bsquid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(à¿º™ÿÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"( £İ
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(ı§ğ–
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(Ÿ€€ï
+Asquid:S1612",Replace this lambda with a method reference.(Â‚°ó
+~squid:S1192"iDefine a constant instead of duplicating this literal "/wait-evaluation-medicament-registration" 6 times.(˜µ¯È
+Bsquid:S1481"(Remove this unused "map" local variable.(„—‰äûÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ÊµæÄ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ı§ğ–
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(›ì±‚ıÿÿÿÿ
+Fsquid:S1612",Replace this lambda with a method reference.(Ùú–Êşÿÿÿÿ
+gsquid:S1192"MDefine a constant instead of duplicating this literal "start cerere" 6 times.(•Ç™Òùÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(½Äæ¬şÿÿÿÿ
+S"squid:SwitchLastCaseIsDefaultCheck""Add a default case to this switch.(¸÷§Ÿÿÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(¤¤õÉ
+Lsquid:S3655"7Call "Optional#isPresent()" before accessing the value.(ÿÇªÿ
+`squid:UnusedPrivateMethod"8Remove this unused private "fillDivisionHistory" method.(Û”åƒøÿÿÿÿ
+_squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ª£şÖ
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(©‰ÿµÿÿÿÿÿ
+asquid:S1172"GRemove this unused method parameter "medicamentHistoryEntityForUpdate".(¨ú÷Óûÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ï¹•©ıÿÿÿÿ
+@squid:S1612",Replace this lambda with a method reference.(î¨\
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(‡¿Ç¡
+Ssquid:S1155">Use isEmpty() to check whether the collection is empty or not.(±™³Ñ
+_squid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(¸Ğµ
+esquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(£ÇœŞşÿÿÿÿ
+Asquid:S1612",Replace this lambda with a method reference.(¹ÊÃ
+Fsquid:S1612",Replace this lambda with a method reference.(šÓœ¥ûÿÿÿÿ
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(Ğ›Åÿùÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ÚÔ¼€
+@squid:S1612",Replace this lambda with a method reference.(î¨\
+gsquid:S00117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¶ñú
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ĞÙÿ—
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(»Í³²
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ëÛÄ«øÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(”ÀÈ­
+Asquid:S1612",Replace this lambda with a method reference.(§×±÷
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(Ô‘«›ÿÿÿÿÿ
+_squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(©¼è
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(ˆÕ
+bsquid:S1192"MDefine a constant instead of duplicating this literal "numar cerere" 6 times.(ºƒ÷§
+Zsquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(Ö³Â¼ùÿÿÿÿ
+Rsquid:S3655"8Call "regReqOpt.isPresent()" before accessing the value.(¡ïÅ¾ùÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(Õî·¤
+Bsquid:S1481"(Remove this unused "map" local variable.(„—‰äûÿÿÿÿ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(åûé
+Lsquid:S3655"7Call "Optional#isPresent()" before accessing the value.(òÅÒ
+`squid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(ËÔ÷Õ
+Nsquid:S1854"9Remove this useless assignment to local variable "first".(»ºÀƒ
+_squid:S3655"ECall "nmMedicamentTypeEntity.isPresent()" before accessing the value.(»Æ¶íÿÿÿÿÿ
+@squid:S1612",Replace this lambda with a method reference.(î¨\
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(Áª˜‰şÿÿÿÿ
+Zsquid:HiddenFieldCheck"5Rename "i" which hides the field declared at line 57.(â²®®øÿÿÿÿ
+Msquid:S3655"3Call "type.isPresent()" before accessing the value.(¬‰Œµıÿÿÿÿ
+Ssquid:S1155">Use isEmpty() to check whether the collection is empty or not.(øí–á
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(äËé´ùÿÿÿÿ
+dsquid:S4488"JReplace "@RequestMapping(method = RequestMethod.POST)" with "@PostMapping"(ÎøÕÖøÿÿÿÿ
+R
+squid:S106"9Replace this use of System.out or System.err by a logger.(á™¨–ıÿÿÿÿ
+Isquid:S1066"/Merge this if statement with the enclosing one.(Ù´ƒşÿÿÿÿ
+Usquid:S4684"@Replace this persistent entity with a simple POJO or DTO object.(¤ŸÉì
+Fsquid:S1612",Replace this lambda with a method reference.(šÓœ¥ûÿÿÿÿ
+°%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(È‘Ú§
+µ%squid:RedundantThrowsDeclarationCheck"€Remove the declaration of thrown exception 'com.bass.amed.exception.CustomException', as it cannot be thrown from method's body.(ú¹×ˆüÿÿÿÿ
+]squid:S4488"HReplace "@RequestMapping(method = RequestMethod.GET)" with "@GetMapping"(‹ƒªÙ
+Tsquid:S1854"?Remove this useless assignment to local variable "requestList".(Î·å†

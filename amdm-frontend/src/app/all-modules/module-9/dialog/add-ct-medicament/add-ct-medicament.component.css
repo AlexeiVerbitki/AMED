@@ -1,0 +1,10 @@
+.md-form-modified {
+    position: relative;
+    margin-top: 18px;
+    margin-bottom: 1.5rem;
+}
+
+.md-form-modified-ng-select {
+    margin-top: 10px;
+    margin-bottom: 1.5rem;
+}

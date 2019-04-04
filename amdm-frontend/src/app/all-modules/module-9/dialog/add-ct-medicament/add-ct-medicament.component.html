@@ -1,0 +1,145 @@
+<h3 class="text-center my-3 font-weight-bold" mat-dialog-title>{{pageTitle}}</h3>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]="addMedForm" #f="ngForm">
+        <div class="row">
+            <div class="col-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input type="text" matInput placeholder="Nume" formControlName="name">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="md-form-modified-ng-select">
+                    <ng-select [items]="manufacturers | async"
+                               bindLabel="description"
+                               id="producator"
+                               name="producator"
+                               placeholder="Producatorul"
+                               formControlName="manufacture"
+                               [loading]="loadingManufacturer"
+                               [typeahead]="manufacturerInputs">
+                        <ng-template ng-option-tmp ng-label-tmp let-item="item">
+                            {{item.description}}
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input type="text" matInput placeholder="Concentrație" formControlName="dose">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-3">
+                <div class="md-form-modified-ng-select">
+                    <ng-select [items]="farmForms | async"
+                               bindLabel="description"
+                               placeholder="Forma farmaceutica"
+                               formControlName="pharmaceuticalForm"
+                               [loading]="loadingFarmForms"
+                               [typeahead]="farmFormsInputs">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.description}}
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="md-form-modified-ng-select">
+                    <ng-select [items]="atcCodes | async"
+                               bindLabel="description"
+                               placeholder="Grupa farmacoterapeutică"
+                               formControlName="atcCode"
+                               [loading]="loadingAtcCodes"
+                               [typeahead]="atcCodesInputs">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.code}} <br/>
+                            <small class="form-text text-muted">{{item.description}}</small>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input type="text" matInput placeholder="Populaţie subiecţi SC"
+                               formControlName="subjectsSC">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="md-form-modified">
+                    <mat-form-field class="w-100">
+                        <input type="text" matInput placeholder="Calea de administrare"
+                               formControlName="administratingMode">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="gradient-card-header bg-sidebar border-gradient" *ngIf="!isMicPlacebo">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Substanţe active</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="addMedActiveSubstanceDialog()" class="fa fa-plus-circle fa-lg fa-mt"
+                               aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Card content -->
+        <div class="card-body card-body-cascade" *ngIf="!isMicPlacebo">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Cod CAS</th>
+                    <th scope="col">Concentratie</th>
+                    <th scope="col">Unitate de masură</th>
+                    <th scope="col">Producător</th>
+                    <th scope="col">Ţară producător</th>
+                    <th scope="col">Adresă producător</th>
+                    <th scope="col">Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let substance of medActiveSubstances;let i = index">
+                    <th scope="row">{{ substance.activeSubstance.description }}</th>
+                    <td>{{ substance.activeSubstance.code }}</td>
+                    <td>{{ substance.quantity }}</td>
+                    <td>{{ substance.unitsOfMeasurement.description }}</td>
+                    <td>{{ substance.manufacture.description }}</td>
+                    <td>{{ substance.manufacture.country.description }}</td>
+                    <td>{{ substance.manufacture.address }}</td>
+                    <td>
+                        <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="removeMedActiveSubstance(i)"
+                                mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button class="btn btn-dark-green-color btn-sm waves-light"
+            (click)="submit()">Adauga
+    </button>
+    <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+</mat-dialog-actions>

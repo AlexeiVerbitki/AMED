@@ -1,0 +1,28 @@
+<div class="container-fluid sky z-depth-2">
+    <form [formGroup]="eForm">
+        <div class="mt-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="md-form-modified">
+                        <ng-select class="w-100" [items]="reportTypes" bindLabel="description"
+                                   (change)="onReportTypeChange($event)" formControlName="reportType"
+                                   placeholder="Tip de raport">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="md-form-modified">
+                        <ng-select class="w-100" [items]="reports" bindLabel="description" formControlName="report"
+                                   placeholder="Raport">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="grafan my-2">
+                <div class="grafan-header"></div>
+                <div class="grafan-sidebar"></div>
+                <iframe *ngIf="eForm.get('report').value" [src]="eForm.get('report').value?.url  | safe" width="100%" height="700px" frameborder="0"></iframe>
+            </div>
+        </div>
+    </form>
+</div>
