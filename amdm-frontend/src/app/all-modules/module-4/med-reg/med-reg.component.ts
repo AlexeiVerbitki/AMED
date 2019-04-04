@@ -96,6 +96,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
     isUnitOfImportValid = false;
     registrationDate: any;
     maxDate = new Date();
+    importSources: any[] = [];
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -186,7 +187,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     registrationRmNumber: [null, Validators.required],
                     unitsOfMeasurement: [null, Validators.required],
                     registrationRmDate: [null, Validators.required],
-                    internationalMedicamentName: [null, Validators.required]
+                    internationalMedicamentName: [null, Validators.required],
+                    importSources: [null, Validators.required]
                 }),
             }),
         });
@@ -243,6 +245,10 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     if (data.importAuthorizationEntity.sgeapDate) {
                         this.evaluateImportForm.get('importAuthorizationEntity.sgeapDate').setValue(new Date(data.importAuthorizationEntity.sgeapDate));
                     }
+                    // if (data.importAuthorizationEntity.unitOfImportTable.importSources)
+                    // {
+                    //     this.evaluateImportForm.get('data.importAuthorizationEntity.unitOfImportTable.importSources').setValue(new Date(data.importAuthorizationEntity.unitOfImportTable.importSources));
+                    // }
 
                     //If it's a registered medicament, disable the following fields
 
@@ -262,6 +268,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').disable();
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').disable();
                             this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').disable();
+
+                            this.evaluateImportForm.get('data.importAuthorizationEntity.unitOfImportTable.importSources').setErrors(null);
                         }
                     }
 
@@ -304,6 +312,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
         this.loadInternationalMedicamentName();
         this.invalidPrice = false;
         this.authorizationSumm = 0;
+        this.loadImportSources();
 
         // console.log('specificationDate', this.evaluateImportForm.get('importAuthorizationEntity.specificationDate'));
     }
@@ -591,6 +600,9 @@ export class MedRegComponent implements OnInit, OnDestroy {
             // registrationDate = new Date();
             this.registrationDate = new Date();
         }
+        if (this.importData.importAuthorizationEntity.medType && this.importData.importAuthorizationEntity.medType == 1) {
+            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').setErrors(null);
+        }
 
         // if (this.importData.importAuthorizationEntity.medType && this.importData.importAuthorizationEntity.medType == 1) {
         //
@@ -603,8 +615,9 @@ export class MedRegComponent implements OnInit, OnDestroy {
         const invalidPrice = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.price').invalid;
         const invalidCustomsCode = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.customsCode').invalid;
         this.invalidCurrency = this.evaluateImportForm.get('importAuthorizationEntity.currency').invalid;
+        const importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').invalid;
         // console.log(this.evaluateImportForm.get('importAuthorizationEntity.unitspliceOfImportTable.customsCode'));
-        if (invalidMedicament || invalidQty || invalidPrice || invalidCustomsCode || this.invalidPrice || this.invalidCurrency) {
+        if (invalidMedicament || invalidQty || invalidPrice || invalidCustomsCode || importSources || this.invalidPrice || this.invalidCurrency) {
             this.errorHandlerService.showError('Medicamentul contine date invalide');
             return;
         }
@@ -633,6 +646,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
             registrationNumber: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').value,
             registrationDate: this.registrationDate,
             medicament: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').value,
+            importSources: this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value,
         });
 
         this.authorizationSumm = this.authorizationSumm + this.unitSumm;
@@ -658,7 +672,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmNumber').reset();
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').reset();
         this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.medicament').reset();
-        // this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable').reset();
+        this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').reset();
 
 
         // this.addMedicamentClicked = false;
@@ -914,6 +928,19 @@ export class MedRegComponent implements OnInit, OnDestroy {
         );
     }
 
+    loadImportSources() {
+        this.subscriptions.push(
+            this.administrationService.getImportSources().subscribe(data => {
+                    this.importSources = data;
+                    console.log('importSources', data);
+
+                },
+                error => console.log(error)
+            )
+        );
+    }
+
+
     interruptProcess() {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
@@ -1022,11 +1049,19 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 this.loadingService.show();
 
                 this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                        // console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
-                        this.loadingService.hide();
+                        console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
                         if (submitForm) {
                             this.router.navigate(['dashboard/']);
+                        } else {
+                            this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+                            this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
+                                console.log('this.requestService.getImportRequest(params[\'id\'])', data);
+                                console.log('regSubject', data.regSubject);
+                                this.importData = data;
+                                this.unitOfImportTable = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
+                            }))}));
                         }
+                        this.loadingService.hide();
                     }, error => {
                         // alert('Something went wrong while sending the model');
                         console.log('error: ', error);

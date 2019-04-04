@@ -587,6 +587,29 @@
                                 </div>
                             </div>
 
+                            <div class="col-4" *ngIf="importData?.importAuthorizationEntity?.medType==2">
+                                <div class="md-form-modified" id="importSources">
+                                    <ng-select [items]="importSources"
+                                               bindLabel="name"
+                                               placeholder="Sursa importului"
+                                               formControlName="importSources"
+                                               required="true">
+                                               <!--[selectOnTab]="false"-->
+                                               <!--[clearable]="false"-->
+                                               <!--(open)="getCurrentCurrency()"-->
+                                               <!--(close)="showConfirm()"-->
+                                    </ng-select>
+                                    <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').invalid">
+                                        <small class="text-muted"><strong class="text-danger">Sursa importului trebuie
+                                            selectată</strong></small>
+                                    </div>
+                                </div>
+                                <!--<div *ngIf="(medicamentSelected && invalidCurrency) ">-->
+                                <!--<small class="text-muted"><strong class="text-danger">Valuta contractului trebuie introdusă</strong>-->
+                                <!--</small>-->
+                                <!--</div>-->
+                            </div>
+
 
                             <div class="col-md-4" *ngIf="importData?.importAuthorizationEntity.medType==1">
                                 <div class="md-form">
@@ -660,6 +683,7 @@
                             <!--<th scope="col">Ţara şi adresa producătorului materiei prime</th>-->
                             <th scope="col">Termen de valabilitate</th>
                             <th scope="col">Codul Vamal</th>
+                            <th scope="col">Sursa</th>
                             <th scope="col">Actiuni</th>
 
                             <!--<th scope="col">Actiuni</th>-->
@@ -679,6 +703,7 @@
                             <!--<td>{{ unitOfImport?.producer.address }}, {{ unitOfImport?.producer.country.description }}</td>-->
                             <td>{{ unitOfImport?.expirationDate | date:'mediumDate' }}</td>
                             <td>{{ unitOfImport?.customsCode?.code }}</td>
+                            <td>{{ unitOfImport?.importSources?.name }}</td>
 
 
                             <td [ngStyle]="{'width': '200px'}">

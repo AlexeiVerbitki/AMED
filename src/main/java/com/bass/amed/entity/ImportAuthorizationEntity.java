@@ -404,19 +404,20 @@ public class ImportAuthorizationEntity {
 		this.processVerbalDate = processVerbalDate;
 	}
 
-    @Basic
-    @Column(name = "revision_date", nullable = true)
-    public Timestamp getRevisionDate()
-    {
-        return revisionDate;
-    }
+	@Basic
+	@Column(name = "revision_date", nullable = true)
+	public Timestamp getRevisionDate()
+	{
+		return revisionDate;
+	}
 
-    public void setRevisionDate(Timestamp revisionDate)
-    {
-        this.revisionDate = revisionDate;
-    }
+	public void setRevisionDate(Timestamp revisionDate)
+	{
+		this.revisionDate = revisionDate;
+	}
 
-    @Override
+
+	@Override
     public boolean equals(Object o)
     {
         if (this == o)

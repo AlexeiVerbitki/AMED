@@ -83,6 +83,8 @@ public class AdministrationController {
     @Autowired
     private NmImportActivityRepository nmImportActivityRepository;
     @Autowired
+    private NmImportSourcesRepository nmImportSourcesRepository;
+    @Autowired
     private NmBiologicalMedicinesRepository nmBiologicalMedicinesRepository;
     @Autowired
     private NmGMPManufacturesRepository nmGMPManufacturesRepository;
@@ -320,6 +322,12 @@ public class AdministrationController {
     public ResponseEntity<List<NmImportActivitiesEntity>> retrieveAllImportActivities() {
         LOGGER.debug("Retrieve all import activities");
         return new ResponseEntity<>(nmImportActivityRepository.findAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping("/all-import-sources")
+    public ResponseEntity<List<NmImportSources>> retrieveAllImportSources() {
+        LOGGER.debug("Retrieve all import activities");
+        return new ResponseEntity<>(nmImportSourcesRepository.findAll(), HttpStatus.OK);
     }
 
 

@@ -627,10 +627,18 @@ export class AmbalajComponent implements OnInit,OnDestroy {
             if (/*&& this.evaluateImportForm.valid && */ this.docs !== null) {
                 this.loadingService.show();
                 this.subscriptions.push(this.requestService.addImportRequest(modelToSubmit).subscribe(data => {
-                        console.log('addImportRequest(modelToSubmit).subscribe(data) ', data);
+                        console.log('saved Registration Request', data);
                         this.loadingService.hide();
                         if (submitForm) {
                             this.router.navigate(['dashboard/']);
+                        } else {
+                            this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
+                            this.subscriptions.push(this.requestService.getImportRequest(params['id']).subscribe(data => {
+                                console.log('this.requestService.getImportRequest(params[\'id\'])', data);
+                                console.log('regSubject', data.regSubject);
+                                this.importData = data;
+                                this.unitOfImportTable = this.importData.importAuthorizationEntity.importAuthorizationDetailsEntityList;
+                            }))}));
                         }
                     }, error => {
                         alert('Something went wrong while sending the model');

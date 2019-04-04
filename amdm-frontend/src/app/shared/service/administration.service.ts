@@ -122,6 +122,10 @@ export class AdministrationService {
         return this.http.get('/api/price/all-currencies-short');
     }
 
+    getImportSources(): Observable<any> {
+        return this.http.get('/api/administration/all-import-sources');
+    }
+
     getCustomsPoints(): Observable<any> {
         return this.http.get('/api/administration/customs-points');
     }
