@@ -1,0 +1,125 @@
+<h3 class="text-center my-3 font-weight-bold" mat-dialog-title>{{title}}</h3>
+<mat-dialog-content class="mat-typography">
+    <form [formGroup]='aForm' #f="ngForm">
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <div class="md-form-modified mt-3">
+                    <mat-checkbox formControlName="isNotAuthorized">
+                        Substanta neautorizata!
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <div class="col-md-12" *ngIf="!f.value.isNotAuthorized">
+                <div class="md-form-modified">
+                    <ng-select [items]="activeSubstances"
+                               id="activeSubstances"
+                               name="activeSubstances"
+                               bindLabel="description"
+                               placeholder="Denumire"
+                               formControlName="activeSubstance"
+                               required="true">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-12" *ngIf="!f.value.isNotAuthorized">
+                <div class="md-form">
+                    <input id="codCas" mdbInputDirective type="text" class="form-control"
+                           formControlName="activeSubstanceCode">
+                    <label for="codCas">Cod CAS</label>
+                </div>
+            </div>
+            <div class="col-md-12" *ngIf="f.value.isNotAuthorized">
+                <div class="md-form">
+                    <input id="actSubstName" mdbInputDirective type="text" class="form-control"
+                           formControlName="actSubstName">
+                    <label for="actSubstName">Denumire<span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="md-form">
+                    <input id="quantity" mdbInputDirective min="0" step=".01" type="number" class="form-control"
+                           formControlName="quantity">
+                    <label for="quantity">Concentratie<span class="text-danger">*</span></label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="md-form-modified">
+                    <ng-select id="activeSubstanceUnit" name="activeSubstanceUnit"
+                               [items]="activeSubstanceUnitsOfMeasurement"
+                               bindLabel="description" placeholder="Unitate de masură *"
+                               formControlName="unitsOfMeasurement">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="md-form">
+                    <input id="compositionNr" mdbInputDirective min="1" step="1" type="number" class="form-control"
+                           formControlName="compositionNumber">
+                    <label for="compositionNr">Numărul compoziției<span class="text-danger">*</span></label>
+                </div>
+            </div>
+        </div>
+        <div class="gradient-card-header bg-sidebar border-gradient">
+            <div class="container-fluid">
+                <!-- Title -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card-header-title white-text">Producatori</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-right fap text-white">
+                            <i (click)="addManufacture()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body card-body-cascade">
+            <table class="table table-widths text-center">
+                <thead class="bg-sidebar white-text">
+                <tr>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Tara</th>
+                    <th scope="col">Adresa</th>
+                    <th scope="col">Actiuni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let manufacture of manufacturesTable;let i = index">
+                    <td>{{ manufacture.manufacture.description }}</td>
+                    <td>{{ manufacture.manufacture.country.description }}</td>
+                    <td>{{ manufacture.manufacture.address }}</td>
+                    <td>
+                        <button class="btn btn-dark-red-color waves-light btn-sm waves-light"
+                                (click)="removeManufacture(i)"
+                                mdbWavesEffect><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="manufacturesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!
+        </div>
+        <hr>
+
+        <br>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <div class="row">
+        <div class="col-md-12">
+            <div *ngIf="formSubmitted && manufacturesTable.length==0">
+                <small class="text-muted"><strong class="text-danger">Nu a fost introdus nici un producator</strong>
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <button class="btn btn-dark-green-color btn-sm waves-light"
+                    (click)="submit()">Adauga
+            </button>
+            <button class="btn btn-danger btn-sm-bl btn-sm" (click)="cancel()">Inchidere</button>
+        </div>
+    </div>
+</mat-dialog-actions>
