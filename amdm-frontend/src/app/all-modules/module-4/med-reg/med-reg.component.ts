@@ -17,6 +17,9 @@ import {ImportMedDialogComponent} from '../dialog/import-med-dialog.component';
 import {PriceService} from '../../../shared/service/prices.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
+import {HttpEvent} from "@angular/common/http";
+import * as XLSX from 'xlsx';
 
 export interface PeriodicElement {
     name: string;
@@ -97,6 +100,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
     registrationDate: any;
     maxDate = new Date();
     importSources: any[] = [];
+    // excelSheet: any;
     private subscriptions: Subscription[] = [];
 
     constructor(private fb: FormBuilder,
@@ -111,7 +115,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 public priceServise: PriceService,
                 private administrationService: AdministrationService,
                 private navbarTitleService: NavbarTitleService,
-                private errorHandlerService: SuccessOrErrorHandlerService) {
+                private errorHandlerService: SuccessOrErrorHandlerService,
+                private uploadService: UploadFileService) {
     }
 
     get importTypeForms() {
@@ -318,6 +323,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
     }
 
     onChanges(): void {
+
         if (this.evaluateImportForm.get('importAuthorizationEntity')) {
 
             this.subscriptions.push(this.evaluateImportForm.get('importAuthorizationEntity.currency').valueChanges.subscribe(value => {
@@ -584,6 +590,105 @@ export class MedRegComponent implements OnInit, OnDestroy {
         }
 
     }
+
+    parseSpecification(files: FileList){
+
+        var documents: FileList = files;
+
+        let cellExists: boolean;
+        console.log('documents', documents);
+
+        var nn = this;
+
+        if (!files || files.length == 0) return;
+        var file = files[0];
+
+
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+
+
+        let excelSheet: any;
+
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            excelSheet = XLSX.read(data, {type: 'array'});
+            excelSheet.Sheets.Medicamente_Rom_Engl.P10.v ? cellExists = true : cellExists = false;
+            console.log('excelSheet', excelSheet);
+
+            // // for (let i = 9; i < excelSheet.Sheets.Medicamente_Rom_Engl.length; i++) {
+            // //     let columnA ="A"+(i+1);
+            // //     console.log("column A",columnA)
+            // //     excelSheet.Sheets.Medicamente_Rom_Engl.find(item => item.constructor.name == columnA, console.log("column found"))
+            // // }
+            //
+            // let columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
+            // for (let k = 0; k < excelSheet.Sheets.Medicamente_Rom_Engl.P10['!range'].length; k++) {
+            //     for (let i = 0; i < columns.length; i++) {
+            //         console.log("column ",  columns[i]+k)
+            //     }
+            // }
+
+            //=====================
+            /* loop through every cell manually */
+
+            let columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
+            let sheet = excelSheet.Sheets.Medicamente_Rom_Engl;
+            var range = XLSX.utils.decode_range(sheet['!ref']); // get the range
+            for ( let R: number  = range.s.r; R <= range.e.r; R++) {
+                // for (var C = range.s.c; C <= range.e.c; ++C) {
+                for (let C = 0; C < columns.length; C++) {
+                    /* find the cell object */
+                    // console.log('Row : ' + R);
+                    // console.log('Column : ' + C);
+                    var cellref = XLSX.utils.encode_cell({c: C, r: R}); // construct A1 reference for cell
+                    if (!sheet[cellref]) {
+                        console.log(columns[C] + R+1 + ": contine greseli")
+                        continue; // if cell doesn't exist, move on
+                    } else {
+
+                        var cell = sheet[cellref];
+                        console.log(columns[C] + R+1 +": " +cell.v);
+                    }
+
+                };
+            }
+
+
+            if (cellExists) {
+                nn.pushToUnitOfImportTable(excelSheet);
+                // pushToUnitOfImportTable(excelSheet)
+            }
+        };
+
+    }
+
+     pushToUnitOfImportTable(excelSheet: any) {
+
+        this.unitOfImportTable.push({
+            codeAmed: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            customsCode: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            name: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            quantity: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            price: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            currency: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            summ: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            producer: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            expirationDate: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            pharmaceuticalForm: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            dose: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            unitsOfMeasurement: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            internationalMedicamentName: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            atcCode: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            registrationNumber: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            registrationDate: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            medicament: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v,
+            importSources: excelSheet.Sheets.Medicamente_Rom_Engl.A10.v
+        });
+        console.log('unitOfImportTable', this.unitOfImportTable);
+
+    }
+
 
     addUnitOfImport() {
         this.isUnitOfImportValid = true;
