@@ -635,32 +635,78 @@ export class MedRegComponent implements OnInit, OnDestroy {
             let columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
             let sheet = excelSheet.Sheets.Medicamente_Rom_Engl;
             var range = XLSX.utils.decode_range(sheet['!ref']); // get the range
-            for ( let R: number  = range.s.r; R <= range.e.r; R++) {
+            for ( let R: number  = range.s.r+8; R <= range.e.r; R++) {
                 // for (var C = range.s.c; C <= range.e.c; ++C) {
-                for (let C = 0; C < columns.length; C++) {
+                let unitOfImport: any ={};
+
+                //Go through cells ina  row
+                for (let C = 1; C < columns.length; C++) {
                     /* find the cell object */
                     // console.log('Row : ' + R);
                     // console.log('Column : ' + C);
                     var cellref = XLSX.utils.encode_cell({c: C, r: R}); // construct A1 reference for cell
                     if (!sheet[cellref]) {
-                        console.log(columns[C] + R+1 + ": contine greseli")
-                        continue; // if cell doesn't exist, move on
+                        let cellNumber: number = R+1;
+                        // console.log(columns[C] + cellNumber + ": empty cell")
+                        break; // if cell doesn't exist, move on
                     } else {
 
                         var cell = sheet[cellref];
-                        console.log(columns[C] + R+1 +": " +cell.v);
+                        let cellNumber: number = R+1;
+                        console.log(columns[C] + cellNumber +": " +cell.v);
+
+                        switch (C) {
+                            case  1: {unitOfImport.codeAmed =                    cell.v; break;}
+                            case  2: {unitOfImport.customsCode =                 cell.v; break;}
+                            case  3: {unitOfImport.name =                        cell.v; break;}
+                            case  4: {unitOfImport.quantity =                    cell.v; break;}
+                            case  5: {unitOfImport.price =                       cell.v; break;}
+                            case  6: {unitOfImport.currency =                    cell.v; break;}
+                            case  7: {unitOfImport.summ =                        cell.v; break;}
+                            case  8: {unitOfImport.producer =                    cell.v; break;}
+                            case  9: {unitOfImport.expirationDate =              cell.v; break;}
+                            case 10: {unitOfImport.pharmaceuticalForm =          cell.v; break;}
+                            case 11: {unitOfImport.dose =                        cell.v; break;}
+                            case 12: {unitOfImport.unitsOfMeasurement =          cell.v; break;}
+                            case 13: {unitOfImport.internationalMedicamentName = cell.v; break;}
+                            case 14: {unitOfImport.atcCode =                     cell.v; break;}
+                            case 15: {unitOfImport.registrationNumber =          cell.v; break;}
+                        }
                     }
-
+                    // console.log('unitOfImport',unitOfImport);
                 };
+                if(unitOfImport.codeAmed &&
+                   unitOfImport.customsCode &&
+                   unitOfImport.name &&
+                   unitOfImport.quantity &&
+                   unitOfImport.price &&
+                   unitOfImport.currency &&
+                   unitOfImport.summ &&
+                   unitOfImport.producer &&
+                   unitOfImport.expirationDate &&
+                   unitOfImport.pharmaceuticalForm &&
+                   unitOfImport.dose &&
+                   unitOfImport.unitsOfMeasurement &&
+                   unitOfImport.internationalMedicamentName &&
+                   unitOfImport.atcCode &&
+                   unitOfImport.registrationNumber ){
+                    nn.pushToUnitOfImportTable2(unitOfImport);
+                }
+
             }
 
 
-            if (cellExists) {
-                nn.pushToUnitOfImportTable(excelSheet);
-                // pushToUnitOfImportTable(excelSheet)
-            }
+            // if (cellExists) {
+            //     nn.pushToUnitOfImportTable(excelSheet);
+            //     // pushToUnitOfImportTable(excelSheet)
+            // }
         };
 
+    }
+
+    pushToUnitOfImportTable2(unitOfImport: any) {
+        this.unitOfImportTable.push(unitOfImport);
+        console.log('this.unitOfImportTable',this.unitOfImportTable);
     }
 
      pushToUnitOfImportTable(excelSheet: any) {
