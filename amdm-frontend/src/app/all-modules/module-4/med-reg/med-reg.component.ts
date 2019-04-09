@@ -911,6 +911,10 @@ export class MedRegComponent implements OnInit, OnDestroy {
                         // }
                         if (val.pharmaceuticalForm) {
                             unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
+                            if (val.pharmaceuticalForm) {
+                                this.subscriptions.push(this.administrationService.getAllPharamceuticalFormsByName(val.pharmaceuticalForm).subscribe(val => {
+                                    console.log('pharmaceuticalForm', val);
+                                }))
                         }
                         if (val.dose) {
                             unitOfImportWithCodeAmed.dose = val.dose;
@@ -949,9 +953,13 @@ export class MedRegComponent implements OnInit, OnDestroy {
                         }
 
                         // console.log('val.manufactures', val.manufactures);
-                        if (val.producer) {
-                            unitOfImportWithCodeAmed.producer = val.producer;
-                        }
+                            if (val.producer) {
+                                unitOfImportWithCodeAmed.producer = val.producer;
+                                this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(val.producer).subscribe(val => {
+                                }));
+
+                            }
+
                         (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(val.atcCode).subscribe(atcCode => {
                             unitOfImportWithCodeAmed.atcCode = atcCode[0];
                         })));
