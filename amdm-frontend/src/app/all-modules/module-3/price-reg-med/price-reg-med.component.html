@@ -3,7 +3,7 @@
     <form [formGroup]='rForm'>
         <div class="row">
 
-            <div class="col-lg-4">
+            <!--<div class="col-lg-4">
                 <div class="md-form">
                     <input id="nrDosar" mdbInputDirective type="text" class="form-control" formControlName="folderNumber">
                     <label for="nrDosar">Nr. dosar</label>
@@ -11,15 +11,32 @@
                 <div *ngIf="formSubmitted && rForm.get('folderNumber').invalid">
                     <small class="text-muted"><strong class="text-danger">Introduceți numărul dosarului</strong></small>
                 </div>
-            </div>
+            </div>-->
 
-            <div class="col-md-4">
-                <div class="md-form" formGroupName="company">
-                    <input id="comp" mdbInputDirective type="text" class="form-control" formControlName="name">
-                    <label for="comp">Compania solicitant</label>
+            <div class="col-md-7">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="companii | async"
+                               bindLabel="name"
+                               placeholder="Compania beneficiara"
+                               formControlName="company"
+                               [required]="true"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
+                    </ng-select>
                 </div>
                 <div *ngIf="formSubmitted && rForm.get('company').invalid">
-                    <small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
+                    <small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="md-form">
+                    <button class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou" (click)="newAgent()"><i
+                            class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
                 </div>
             </div>
 

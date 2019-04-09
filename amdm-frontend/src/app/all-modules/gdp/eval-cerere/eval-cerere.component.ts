@@ -17,6 +17,7 @@ import {InspectorsModalComponent} from '../inspectors-modal/inspectors-modal.com
 import {DatePipe} from '@angular/common';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
 import {RequestAdditionalDataDialogComponent} from '../../../dialog/request-additional-data-dialog/request-additional-data-dialog.component';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 
 @Component({
@@ -70,7 +71,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         periods: []
     };
 
-    canChange: boolean = true;
+    canChange = true;
 
     get formData() { return <FormArray>this.inspectorForm.get('periods'); }
 
@@ -100,6 +101,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
             'startDate': {disabled: true, value: new Date()},
             'currentStep': ['E'],
             'decision': [null, Validators.required],
+            'benefCompany': [null, Validators.required],
             'responsiblePerson': fb.group({
                 'idnp': [{value: null, disabled: true}],
                 'mandatedFirstname': [{value: null, disabled: true}],
@@ -134,13 +136,13 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     }
 
     inspectorUsageChanged($event) {
-        for( var i = 0; i < this.outputDocuments.length; i++){
+        for ( let i = 0; i < this.outputDocuments.length; i++) {
             if ( this.outputDocuments[i].docType.category == 'OGD') {
                 this.outputDocuments.splice(i, 1);
             }
         }
 
-        if($event.checked) {
+        if ($event.checked) {
             this.outputDocuments.push({
                 docType: {category: 'OGD'},
                 description: 'Ordin GDP',
@@ -150,6 +152,11 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
             this.documentAdded(null);
         }
+    }
+
+    companySelected(company) {
+        console.log(company);
+        this.getCompanyLicenseInfo(company)
     }
 
     createPeriod(obj): FormGroup {
@@ -165,7 +172,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     startDateChanged(e, d) {
         e.controls['toDate'].reset();
         d.disabled = true;
-        if(e.controls['fromDate'].value) {
+        if (e.controls['fromDate'].value) {
             d.disabled = false;
         }
     }
@@ -174,9 +181,24 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         (this.inspectorForm.get('periods') as FormArray).push(this.createPeriod(obj));
     }
 
-    ngOnInit() {
-        this.navbarTitleService.showTitleMsg('Organizarea inspecției regulilor de bună practică de distribuţie');
 
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'custom-dialog-container',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
+    }
+
+    getCompanies() {
         this.companii =
             this.companyInputs.pipe(
                 filter((result: string) => {
@@ -197,7 +219,12 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
                     )
                 )
             );
+    }
 
+    ngOnInit() {
+        this.navbarTitleService.showTitleMsg('Organizarea inspecției regulilor de bună practică de distribuţie');
+
+        this.getCompanies();
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.requestId = params['id'];
@@ -227,8 +254,8 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
                 this.rForm.get('requestHistories').setValue(data.requestHistories);
 
                 this.gdpInspection = data.gdpInspection ? data.gdpInspection : this.gdpInspection;
-                if(this.gdpInspection.groupLeaderId) {
-                    this.inspectorUsageChanged({checked:true});
+                if (this.gdpInspection.groupLeaderId) {
+                    this.inspectorUsageChanged({checked: true});
                 }
                 if (this.gdpInspection.inspectors.length > 0) {
                     this.inspectorForm.get('useInspector').setValue(true);
@@ -254,47 +281,54 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
                     this.rForm.get('responsiblePerson.requestMandateDate').setValue(data.registrationRequestMandatedContacts[0].requestMandateDate);
                 }
 
-                if (data.company) {
-                    this.rForm.get('company.adresa').setValue(data.company.legalAddress);
-                    this.rForm.get('company.id').setValue(data.company.id);
-                    this.rForm.get('company.name').setValue(data.company.name);
+                this.rForm.get('benefCompany').setValue(data.company);
+                this.getCompanyLicenseInfo(data.company);
 
-                    if (data.company.idno) {
-                        this.rForm.get('company.idno').setValue(data.company.idno);
-                        this.subscriptions.push(
-                            this.gdpService.retrieveLicenseByIdno(data.company.idno).subscribe(data => {
-                                console.log('retrieveLicenseByIdno', data);
-                                if (data) {
-                                    this.rForm.get('company.seria').setValue(data.serialNr);
-                                    this.rForm.get('company.nrLic').setValue(data.nr);
-                                    this.rForm.get('company.dataEliberariiLic').setValue(new Date(data.releaseDate));
-                                    this.rForm.get('company.dataExpirariiLic').setValue(new Date(data.expirationDate));
-                                    this.subsidiaryList = data.economicAgents;
-                                    this.normalizeSubsidiaryList(this.subsidiaryList);
-                                } else {
-                                    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-                                        data: {
-                                            message: 'Compania solicitanta nu are licenta. Mergeți la pagina principală?',
-                                            confirm: false
-                                        }
-                                    });
-                                    dialogRef.afterClosed().subscribe(result => {
-                                        if (result) {
-                                            this.route.navigate(['dashboard/homepage']);
-                                        }
-                                    });
-                                }
-                            }));
-                    }
-                }
             }, error1 => console.log(error1)));
         }));
 
     }
 
+    getCompanyLicenseInfo(company: any) {
+        if (company) {
+            this.rForm.get('company.adresa').setValue(company.legalAddress);
+            this.rForm.get('company.id').setValue(company.id);
+            this.rForm.get('company.name').setValue(company.name);
+
+            if (company.idno) {
+                this.rForm.get('company.idno').setValue(company.idno);
+                this.subscriptions.push(
+                    this.gdpService.retrieveLicenseByIdno(company.idno).subscribe(data => {
+                        console.log('retrieveLicenseByIdno', data);
+                        if (data) {
+                            this.rForm.get('company.seria').setValue(data.serialNr);
+                            this.rForm.get('company.nrLic').setValue(data.nr);
+                            this.rForm.get('company.dataEliberariiLic').setValue(new Date(data.releaseDate));
+                            this.rForm.get('company.dataExpirariiLic').setValue(new Date(data.expirationDate));
+                            this.subsidiaryList = data.economicAgents;
+                            this.gdpInspection.subsidiaries = [];
+                            this.normalizeSubsidiaryList(this.subsidiaryList);
+                        } else {
+                            const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+                                data: {
+                                    message: 'Compania solicitanta nu are licenta. Mergeți la pagina principală?',
+                                    confirm: false
+                                }
+                            });
+                            dialogRef.afterClosed().subscribe(result => {
+                                if (result) {
+                                    this.route.navigate(['dashboard/homepage']);
+                                }
+                            });
+                        }
+                    }));
+            }
+        }
+    }
+
     bossSelected(id) {
-        this.gdpInspection.groupLeaderId = id
-        this.inspectorUsageChanged({checked:true});
+        this.gdpInspection.groupLeaderId = id;
+        this.inspectorUsageChanged({checked: true});
     }
 
     normalizeSubsidiaryList(list) {
@@ -361,13 +395,25 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     }
 
     requestAdditionalData() {
-        const lenOutDoc = this.outDocuments.filter(r => r.docType.category === 'SL').length;
+
+        let magicNumber = '';
+        for (const outDoc of this.outDocuments) {
+            if (magicNumber < outDoc.number) {
+                magicNumber = outDoc.number;
+            }
+        }
+        const magicNumbers = magicNumber.split('-');
+
+        let nrOrdDoc = 1;
+        if (magicNumbers && magicNumbers.length > 2) {
+            nrOrdDoc = Number(magicNumbers[3]) + 1;
+        }
 
         const dialogRef2 = this.dialogConfirmation.open(RequestAdditionalDataDialogComponent, {
             width: '1000px',
             data: {
                 // hideSave: true,
-                nrOrdDoc: lenOutDoc + 1,
+                nrOrdDoc: nrOrdDoc,
                 requestNumber: this.rForm.get('requestNumber').value,
                 requestId: this.rForm.get('id').value,
                 modalType: 'REQUEST_ADDITIONAL_DATA_EMPTY',
@@ -395,7 +441,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
 
     addAditionalDataAsRequiredOutputDocument(result: any) {
-        result.description = 'Scrisoare de solicitare date aditionale'
+        result.description = 'Scrisoare de solicitare date aditionale';
         result.status = 'Nu este atasat';
         this.outputDocuments.push(result);
     }
@@ -472,7 +518,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         console.log(this.rForm);
 
         const decisionAccept = this.rForm.valid && this.rForm.get('decision').value.id == 1;
-        const acceptWithoutPeriods: boolean = decisionAccept && (this.inspectorForm.get('periods') as FormArray).length == 0 ;//|| !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value);
+        const acceptWithoutPeriods: boolean = decisionAccept && (this.inspectorForm.get('periods') as FormArray).length == 0 ; //|| !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value);
         const acceptWithoutDocs: Boolean = decisionAccept && this.hasUnloadedDocs();
         const acceptWithoutSubsidiaries: Boolean = decisionAccept && (!this.gdpInspection.subsidiaries || this.gdpInspection.subsidiaries.length == 0);
         const inspectorsWithoutBoss: Boolean = decisionAccept && this.inspectorForm.get('useInspector').value && this.gdpInspection.groupLeaderId == null;
@@ -522,7 +568,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
         this.subscriptions.push(this.gdpService.addRegistrationRequestForGDP(modelToSubmit).subscribe(req => {
                 this.errorHandlerService.showSuccess('Datele au fost salvate');
-                if(this.rForm.get('decision').value.id == 1) {
+                if (this.rForm.get('decision').value.id == 1) {
                     this.router.navigate(['/dashboard/homepage']);
                 } else if (req.body.gdpInspection) {
                     this.gdpInspection = req.body.gdpInspection;
@@ -551,7 +597,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
             this.canChange = true;
 
             for (const doc of this.documents) {
-                if(doc.docType.category == 'OGD') {
+                if (doc.docType.category == 'OGD') {
                     this.canChange = false;
                 }
                 if (doc.docType.category == outDoc.docType.category) {
@@ -571,7 +617,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
     viewDoc(document: any) {
         if (document.docType.category == 'OGD') {
             this.viewOGD();
-        } else if (document.docType.category == 'SL'){
+        } else if (document.docType.category == 'SL') {
             this.viewSL(document);
         }
     }
@@ -580,8 +626,8 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
         if (!this.gdpInspection.groupLeaderId) {
             this.errorHandlerService.showError('Trebuie să indicați șeful de grup');
             return;
-        } else if((this.inspectorForm.get('periods') as FormArray).length == 0 || !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value)){
-            this.errorHandlerService.showError('Trebuie să introduceți cel puțin o perioadă de inspecție ')
+        } else if ((this.inspectorForm.get('periods') as FormArray).length == 0 || !this.isValidDate((this.inspectorForm.get('periods') as FormArray).controls[0].get('fromDate').value)) {
+            this.errorHandlerService.showError('Trebuie să introduceți cel puțin o perioadă de inspecție ');
             return;
         }
 
@@ -670,7 +716,7 @@ export class EvalCerereComponent implements OnInit, OnDestroy, CanModuleDeactiva
 
     killInspector(i) {
         this.gdpInspection.inspectors.splice(i, 1);
-        if(this.gdpInspection.groupLeaderId && !this.gdpInspection.inspectors.some(i => i.id == this.gdpInspection.groupLeaderId)) {
+        if (this.gdpInspection.groupLeaderId && !this.gdpInspection.inspectors.some(i => i.id == this.gdpInspection.groupLeaderId)) {
             this.gdpInspection.groupLeaderId = undefined;
         }
     }

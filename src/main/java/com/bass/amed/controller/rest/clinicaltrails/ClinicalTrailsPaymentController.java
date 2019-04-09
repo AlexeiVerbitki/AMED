@@ -129,25 +129,33 @@ public class ClinicalTrailsPaymentController {
             JRBeanCollectionDataSource bonDePlataStudiuClinicDataset = new JRBeanCollectionDataSource(servTaxList);
 
             //TODO: Bug, perf fizica nu este acoperit.
-            NmEconomicAgentsEntity nmEconomicAgentsEntity = economicAgentsRepository.getParentForIdno(ctPayNote.getEconomicAgent().getIdno()).get();
             String date = new SimpleDateFormat(Constants.Layouts.POINT_DATE_FORMAT).format(ctPayNote.getPayOrder().getDate());
 
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("nr", ctPayNote.getPayOrder().getNumber().toString());
             parameters.put("date", date);
 
-            parameters.put("companyName", nmEconomicAgentsEntity.getName());
-            parameters.put("companyAddress", nmEconomicAgentsEntity.getLegalAddress());
+            if (ctPayNote.getEconomicAgent() == null) {
+                RegistrationRequestMandatedContactEntity mandatedContact = ctPayNote.getMandatedContactEntity();
+                parameters.put("companyName", mandatedContact.getMandatedFirstname().concat(" ").concat(mandatedContact.getMandatedLastname()));
+                parameters.put("companyAddress","");
+            } else {
+                NmEconomicAgentsEntity nmEconomicAgentsEntity = economicAgentsRepository.getParentForIdno(ctPayNote.getEconomicAgent().getIdno()).get();
+                parameters.put("companyName", nmEconomicAgentsEntity.getName());
+                parameters.put("companyAddress", nmEconomicAgentsEntity.getLegalAddress());
+            }
+
+
             parameters.put("isClinicalTrial", ctPayNote.getRequestType().equals(3));
 
             ClinicalTrialsEntity clinicalTrialsEntity = clinicalTrialsRepository.getClinicalTrialsEntityById(ctPayNote.getClinicalTrialId());
-            if(clinicalTrialsEntity.getPhase()==null) {
+            if (clinicalTrialsEntity.getPhase() == null) {
                 throw new CustomException("Faza studiului clinic nu este salvata.");
             }
-            if(clinicalTrialsEntity.getCode()==null || clinicalTrialsEntity.getCode().isEmpty()) {
+            if (clinicalTrialsEntity.getCode() == null || clinicalTrialsEntity.getCode().isEmpty()) {
                 throw new CustomException("Codul studiului clinic nu este salvat.");
             }
-            if(clinicalTrialsEntity.getTitle()==null || clinicalTrialsEntity.getTitle().isEmpty()) {
+            if (clinicalTrialsEntity.getTitle() == null || clinicalTrialsEntity.getTitle().isEmpty()) {
                 throw new CustomException("Titlul studiului clinic nu este salvat.");
             }
             parameters.put("clinicStudyNr", clinicalTrialsEntity.getCode());

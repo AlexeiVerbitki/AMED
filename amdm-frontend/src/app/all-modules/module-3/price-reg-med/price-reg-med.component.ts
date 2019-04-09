@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {Document} from '../../../models/document';
 import {MatDialog, MatTabGroup} from '@angular/material';
 import {saveAs} from 'file-saver';
@@ -11,6 +11,8 @@ import {Country} from '../../../models/country';
 import {Currency} from '../../../models/currency';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-price-reg-med',
@@ -26,6 +28,9 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
     countries: Country[] = [];
     currencies: Currency[] = [];
     priceTypes: any[];
+    companii: Observable<any[]>;
+    loadingCompany = false;
+    companyInputs = new Subject<string>();
 
     requests: any[] = [];
     rForm: FormGroup;
@@ -105,11 +110,9 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
             'email': {disabled: true, value: null},
             'idnp': {disabled: true, value: null},
             'requestMandateNr': {disabled: true, value: null},
+            'companySolicitant': {disabled: true, value: null},
             'requestMandateDate': {disabled: true, value: new Date()},
-            'company': fb.group({
-                'name': {disabled: true, value: null},
-                'id': [null]
-            }),
+            'company': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
             'type':
@@ -120,6 +123,27 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    getCompanies() {
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) { return true; }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.priceService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
+    }
+
     ngOnInit() {
         this.navbarTitleService.showTitleMsg('Înregistrarea prețului medicamentelor');
 
@@ -127,6 +151,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
         this.getCountries();
         this.getCurrencies();
         this.getPriceTypes();
+        this.getCompanies();
 
         if (this.registrationRequestId != undefined) {
             this.subscriptions.push(
@@ -141,8 +166,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.rForm.get('folderNumber').setValue(r.dossierNr);
                     this.rForm.get('startDate').setValue(r.startDate);
                     this.rForm.get('initiator').setValue(r.initiator);
-                    this.rForm.get('company.name').setValue(r.company.name);
-                    this.rForm.get('company.id').setValue(r.company.id);
+                    this.rForm.get('company').setValue(r.company);
                     if (r.registrationRequestMandatedContacts && r.registrationRequestMandatedContacts[0]) {
                         this.rForm.get('contactId').setValue(r.registrationRequestMandatedContacts[0].id);
                         this.rForm.get('mandatedFirstname').setValue(r.registrationRequestMandatedContacts[0].mandatedFirstname);
@@ -152,6 +176,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.rForm.get('idnp').setValue(r.registrationRequestMandatedContacts[0].idnp);
                         this.rForm.get('requestMandateNr').setValue(r.registrationRequestMandatedContacts[0].requestMandateNr);
                         this.rForm.get('requestMandateDate').setValue(new Date(r.registrationRequestMandatedContacts[0].requestMandateDate));
+                        this.rForm.get('companySolicitant').setValue(r.registrationRequestMandatedContacts[0].companySolicitant);
                     }
                     this.commonDocuments = r.documents;
 
@@ -202,6 +227,23 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'custom-dialog-container',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
+    }
+
     getPriceTypes() {
         this.subscriptions.push(
             this.priceService.getPriceTypes('2').subscribe(priceTypes => {
@@ -248,7 +290,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loadingService.show();
         this.formSubmitted = true;
 
-        const canSave: boolean = //this.commonDocuments.length > 0 && //this.rForm.get('folderNumber').valid &&
+        const canSave: boolean = this.rForm.get('company').valid && //this.commonDocuments.length > 0 && //this.rForm.get('folderNumber').valid &&
             ((this.requests.length) == this.tabs.length && this.requests.every(value => value.valid)); //&& this.mandatoryDocuments.length == 0;
 
         if (!canSave) {
@@ -281,7 +323,8 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
             email: this.rForm.get('email').value,
             idnp: this.rForm.get('idnp').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
-            requestMandateDate: this.rForm.get('requestMandateDate').value
+            requestMandateDate: this.rForm.get('requestMandateDate').value,
+            companySolicitant: this.rForm.get('companySolicitant').value
         };
 
         this.requests.forEach(req => {
@@ -309,6 +352,7 @@ export class PriceRegMedComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.sourceRegistrationRequest.currentStep = this.rForm.get('decision').value.sourceReqCurrentStep;
+        this.sourceRegistrationRequest.company = this.rForm.get('company').value;
 
         this.requests.push(this.sourceRegistrationRequest);
 

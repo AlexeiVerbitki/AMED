@@ -202,7 +202,7 @@ export class RegCerereGmpComponent implements OnInit, OnDestroy, CanModuleDeacti
         }
 
         if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid
-            || this.rForm.get('idnp').invalid) {
+            || this.rForm.get('idnp').invalid || this.rForm.get('regSubject').invalid) {
             return;
         }
 

@@ -180,7 +180,7 @@ export class AmendmentDetailsComponent implements OnInit, OnDestroy {
                     && medicamentFrom.subjectsSC == medicamentTo.subjectsSC && medicamentFrom.administratingMode == medicamentTo.administratingMode
                     && medicamentFrom.activeSubstances.length == medicamentTo.activeSubstances.length) {
                     for (const actSubstFrom of medicamentFrom.activeSubstances) {
-                        const actSubstTo = medicamentTo.activeSubstances.find(actSubstanceTo => actSubstanceTo.activeSubstance.id == actSubstFrom.activeSubstance.id);
+                        const actSubstTo = medicamentTo.activeSubstances.find(actSubstanceTo => actSubstanceTo.id == actSubstFrom.id);
                         if (actSubstTo && actSubstFrom.manufacture.id == actSubstTo.manufacture.id && actSubstFrom.quantity == actSubstTo.quantity
                             && actSubstFrom.unitsOfMeasurement.id == actSubstTo.unitsOfMeasurement.id) {
                             return false;

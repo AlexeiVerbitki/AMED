@@ -65,4 +65,7 @@ public class LicensesEntity
 
     @Transient
     private String companyName;
+
+    @Transient
+    private NmEconomicAgentsEntity company;
 }

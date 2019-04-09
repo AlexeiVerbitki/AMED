@@ -16,6 +16,7 @@ import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-gua
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-reg-modify-cerere',
@@ -127,7 +128,8 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
     nextStep() {
         this.formSubmitted = true;
         if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid
-            || this.rForm.get('company').invalid || this.rForm.get('type.code').invalid  || this.rForm.get('idnp').invalid) {
+            || this.rForm.get('type.code').invalid  || this.rForm.get('idnp').invalid
+            || this.rForm.get('regSubject').invalid) {
             return;
         }
 
@@ -164,10 +166,11 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
             email: this.rForm.get('email').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value,
-	        idnp : this.rForm.get('idnp').value
+            idnp: this.rForm.get('idnp').value,
+            companySolicitant: this.rForm.get('company').value
         }];
         modelToSubmit.medicament = null;
-
+        modelToSubmit.company = null;
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
                 if (this.roleSrv.isRightAssigned('scr_module_6') || this.roleSrv.isRightAssigned('scr_admin')) {
@@ -187,5 +190,21 @@ export class RegModifyCerereComponent implements OnInit, OnDestroy, CanModuleDea
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
         return true;
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'custom-dialog-container',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
     }
 }

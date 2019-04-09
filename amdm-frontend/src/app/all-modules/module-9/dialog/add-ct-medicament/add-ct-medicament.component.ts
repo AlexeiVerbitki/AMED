@@ -85,18 +85,36 @@ export class AddCtMedicamentComponent implements OnInit, OnDestroy {
             this.addMedForm.get('atcCode').disable();
         }
 
-
-        if (this.dataDialog.medicament) {
-            this.addMedForm.setValue(this.dataDialog.medicament);
-            this.medActiveSubstances = this.dataDialog.medicament.activeSubstances;
-        }
+        this.assignMedicament(this.dataDialog.medicament);
 
         this.loadManufacturers();
         this.loadFarmForms();
         this.loadATCCodes();
     }
 
+    assignMedicament(medicament: any) {
+        if (medicament) {
+            this.addMedForm.get('id').setValue(medicament.id);
+            this.addMedForm.get('name').setValue(medicament.name);
+            this.addMedForm.get('manufacture').setValue(medicament.manufacture);
+            this.addMedForm.get('dose').setValue(medicament.dose);
+            this.addMedForm.get('pharmaceuticalForm').setValue(medicament.pharmaceuticalForm);
+            this.addMedForm.get('atcCode').setValue(medicament.atcCode);
+            this.addMedForm.get('administratingMode').setValue(medicament.administratingMode);
+            this.addMedForm.get('subjectsSC').setValue(medicament.subjectsSC);
+            this.addMedForm.get('isNew').setValue(false);
+            if (medicament.isNew) {
+                this.addMedForm.get('isNew').setValue(true);
+            }
+
+            this.medActiveSubstances = this.dataDialog.medicament.activeSubstances;
+        }
+    }
+
     ngOnDestroy(): void {
+        this.subscriptions.forEach(subscription => {
+            subscription.unsubscribe();
+        });
     }
 
     loadManufacturers() {

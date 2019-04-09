@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -128,6 +129,12 @@ public class MedicamentHistoryEntity
     @Basic
     @Column(name = "nonesentiale_from", nullable = true)
     private Boolean nonesentialeFrom;
+    @Basic
+    @Column(name = "approve_date")
+    private LocalDate approveDate;
+    @Basic
+    @Column(name = "transfer_certificate")
+    private Boolean transferCertificate;
 
     public void assign(MedicamentEntity entity)
     {

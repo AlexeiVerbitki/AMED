@@ -26,3 +26,9 @@ label.required:not(:empty):after,
 .mt-4s {
     padding-top: 45px;
 }
+
+.table-height {
+    max-height : 250px;
+    width: 100%;
+    overflow: auto;
+}

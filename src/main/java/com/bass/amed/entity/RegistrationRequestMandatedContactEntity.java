@@ -35,4 +35,11 @@ public class RegistrationRequestMandatedContactEntity
     @Basic
     @Column(name = "idnp")
     private String idnp;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "company_solicitant_id")
+    private NmEconomicAgentsEntity companySolicitant;
+    @Basic
+    @Column(name = "primary_contact")
+    private Boolean primary;
 }

@@ -173,6 +173,7 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
     }
 
     ngOnInit() {
+        this.incrementCertificateNumber("adg");
         this.navbarTitleService.showTitleMsg('Aprobarea inspecției regulilor de bună practică de distribuţie');
 
         this.companii =
@@ -493,10 +494,26 @@ export class AprobCerereComponent implements OnInit, OnDestroy, CanModuleDeactiv
                         this.subscriptions.push(this.gdpService.viewGDPCertificate(this.createGDPCertificateDTO(ordinGDP)).subscribe(this.showGeneratedDocCallback, this.errorCatchCallback));
                     }));
                 } else {
+                    this.inspectorForm.get('certificateNr').setValue(this.incrementCertificateNumber(this.inspectorForm.get('certificateNr').value));
                     this.subscriptions.push(this.gdpService.viewGDPCertificate(this.createGDPCertificateDTO(ordinGDP)).subscribe(this.showGeneratedDocCallback, this.errorCatchCallback));
                 }
             }
         }
+    }
+
+    incrementCertificateNumber(certificateNr: string) {
+        var str = certificateNr;
+        var num = '';
+        var endIndex = str.lastIndexOf(".");
+        var _index = str.indexOf("_");
+        if (_index != -1) {
+            num = str.slice(_index + 1, endIndex);
+             num = (+num + 1).toString();
+             num = str.slice(0,_index + 1) + num + str.slice(endIndex, str.length);
+        } else {
+            num = str.slice(0, endIndex) + '_1' + str.slice(endIndex, str.length);
+        }
+        return num;
     }
 
     showGeneratedDocCallback = (data): void => {

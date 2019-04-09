@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class LicenseRegistrationRequestService
-{
+public class LicenseRegistrationRequestService {
     @Autowired
     private EntityManagerFactory entityManagerFactory;
     @Autowired
@@ -53,59 +52,56 @@ public class LicenseRegistrationRequestService
     private static final Logger LOGGER = LoggerFactory.getLogger(LicenseRegistrationRequestService.class);
 
     @Transactional(readOnly = true)
-    public RegistrationRequestsEntity findLicenseRegistrationById(Integer id, boolean viewCompleted) throws CustomException
-    {
+    public RegistrationRequestsEntity findLicenseRegistrationById(Integer id, boolean viewCompleted) throws CustomException {
         Optional<RegistrationRequestsEntity> re = requestRepository.findById(id);
 
-        if (!re.isPresent())
-        {
+        if (!re.isPresent()) {
             throw new CustomException("Inregistrarea nu a fost gasita");
-        } else if (re.get().getEndDate() != null && !viewCompleted)
-        {
+        } else if (re.get().getEndDate() != null && !viewCompleted) {
             throw new CustomException("Cererea a fost deja finisata!!!");
         }
         RegistrationRequestsEntity rrE = re.get();
         rrE.setLicense((LicensesEntity) Hibernate.unproxy(re.get().getLicense()));
 
-        rrE.getLicense().setDetail(rrE.getLicense().getDetails().stream().filter(det -> det.getRegistrationId().equals(rrE.getId())).findFirst().orElse(null));
+        if (rrE.getLicense() != null) {
+            rrE.getLicense().setDetail(rrE.getLicense().getDetails().stream().filter(det -> det.getRegistrationId().equals(rrE.getId())).findFirst().orElse(null));
+        }
 
-        if (!viewCompleted)
-        {
+        if (!viewCompleted && rrE.getLicense() != null) {
             rrE.getLicense().setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(rrE.getLicense().getIdno()).get().getLongName());
+            rrE.getLicense().setCompany(economicAgentsRepository.findFirstByIdnoEquals(rrE.getLicense().getIdno()).get());
 
-            for (NmEconomicAgentsEntity ece : rrE.getLicense().getEconomicAgents())
-            {
-                if (ece.getLocality() != null)
-                {
+            for (NmEconomicAgentsEntity ece : rrE.getLicense().getEconomicAgents()) {
+                if (ece.getLocality() != null) {
                     ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
                 }
                 ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).orElse(null));
             }
         }
 
-
-        for (NmEconomicAgentsEntity ne : rrE.getLicense().getEconomicAgents())
+        if (rrE.getLicense() != null)
         {
-            ne.setCurrentResolution(ne.getResolutions().stream().filter(e -> e.getLicenseDetailId().equals(rrE.getLicense().getDetail().getId())).findFirst().orElse(null));
+            for (NmEconomicAgentsEntity ne : rrE.getLicense().getEconomicAgents()) {
+                ne.setCurrentResolution(ne.getResolutions().stream().filter(e -> e.getLicenseDetailId().equals(rrE.getLicense().getDetail().getId())).findFirst().orElse(null));
+            }
         }
+
 
         //Call to load data from proxy
         rrE.getDocuments().toString();
+        rrE.getRegistrationRequestMandatedContacts().toString();
 
-        if (viewCompleted)
-        {
+        if (viewCompleted) {
             Optional<RegistrationRequestPayloadEntity> reqNewOpt = registrationRequestPayloadRepository.findByRegistrationRequestId(id);
 
-            if (!reqNewOpt.isPresent())
-            {
+            if (!reqNewOpt.isPresent()) {
                 Optional<Integer> resultOpt = requestRepository.getPreviousLicenseModificationId(rrE.getLicense().getId(), id);
 
                 reqNewOpt = registrationRequestPayloadRepository.findByRegistrationRequestId(resultOpt.get());
             }
 
             ObjectMapper mapper = new ObjectMapper();
-            try
-            {
+            try {
                 LicensesEntity version = mapper.readValue(reqNewOpt.get().getPayload(), LicensesEntity.class);
 
                 rrE.getLicense().setSerialNr(version.getSerialNr());
@@ -114,15 +110,12 @@ public class LicenseRegistrationRequestService
                 rrE.getLicense().setStatus(version.getStatus());
                 rrE.getLicense().setReason(version.getReason());
 
-                for (NmEconomicAgentsEntity ece : version.getEconomicAgents())
-                {
-                    if (rrE.getLicense().getCompanyName() == null)
-                    {
+                for (NmEconomicAgentsEntity ece : version.getEconomicAgents()) {
+                    if (rrE.getLicense().getCompanyName() == null) {
                         rrE.getLicense().setCompanyName(ece.getLongName());
                     }
 
-                    if (ece.getLocality() != null)
-                    {
+                    if (ece.getLocality() != null) {
                         ece.setLocality(localityService.findLocalityById(ece.getLocality().getId()));
                     }
                     ece.setSelectedPharmaceutist(ece.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).get());
@@ -130,8 +123,7 @@ public class LicenseRegistrationRequestService
 
 
                 rrE.getLicense().setEconomicAgents(version.getEconomicAgents());
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 throw new CustomException(e.getMessage(), e);
             }
         }
@@ -140,89 +132,112 @@ public class LicenseRegistrationRequestService
     }
 
 
-    public void saveNewLicense(RegistrationRequestsEntity request) throws CustomException
-    {
+    public void saveNewLicense(RegistrationRequestsEntity request) throws CustomException {
         EntityManager em = null;
-        try
-        {
+        try {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
-            request.getLicense().setCurrentStatus("A");
+//            request.getLicense().setCurrentStatus("A");
 
             em.persist(request);
 
 
 //            LicensesEntity l = em.find(LicensesEntity.class, request.getLicense().getId());
 
-            LicenseDetailsEntity detail = request.getLicense().getDetail();
-            detail.setRegistrationId(request.getId());
-            request.getLicense().getDetails().add(detail);
+//            LicenseDetailsEntity detail = request.getLicense().getDetail();
+//            detail.setRegistrationId(request.getId());
+//            request.getLicense().getDetails().add(detail);
 
 
-            em.merge(request);
+//            em.merge(request);
 
 
-            List<NmEconomicAgentsEntity> agentsByIdno = economicAgentsRepository.findAllByIdno(request.getLicense().getIdno());
+//            List<NmEconomicAgentsEntity> agentsByIdno = economicAgentsRepository.findAllByIdno(request.getLicense().getIdno());
+//
+//            for (NmEconomicAgentsEntity ag : agentsByIdno)
+//            {
+//                if (ag.getLicenseId() != null)
+//                {
+//                    NmEconomicAgentsEntity r = em.find(NmEconomicAgentsEntity.class, ag.getId());
+//
+//                    r.setLicenseId(null);
+//
+//                    em.merge(r);
+//                }
+//            }
 
-            for (NmEconomicAgentsEntity ag : agentsByIdno)
-            {
-                if (ag.getLicenseId() != null)
-                {
-                    NmEconomicAgentsEntity r = em.find(NmEconomicAgentsEntity.class, ag.getId());
-
-                    r.setLicenseId(null);
-
-                    em.merge(r);
+            //Schedule job for new license
+            if (request.getType().equals("LICEL")) {
+                LOGGER.debug("Start jobSchedule method...");
+                ResponseEntity<ScheduledModuleResponse> result = null;
+                result = jobSchedulerComponent.jobSchedule(20, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, "Se depaseste termenul de informare a clientului despre decizie");
+                if (result != null && !result.getBody().isSuccess()) {
+                    LOGGER.debug("The method jobSchedule, was not successful.");
+                    throw new CustomException("Nu a putut fi setat termenul de informare a clientului despre decizie.");
+                } else {
+                    LOGGER.debug("Finished jobSchedule method.");
                 }
             }
 
-            //Schedule job for new license
-            LOGGER.debug("Start jobSchedule method...");
-            ResponseEntity<ScheduledModuleResponse> result = null;
-            result = jobSchedulerComponent.jobSchedule(20, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null,  "Se depaseste termenul de informare a clientului despre decizie");
-            if (result != null && !result.getBody().isSuccess())
-            {
-                LOGGER.debug("The method jobSchedule, was not successful.");
-                throw new CustomException("Nu a putut fi setat termenul de informare a clientului despre decizie.");
-            }
-            else
-            {
-                LOGGER.debug("Finished jobSchedule method.");
-            }
 
             em.getTransaction().commit();
 
-        } catch (Exception e)
-        {
-            if (em != null)
-            {
+        } catch (Exception e) {
+            if (em != null) {
                 em.getTransaction().rollback();
             }
             throw new CustomException(e.getMessage(), e);
-        } finally
-        {
+        } finally {
             em.close();
         }
     }
 
-    public void updateRegistrationLicense(RegistrationRequestsEntity request, boolean next) throws CustomException
-    {
+    public void updateRegistrationLicense(RegistrationRequestsEntity request, boolean next) throws CustomException {
         EntityManager em = null;
-        try
-        {
+        try {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
             RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
 
             //License Details
-            LicenseDetailsEntity lde           = em.find(LicenseDetailsEntity.class, request.getLicense().getDetail().getId());
-            boolean              updateDetails = false;
 
-            //Commision responses
-            for (LicenseCommisionResponseEntity le : request.getLicense().getDetail().getCommisionResponses())
+
+//            LicensesEntity l = em.find(LicensesEntity.class, request.getLicense().getId());
+//
+//            LicenseDetailsEntity detail = request.getLicense().getDetail();
+//            detail.setRegistrationId(request.getId());
+//            request.getLicense().getDetails().add(detail);
+//
+//
+//            em.merge(request);
+
+
+//            LicenseDetailsEntity lde = null;
+            if (request.getLicense().getId() == null)
             {
-                if (le.getId() != null)
-                {
+                LicensesEntity license = request.getLicense();
+                LicenseDetailsEntity detail = request.getLicense().getDetail();
+                detail.setRegistrationId(r.getId());
+                license.getDetails().add(detail);
+
+                r.setLicense(license);
+                em.merge(r);
+
+
+
+//                r.setLicense(request.getLicense());
+//                request.getLicense().getDetails().add(request.getLicense().getDetail());
+//                em.persist(request.getLicense());
+//                lde = request.getLicense().getDetail();
+            }
+//            else{
+//                lde = em.find(LicenseDetailsEntity.class, request.getLicense().getDetail().getId());
+//            }
+
+
+            //Commision responses update
+            for (LicenseCommisionResponseEntity le : request.getLicense().getDetail().getCommisionResponses()) {
+                if (le.getId() != null) {
                     LicenseCommisionResponseEntity lTmp = em.find(LicenseCommisionResponseEntity.class, le.getId());
                     lTmp.setDate(le.getDate());
                     lTmp.setAnnouncedMethods(le.getAnnouncedMethods());
@@ -234,18 +249,10 @@ public class LicenseRegistrationRequestService
                 }
             }
 
-            Set<LicenseCommisionResponseEntity> newC = request.getLicense().getDetail().getCommisionResponses().stream().filter(co -> co.getId() == null).collect(Collectors.toSet());
-            if (!newC.isEmpty())
-            {
-                lde.setCommisionResponses(newC);
-            }
-
-            //Merge data
-            if (updateDetails)
-            {
-                em.merge(lde);
-            }
-
+//            Set<LicenseCommisionResponseEntity> newC = request.getLicense().getDetail().getCommisionResponses().stream().filter(co -> co.getId() == null).collect(Collectors.toSet());
+//            if (!newC.isEmpty()) {
+//                lde.setCommisionResponses(newC);
+//            }
 
             //Economic agents
             //From view
@@ -253,13 +260,12 @@ public class LicenseRegistrationRequestService
             //Existing
             Set<NmEconomicAgentsEntity> ecExistingList = r.getLicense().getEconomicAgents();
 
-            Set<Integer> ecViewIds     = ecViewList.stream().map(x -> x.getId()).collect(Collectors.toSet());
+            Set<Integer> ecViewIds = ecViewList.stream().map(x -> x.getId()).collect(Collectors.toSet());
             Set<Integer> ecExistingIds = ecExistingList.stream().map(x -> x.getId()).collect(Collectors.toSet());
 
             ecExistingIds.removeAll(ecViewIds);
 
-            for (Integer rmv : ecExistingIds)
-            {
+            for (Integer rmv : ecExistingIds) {
                 NmEconomicAgentsEntity ec = em.find(NmEconomicAgentsEntity.class, rmv);
 
                 ec.setLicenseId(null);
@@ -267,8 +273,7 @@ public class LicenseRegistrationRequestService
                 em.merge(ec);
             }
 
-            for (NmEconomicAgentsEntity ecView : ecViewList)
-            {
+            for (NmEconomicAgentsEntity ecView : ecViewList) {
                 NmEconomicAgentsEntity ec = em.find(NmEconomicAgentsEntity.class, ecView.getId());
 
 //                ec = ecView;
@@ -283,8 +288,7 @@ public class LicenseRegistrationRequestService
                 ec.getActivities().addAll(ecView.getActivities());
 
                 //Resolution
-                if (ecView.getCurrentResolution() != null)
-                {
+                if (ecView.getCurrentResolution() != null) {
                     ecView.getCurrentResolution().setLicenseDetailId(request.getLicense().getDetail().getId());
                     ec.getResolutions().clear();
                     ec.getResolutions().add(ecView.getCurrentResolution());
@@ -296,8 +300,7 @@ public class LicenseRegistrationRequestService
                 ec.setType(ecView.getType());
 
                 //Cesionare
-                if (request.getType().getCode().equals("LICC") && !ecView.getIdno().equals(request.getLicense().getIdno()))
-                {
+                if (request.getType().getCode().equals("LICC") && !ecView.getIdno().equals(request.getLicense().getIdno())) {
                     NmEconomicAgentsEntity originalEc = ecViewList.stream().filter(ss -> !ss.getIdno().equals(ecView.getIdno())).findFirst().get();
 
                     ec.setOldIdno(ecView.getIdno());
@@ -315,8 +318,7 @@ public class LicenseRegistrationRequestService
             //Update documents
             Set<DocumentsEntity> dSet = request.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
 
-            if (!dSet.isEmpty())
-            {
+            if (!dSet.isEmpty()) {
                 r.getDocuments().addAll(dSet);
             }
 
@@ -329,43 +331,36 @@ public class LicenseRegistrationRequestService
 
 
             //Job Unshcedule for new license
-            if (request.getType().getCode().equals("LICEL") && next )
-            {
+            if (request.getType().getCode().equals("LICEL") && next) {
                 LOGGER.debug("Start jobUnschedule method...");
-                jobSchedulerComponent.jobUnschedule( "/set-expired-request", request.getId());
+                jobSchedulerComponent.jobUnschedule("/set-expired-request", request.getId());
                 LOGGER.debug("Finished jobUnschedule method.");
             }
 
             //Job Unshcedule for duplicate license
-            if (request.getType().getCode().equals("LICD") && next )
-            {
+            if (request.getType().getCode().equals("LICD") && next) {
                 LOGGER.debug("Start jobUnschedule method...");
-                jobSchedulerComponent.jobUnschedule( "/set-expired-request", request.getId());
+                jobSchedulerComponent.jobUnschedule("/set-expired-request", request.getId());
                 LOGGER.debug("Finished jobUnschedule method.");
             }
 
 
             em.getTransaction().commit();
 
-        } catch (Exception e)
-        {
-            if (em != null)
-            {
+        } catch (Exception e) {
+            if (em != null) {
                 em.getTransaction().rollback();
             }
             throw new CustomException(e.getMessage(), e);
-        } finally
-        {
+        } finally {
             em.close();
         }
     }
 
 
-    public void finishLicense(RegistrationRequestsEntity request) throws CustomException
-    {
+    public void finishLicense(RegistrationRequestsEntity request) throws CustomException {
         EntityManager em = null;
-        try
-        {
+        try {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
             RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
@@ -383,13 +378,11 @@ public class LicenseRegistrationRequestService
             //Update documents
             Set<DocumentsEntity> dSet = request.getDocuments().stream().filter(d -> d.getId() == null).collect(Collectors.toSet());
 
-            if (!dSet.isEmpty())
-            {
+            if (!dSet.isEmpty()) {
                 r.getDocuments().addAll(dSet);
             }
 
-            if (request.getType().getCode().equals("LICEL") && request.getLicense().getStatus().equals("F"))
-            {
+            if (request.getType().getCode().equals("LICEL") && request.getLicense().getStatus().equals("F")) {
                 Date releaseDate = new Date();
                 r.getLicense().setReleaseDate(releaseDate);
 
@@ -401,8 +394,7 @@ public class LicenseRegistrationRequestService
             }
 
             //Prelungire
-            if (request.getType().getCode().equals("LICP"))
-            {
+            if (request.getType().getCode().equals("LICP")) {
                 Date curExpirationDate = request.getLicense().getExpirationDate();
 
                 Calendar c = Calendar.getInstance();
@@ -413,14 +405,12 @@ public class LicenseRegistrationRequestService
             }
 
             //Anulare
-            if (request.getType().getCode().equals("LICA"))
-            {
+            if (request.getType().getCode().equals("LICA")) {
                 request.getLicense().setStatus("R");
                 r.getLicense().setClosedDate(new Date());
 
 
-                for (NmEconomicAgentsEntity ecView : r.getLicense().getEconomicAgents())
-                {
+                for (NmEconomicAgentsEntity ecView : r.getLicense().getEconomicAgents()) {
                     NmEconomicAgentsEntity ec = em.find(NmEconomicAgentsEntity.class, ecView.getId());
 
                     ec.setLicenseId(null);
@@ -432,15 +422,13 @@ public class LicenseRegistrationRequestService
 
 
             //Suspendare
-            if (request.getType().getCode().equals("LICS"))
-            {
+            if (request.getType().getCode().equals("LICS")) {
                 request.getLicense().setStatus("S");
                 r.getLicense().setSuspendDate(new Date());
             }
 
             //Reluare
-            if (request.getType().getCode().equals("LICRL"))
-            {
+            if (request.getType().getCode().equals("LICRL")) {
                 request.getLicense().setStatus("F");
             }
 
@@ -450,36 +438,45 @@ public class LicenseRegistrationRequestService
             r.setAssignedUser(request.getAssignedUser());
 
             r.getLicense().setStatus(request.getLicense().getStatus());
-            em.merge(r);
 
-            //Update mandated contacts
-            LicenseMandatedContactEntity lmView = request.getLicense().getDetail().getLicenseMandatedContacts().stream().findFirst().get();
-            if (lmView.getNewMandatedLastname() != null && !lmView.getNewMandatedLastname().isEmpty())
+
+            //Mandated contacts
+            RegistrationRequestMandatedContactEntity secondaryMandatedContact = request.getRegistrationRequestMandatedContacts().stream().filter(mc -> Boolean.FALSE.equals( mc.getPrimary())).findFirst().orElse(null);
+            //ADD NEW
+            if (secondaryMandatedContact != null && secondaryMandatedContact.getId() == null && secondaryMandatedContact.getMandatedLastname() != null && !secondaryMandatedContact.getMandatedLastname().isEmpty()){
+                r.getRegistrationRequestMandatedContacts().add(secondaryMandatedContact);
+            }
+            //Remove secondary
+            RegistrationRequestMandatedContactEntity secondaryMandatedContactDB = r.getRegistrationRequestMandatedContacts().stream().filter(mc -> Boolean.FALSE.equals( mc.getPrimary())).findFirst().get();
+            if (secondaryMandatedContact == null && secondaryMandatedContactDB != null ){
+                r.getRegistrationRequestMandatedContacts().remove(secondaryMandatedContactDB);
+            }
+            //Update
+            if (secondaryMandatedContact != null && secondaryMandatedContact.getId() != null)
             {
-                LicenseMandatedContactEntity lmc = em.find(LicenseMandatedContactEntity.class, lmView.getId());
+                RegistrationRequestMandatedContactEntity secondDb = em.find(RegistrationRequestMandatedContactEntity.class, secondaryMandatedContact.getId());
 
-                lmc.setNewMandatedFirstname(lmView.getNewMandatedFirstname());
-                lmc.setNewMandatedLastname(lmView.getNewMandatedLastname());
-                lmc.setNewMandatedNr(lmView.getNewMandatedNr());
-                lmc.setNewMandatedDate(lmView.getNewMandatedDate());
-                lmc.setNewEmail(lmView.getNewEmail());
-                lmc.setNewPhoneNumber(lmView.getNewPhoneNumber());
-                lmc.setNewIdnp(lmView.getNewIdnp());
+                secondDb.setMandatedFirstname(secondaryMandatedContact.getMandatedFirstname());
+                secondDb.setMandatedLastname(secondaryMandatedContact.getMandatedLastname());
+                secondDb.setRequestMandateNr(secondaryMandatedContact.getRequestMandateNr());
+                secondDb.setRequestMandateDate(secondaryMandatedContact.getRequestMandateDate());
+                secondDb.setEmail(secondaryMandatedContact.getEmail());
+                secondDb.setPhoneNumber(secondaryMandatedContact.getPhoneNumber());
+                secondDb.setIdnp(secondaryMandatedContact.getIdnp());
 
-                em.merge(lmc);
+                em.merge(secondDb);
             }
 
+            em.merge(r);
+
             //Save payload
-            if (request.getType().getCode().equals("LICEL") || request.getType().getCode().equals("LICM") || request.getType().getCode().equals("LICC") || request.getType().getCode().equals("LICP"))
-            {
-                Optional<RegistrationRequestPayloadEntity> plOpt  = registrationRequestPayloadRepository.findByRegistrationRequestId(r.getId());
-                ObjectMapper                               mapper = new ObjectMapper();
-                if (plOpt.isPresent())
-                {
+            if (request.getType().getCode().equals("LICEL") || request.getType().getCode().equals("LICM") || request.getType().getCode().equals("LICC") || request.getType().getCode().equals("LICP")) {
+                Optional<RegistrationRequestPayloadEntity> plOpt = registrationRequestPayloadRepository.findByRegistrationRequestId(r.getId());
+                ObjectMapper mapper = new ObjectMapper();
+                if (plOpt.isPresent()) {
                     RegistrationRequestPayloadEntity opt = em.find(RegistrationRequestPayloadEntity.class, plOpt.get().getId());
                     opt.setPayload(mapper.writeValueAsString(Hibernate.unproxy(r.getLicense())));
-                } else
-                {
+                } else {
                     RegistrationRequestPayloadEntity payload = new RegistrationRequestPayloadEntity();
                     payload.setRegistrationRequestId(r.getId());
 
@@ -495,66 +492,59 @@ public class LicenseRegistrationRequestService
 
             em.getTransaction().commit();
 
-        } catch (Exception e)
-        {
-            if (em != null)
-            {
+        } catch (Exception e) {
+            if (em != null) {
                 em.getTransaction().rollback();
             }
             throw new CustomException(e.getMessage(), e);
-        } finally
-        {
+        } finally {
             em.close();
         }
     }
 
 
-    public void stopLicense(RegistrationRequestsEntity request) throws CustomException
-    {
+    public void stopLicense(RegistrationRequestsEntity request) throws CustomException {
         EntityManager em = null;
-        try
-        {
+        try {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
             RegistrationRequestsEntity r = em.find(RegistrationRequestsEntity.class, request.getId());
 
             r.getRequestHistories().add(new ArrayList<>(request.getRequestHistories()).get(0));
             r.setEndDate(new Timestamp(new Date().getTime()));
-            if (r.getType().getCode().equals("LICEL"))
+
+            if (request.getLicense() != null)
             {
-                r.getLicense().setStatus("C");
+                if (r.getType().getCode().equals("LICEL")) {
+                    r.getLicense().setStatus("C");
+                }
+                r.getLicense().setCurrentStatus(null);
             }
 
-            r.getLicense().setCurrentStatus(null);
             r.setCurrentStep("C");
 
             em.merge(r);
 
             em.getTransaction().commit();
 
-        } catch (Exception e)
-        {
-            if (em != null)
-            {
+        } catch (Exception e) {
+            if (em != null) {
                 em.getTransaction().rollback();
             }
             throw new CustomException(e.getMessage(), e);
-        } finally
-        {
+        } finally {
             em.close();
         }
     }
 
 
-    public void updateModifyLicense(RegistrationRequestsEntity request) throws CustomException
-    {
+    public void updateModifyLicense(RegistrationRequestsEntity request) throws CustomException {
         EntityManager em = null;
-        try
-        {
+        try {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
             LicensesEntity originalLicense = request.getLicense();
-            LicensesEntity le              = em.find(LicensesEntity.class, originalLicense.getId());
+            LicensesEntity le = em.find(LicensesEntity.class, originalLicense.getId());
             le.setCurrentStatus("A");
             le.setReason(originalLicense.getReason());
             request.setLicense(le);
@@ -571,22 +561,18 @@ public class LicenseRegistrationRequestService
             em.merge(request);
 
 
-            if (request.getType().getCode().equals("LICM") || request.getType().getCode().equals("LICC"))
-            {
-                List<RegistrationRequestsEntity> reqList              = requestRepository.getRequestsForLicense(originalLicense.getId());
-                boolean                          alreadyRegisteredObj = false;
-                for (RegistrationRequestsEntity rOld : reqList)
-                {
+            if (request.getType().getCode().equals("LICM") || request.getType().getCode().equals("LICC")) {
+                List<RegistrationRequestsEntity> reqList = requestRepository.getRequestsForLicense(originalLicense.getId());
+                boolean alreadyRegisteredObj = false;
+                for (RegistrationRequestsEntity rOld : reqList) {
                     Optional<RegistrationRequestPayloadEntity> payloadOptional = registrationRequestPayloadRepository.findByRegistrationRequestId(rOld.getId());
-                    if (payloadOptional.isPresent())
-                    {
+                    if (payloadOptional.isPresent()) {
                         alreadyRegisteredObj = true;
                         break;
                     }
                 }
 
-                if (!alreadyRegisteredObj)
-                {
+                if (!alreadyRegisteredObj) {
                     RegistrationRequestPayloadEntity payload = new RegistrationRequestPayloadEntity();
                     payload.setRegistrationRequestId(request.getId());
                     ObjectMapper mapper = new ObjectMapper();
@@ -599,18 +585,15 @@ public class LicenseRegistrationRequestService
 
             }
 
-            if (request.getType().getCode().equals("LICD"))
-            {
+            if (request.getType().getCode().equals("LICD")) {
                 //Schedule job for duplicate
                 LOGGER.debug("Start jobSchedule method...");
                 ResponseEntity<ScheduledModuleResponse> result = null;
-                result = jobSchedulerComponent.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null,  "Se depaseste termenul de eliberare a duplicatului licentei");
-                if (result != null && !result.getBody().isSuccess())
-                {
+                result = jobSchedulerComponent.jobSchedule(3, "/set-critical-request", "/set-expired-request", request.getId(), request.getRequestNumber(), null, "Se depaseste termenul de eliberare a duplicatului licentei");
+                if (result != null && !result.getBody().isSuccess()) {
                     LOGGER.debug("The method jobSchedule, was not successful.");
                     throw new CustomException("Nu a putut fi setat termenul de eliberare a duplicatului.");
-                } else
-                {
+                } else {
                     LOGGER.debug("Finished jobSchedule method.");
                 }
             }
@@ -618,22 +601,18 @@ public class LicenseRegistrationRequestService
 
             em.getTransaction().commit();
 
-        } catch (Exception e)
-        {
-            if (em != null)
-            {
+        } catch (Exception e) {
+            if (em != null) {
                 em.getTransaction().rollback();
             }
             throw new CustomException(e.getMessage(), e);
-        } finally
-        {
+        } finally {
             em.close();
         }
     }
 
 
-    public List<DiffLicense> compareRevisions(Integer licenseId, Integer newRequestId) throws CustomException
-    {
+    public List<DiffLicense> compareRevisions(Integer licenseId, Integer newRequestId) throws CustomException {
         Optional<Integer> resultOpt = requestRepository.getPreviousLicenseModificationId(licenseId, newRequestId);
 
         RegistrationRequestPayloadEntity reqNew = registrationRequestPayloadRepository.findByRegistrationRequestId(newRequestId).get();
@@ -642,19 +621,14 @@ public class LicenseRegistrationRequestService
 
         LicensesEntity oldVersion;
 
-        try
-        {
-            if (!resultOpt.isPresent())
-            {
-                if (reqNew.getPayloadMigration() == null)
-                {
+        try {
+            if (!resultOpt.isPresent()) {
+                if (reqNew.getPayloadMigration() == null) {
                     throw new CustomException("Can not find previous version.");
-                } else
-                {
+                } else {
                     oldVersion = mapper.readValue(reqNew.getPayloadMigration(), LicensesEntity.class);
                 }
-            } else
-            {
+            } else {
                 RegistrationRequestPayloadEntity reqOld = registrationRequestPayloadRepository.findByRegistrationRequestId(resultOpt.get()).get();
                 oldVersion = mapper.readValue(reqOld.getPayload(), LicensesEntity.class);
             }
@@ -664,8 +638,7 @@ public class LicenseRegistrationRequestService
 
             List<DiffLicense> listDifference = new ArrayList<>();
 
-            if (!newVersion.getExpirationDate().equals(oldVersion.getExpirationDate()))
-            {
+            if (!newVersion.getExpirationDate().equals(oldVersion.getExpirationDate())) {
                 DiffLicense diffLicense = new DiffLicense();
                 diffLicense.setField("expirationDate");
                 diffLicense.setFieldDesc("Data expirarii");
@@ -676,8 +649,7 @@ public class LicenseRegistrationRequestService
                 listDifference.add(diffLicense);
             }
 
-            if (!newVersion.getSerialNr().equals(oldVersion.getSerialNr()))
-            {
+            if (!newVersion.getSerialNr().equals(oldVersion.getSerialNr())) {
                 DiffLicense diffLicense = new DiffLicense();
                 diffLicense.setField("serialNr");
                 diffLicense.setFieldDesc("Seria");
@@ -687,8 +659,7 @@ public class LicenseRegistrationRequestService
                 listDifference.add(diffLicense);
             }
 
-            if (!newVersion.getNr().equals(oldVersion.getNr()))
-            {
+            if (!newVersion.getNr().equals(oldVersion.getNr())) {
                 DiffLicense diffLicense = new DiffLicense();
                 diffLicense.setField("nr");
                 diffLicense.setFieldDesc("Numarul");
@@ -699,8 +670,7 @@ public class LicenseRegistrationRequestService
             }
 
 
-            if (!newVersion.getStatus().equals(oldVersion.getStatus()))
-            {
+            if (!newVersion.getStatus().equals(oldVersion.getStatus())) {
                 DiffLicense diffLicense = new DiffLicense();
                 diffLicense.setField("status");
                 diffLicense.setFieldDesc("Statut");
@@ -723,12 +693,9 @@ public class LicenseRegistrationRequestService
 
 
             //Modified
-            for (Integer newId : ecNewIds)
-            {
-                if (ecOldIds.contains(newId))
-                {
-                    if (!ecNewList.stream().filter(f -> f.getId().equals(newId)).findFirst().get().equals(ecOldList.stream().filter(f -> f.getId().equals(newId)).findFirst().get()))
-                    {
+            for (Integer newId : ecNewIds) {
+                if (ecOldIds.contains(newId)) {
+                    if (!ecNewList.stream().filter(f -> f.getId().equals(newId)).findFirst().get().equals(ecOldList.stream().filter(f -> f.getId().equals(newId)).findFirst().get())) {
                         DiffLicense diffLicense = new DiffLicense();
                         diffLicense.setField("ecAgent");
                         diffLicense.setFieldDesc("Agentul economic");
@@ -737,13 +704,12 @@ public class LicenseRegistrationRequestService
 
                         NmLocalitiesEntity locality = localityService.findLocalityById(ecAgent.getLocality().getId());
 
-                        StringBuilder                   sb       = new StringBuilder();
+                        StringBuilder sb = new StringBuilder();
                         LicenseAgentPharmaceutistEntity pharmNew = ecAgent.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).orElse(null);
 
                         sb.append(ecAgent.getType().getDescription()).append("; ");
                         sb.append(locality.getStateName()).append(", ").append(locality.getDescription()).append(", ").append(ecAgent.getStreet()).append("; ");
-                        if (pharmNew != null)
-                        {
+                        if (pharmNew != null) {
                             sb.append(pharmNew.getFullName()).append("; ");
                         }
                         sb.append(ecAgent.getActivities().stream().map(act -> act.getDescription()).collect(Collectors.joining(", ")));
@@ -757,8 +723,7 @@ public class LicenseRegistrationRequestService
 
                         sbOld.append(ecAgentOld.getType().getDescription()).append("; ");
                         sbOld.append(locality.getStateName()).append(", ").append(locality.getDescription()).append(", ").append(ecAgentOld.getStreet()).append("; ");
-                        if (pharmOld != null)
-                        {
+                        if (pharmOld != null) {
                             sbOld.append(pharmOld.getFullName()).append("; ");
                         }
 
@@ -775,8 +740,7 @@ public class LicenseRegistrationRequestService
             //Added
             ecNewIds.removeAll(ecOldIds);
 
-            for (Integer added : ecNewIds)
-            {
+            for (Integer added : ecNewIds) {
                 DiffLicense diffLicense = new DiffLicense();
                 diffLicense.setField("ecAgent");
                 diffLicense.setFieldDesc("Agentul economic");
@@ -785,13 +749,12 @@ public class LicenseRegistrationRequestService
 
                 NmLocalitiesEntity locality = localityService.findLocalityById(ecAgent.getLocality().getId());
 
-                StringBuilder                   sb       = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 LicenseAgentPharmaceutistEntity pharmNew = ecAgent.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).orElse(null);
 
                 sb.append(ecAgent.getType().getDescription()).append("; ");
                 sb.append(locality.getStateName()).append(", ").append(locality.getDescription()).append(", ").append(ecAgent.getStreet()).append("; ");
-                if (pharmNew != null)
-                {
+                if (pharmNew != null) {
                     sb.append(pharmNew.getFullName()).append("; ");
                 }
                 sb.append(ecAgent.getActivities().stream().map(act -> act.getDescription()).collect(Collectors.joining(", ")));
@@ -806,8 +769,7 @@ public class LicenseRegistrationRequestService
 
             ecOldIds.removeAll(ecNewIds);
 
-            for (Integer removed : ecOldIds)
-            {
+            for (Integer removed : ecOldIds) {
                 DiffLicense diffLicense = new DiffLicense();
                 diffLicense.setField("ecAgent");
                 diffLicense.setFieldDesc("Agentul economic");
@@ -816,13 +778,12 @@ public class LicenseRegistrationRequestService
 
                 NmLocalitiesEntity locality = localityService.findLocalityById(ecAgent.getLocality().getId());
 
-                StringBuilder                   sb       = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 LicenseAgentPharmaceutistEntity pharmOld = ecAgent.getAgentPharmaceutist().stream().filter(af -> af.getSelectionDate() != null).max(Comparator.comparing(LicenseAgentPharmaceutistEntity::getSelectionDate)).orElse(null);
 
                 sb.append(ecAgent.getType().getDescription()).append("; ");
                 sb.append(locality.getStateName()).append(", ").append(locality.getDescription()).append(", ").append(ecAgent.getStreet()).append("; ");
-                if (pharmOld != null)
-                {
+                if (pharmOld != null) {
                     sb.append(pharmOld.getFullName()).append("; ");
                 }
                 sb.append(ecAgent.getActivities().stream().map(act -> act.getDescription()).collect(Collectors.joining(", ")));
@@ -834,8 +795,7 @@ public class LicenseRegistrationRequestService
 
             return listDifference;
 
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new CustomException(e.getMessage(), e);
         }
 

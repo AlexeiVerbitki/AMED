@@ -13,6 +13,7 @@ import {GDPRoutingModule} from './gdp-routing.module';
 import {EvalCerereComponent} from './eval-cerere/eval-cerere.component';
 import {PaymentModule} from '../../payment/payment.module';
 import {AprobCerereComponent} from './aprob-cerere/aprob-cerere.component';
+import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 
 @NgModule({
     entryComponents: [],
@@ -24,6 +25,7 @@ import {AprobCerereComponent} from './aprob-cerere/aprob-cerere.component';
         ReactiveFormsModule,
         DocumentModule,
         PaymentModule,
+        EcAgentModule,
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
     ],

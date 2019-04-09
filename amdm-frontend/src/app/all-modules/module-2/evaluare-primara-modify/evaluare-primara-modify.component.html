@@ -28,10 +28,31 @@
 		<app-document [documents]="documents" [nrCerere]="eForm.get('requestNumber').value" [dcTypes]="docTypes"
 		              (documentModified)="documentModified($event)"></app-document>
 		<div class="row">
-			<div class="col">
+			<div class="col-md-3">
+				<div class="md-form-modified-select">
+					<ng-select class="custom" [items]="companii | async"
+							   bindLabel="name"
+							   placeholder="Compania beneficiara"
+							   formControlName="company"
+							   [required]="true"
+							   [loading]="loadingCompany"
+							   [typeahead]="companyInputs"
+					>
+						<ng-template ng-option-tmp let-item="item">
+							{{item.name}} <br/>
+							<small class="form-text text-muted">{{item.idno}}</small>
+						</ng-template>
+					</ng-select>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('company').invalid">
+					<small class="text-muted"><strong class="text-danger">Compania beneficiara trebuie selectata</strong>
+					</small>
+				</div>
+			</div>
+			<div class="col-md-1">
 				<div class="md-form">
-					<input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
-					<label for="compSolicitant">Compania solicitant</label>
+					<button class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou" (click)="newAgent()"><i
+							class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
 				</div>
 			</div>
 			<div class="col">
@@ -76,7 +97,54 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-md-2">
+				<div class="md-form">
+					<mat-checkbox #transferCertificate [checked]="eForm.get('medicament.transferCertificate').value" (change)="checkTransferCertificate(transferCertificate)">
+						Transfer certificat de înregistrare</mat-checkbox>
+				</div>
+			</div>
 		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Variatii</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Card content -->
+		<div class="card-body card-body-cascade table-height">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Cod</th>
+					<th scope="col">Valoare</th>
+					<th scope="col">Cantitate</th>
+					<th scope="col">Comentariu</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let variation of variations;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ variation.code }}</td>
+					<td>{{ variation.value }}</td>
+					<td>{{ variation.quantity }}</td>
+					<td>{{ variation.comment }}</td>
+					<td>
+						<button type="button" class="btn btn-mdb-color btn-sm waves-light"
+								(click)="editVariation(variation,i)" mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="variations.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -93,7 +161,7 @@
 			</div>
 		</div>
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -157,7 +225,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -192,9 +260,9 @@
 			</table>
 		</div>
 		<div *ngIf="activeSubstancesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
-		<div *ngIf="formSubmitted && activeSubstancesTable.length==0">
-			<small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>
-		</div>
+<!--		<div *ngIf="formSubmitted && activeSubstancesTable.length==0">-->
+<!--			<small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>-->
+<!--		</div>-->
 		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
@@ -214,7 +282,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -405,7 +473,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -449,6 +517,61 @@
 			<small class="text-muted"><strong class="text-danger">Clientul are datorii.</strong></small>
 		</div>
 		<hr>
+		<div class="row" >
+			<div class="col-12">
+				<div class="md-form">
+					<input id="standard" mdbInputDirective type="text" class="form-control" formControlName="standard">
+					<label for="standard">Standart de referinta</label>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('standard').invalid">
+					<small class="text-muted"><strong class="text-danger">Standartul de referinta trebuie introdus</strong></small>
+				</div>
+			</div>
+		</div>
+		<div class="md-form-modified">
+			<div class="gradient-card-header bg-sidebar border-gradient">
+				<div class="container-fluid">
+					<!-- Title -->
+					<div class="row">
+						<div class="col-9">
+							<div class="card-header-title white-text">Standarte de referinta</div>
+						</div>
+						<div class="col-3">
+							<div class="text-right fap text-white">
+								<i (click)="addStandard()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Card content -->
+			<div class="card-body card-body-cascade">
+				<table class="table table-widths text-center table-height">
+					<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Nr.</th>
+						<th scope="col">Denumire</th>
+						<th scope="col">Actiuni</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr *ngFor="let standard of standarts;let i = index">
+						<td>{{ i + 1 }}</td>
+						<td>{{ standard.description }}</td>
+						<td class="align-middle">
+							<a role="button" class="text-danger" (click)="removeStandard(i)">
+								<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+							</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div *ngIf="standarts.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		</div>
+		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -472,7 +595,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths-lg text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -542,7 +665,7 @@
 		<!--</div>-->
 		<hr>
 		<div class="text-center">
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save(true)">Salvare date</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="nextStep()">Urmatorul pas</button>
 			<!--<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>-->
 		</div>

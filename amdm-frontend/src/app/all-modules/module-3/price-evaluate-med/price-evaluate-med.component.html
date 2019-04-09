@@ -16,13 +16,13 @@
                     <label for="reqStatus">Statutul cererii</label>
                 </div>
             </div>
-            <div class="col-md-4">
+            <!--<div class="col-md-4">
                 <div class="md-form" formGroupName="price">
                     <input id="nrFolder" mdbInputDirective type="text" class="form-control"
                            formControlName="folderNr" [attr.disabled]="true">
                     <label for="nrFolder">Numarul dosarului</label>
                 </div>
-            </div>
+            </div>-->
             <div class="col-md-4">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
@@ -36,7 +36,7 @@
                 <div class="md-form">
                     <input id="compName" mdbInputDirective type="text" class="form-control"
                            formControlName="name" [attr.disabled]="true">
-                    <label for="compName">Compania solicitantă</label>
+                    <label for="compName">Compania beneficiară</label>
                 </div>
             </div>
 
@@ -57,14 +57,14 @@
             </div>
 
 
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="md-form">
                     <input id="typeMed" mdbInputDirective type="text" class="form-control" [value]="medicamentOriginalType ? 'Original' : 'Generic'" [attr.disabled]="true">
                     <label for="typeMed">Tipul medicamentului</label>
                 </div>
             </div>
 
-            <div class="col-md-2" formGroupName="price">
+            <div class="col-md-3" formGroupName="price">
                 <div class="md-form">
                     <input id="tquan" mdbInputDirective type="number" class="form-control"
                            formControlName="totalQuantity"  [attr.disabled]="true">
@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <div class="col-md-2" formGroupName="medicament">
+            <div class="col-md-3" formGroupName="medicament">
                 <div class="md-form">
                     <input id="valab" mdbInputDirective type="number" class="form-control"
                            formControlName="termsOfValidity"  [attr.disabled]="true">
@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <div class="col-md-2" formGroupName="medicament">
+            <div class="col-md-3" formGroupName="medicament">
                 <div class="md-form">
                     <input id="expiration" mdbInputDirective type="text" class="form-control"
                            formControlName="expirationDate"  [attr.disabled]="true">
@@ -100,8 +100,8 @@
                 <th mdbTooltip="Doza">Doza</th>
                 <th mdbTooltip="Divizarea">Divizarea</th>
                 <th mdbTooltip="Denumirea internaţională">Denumirea internaţională</th>
-                <th mdbTooltip="Preţul MDL">Preţul MDL</th>
-                <th mdbTooltip="Preţul Valuta">Preţul Valuta</th>
+                <th mdbTooltip="Preţul MDL solicitat">Preţul MDL</th>
+                <th mdbTooltip="Preţul Valuta solicitat">Preţul Valuta</th>
                 <th *ngIf="medicaments?.length > 1">Șterge</th>
             </tr>
             </thead>
@@ -115,11 +115,12 @@
                 <td class="align-middle" mdbTooltip="{{el.dose}}" placement="top">{{el.dose}}</td>
                 <td class="align-middle" mdbTooltip="{{el.division}}" placement="top">{{el.division}}</td>
                 <td class="align-middle" mdbTooltip="{{el.internationalMedicamentName.description}}" placement="top">{{el.internationalMedicamentName.description}}</td>
-                <td class="align-middle" mdbTooltip="{{el.price.mdlValue | digitsAfterDecimal:4}}" placement="top">
-                    <input type="number" #newMdlPriceInput [value]="el.price.mdlValue | digitsAfterDecimal:4"
-                           (change)="currentMedPriceChanged(i, newMdlPriceInput.value)" id="priceMdlNew" [disabled]="el.rowType == 2"
+                <td class="align-middle" mdbTooltip="{{el.price.askedPriceMdl | digitsAfterDecimal:4}}" placement="top" *ngIf="el.rowType == 1">
+                    <input type="number" #newMdlPriceInput [value]="el.price.askedPriceMdl | digitsAfterDecimal:4"
+                           (change)="currentMedPriceChanged(i, newMdlPriceInput.value)" id="priceMdlNew"
                            class="form-control text-center form-control-sm input-price"/>
                 </td>
+                <td *ngIf="el.rowType == 2" class="align-middle" mdbTooltip="{{el.price.mdlValue}}" placement="top">{{el.price.mdlValue}}</td>
 
                 <td class="align-middle" mdbTooltip="{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}" placement="top">{{el.price.value | digitsAfterDecimal:4}} {{el.price.currency.shortDescription}}</td>
                 <td class="align-middle w-40" *ngIf="el.rowType == 2">
@@ -433,7 +434,22 @@
         </div>
 
         <div>
-            <div class="my-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="md-form-modified">
+                        <ng-select id="pharmaceuticalPhormId"
+                                   name="pharmaceuticalPhormId"
+                                   [items]="pharmaceuticalPhorms"
+                                   bindLabel="description"
+                                   bindValue="id"
+                                   [multiple]="true"
+                                   formControlName="selectedPharnaceuticalForms"
+                                   placeholder="Filtru forme farmaceutice pentru medicamentele similare înregistrate in CNP conform denumirii comune internaționale">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div >
                 <div class="gradient-card-header bg-sidebar border-gradient">
                     <div class="container-fluid">
                         <!-- Title -->
@@ -464,7 +480,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr mdbTableCol *ngFor="let m of relatedMeds; let i = index">
+                        <tr mdbTableCol *ngFor="let m of relatedMeds | tableFilter : 'pharmaceuticalFormId' : PriceRegForm.get('selectedPharnaceuticalForms').value; let i = index">
                             <td class="align-middle" scope="row">{{m.code}}</td>
                             <td class="align-middle" mdbTooltip="{{m.name}}">{{m.name}}</td>
                             <td class="align-middle" mdbTooltip="{{m.pharmaceuticalForm}}">{{m.pharmaceuticalForm}}</td>
@@ -483,7 +499,7 @@
                         </tr>
                         <tr mdbTableCol>
                             <td scope="row" colspan="8">Media</td>
-                            <td>{{avgRelatedMeds | digitsAfterDecimal:4}}</td>
+                            <td>{{avgRelatedMeds.avgMDL | digitsAfterDecimal:4}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -513,12 +529,16 @@
                         <tr>
                             <th scope="col">Sursa</th>
                             <th>Media MDL</th>
+                            <th>Media EUR</th>
+                            <th>Media USD</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr mdbTableCol *ngFor="let m of dciAndOriginAvgs ">
                             <td scope="row">{{m.source}}</td>
-                            <td>{{m.avg | digitsAfterDecimal:4}}</td>
+                            <td>{{m.avgMDL | digitsAfterDecimal:4}}</td>
+                            <td>{{m.avgEUR | digitsAfterDecimal:4}}</td>
+                            <td>{{m.avgUSD | digitsAfterDecimal:4}}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -613,7 +633,7 @@
 
 
         <div class="row" >
-            <div class="col-md-6" formGroupName="evaluation">
+            <div class="col-md-4" formGroupName="evaluation">
                 <div class="md-form-modified">
                     <ng-select class="w-100"
                                [items]="decisions"
@@ -631,7 +651,19 @@
                 </div>
             </div>
 
-            <div class="col-md-6" formGroupName="evaluation">
+            <div class="col-lg-4" formGroupName="price">
+                <div class="md-form">
+                    <input id="acceptedPrice" mdbInputDirective type="number" class="form-control"
+                           formControlName="mdlValue">
+                    <label for="acceptedPrice">Prețul acceptat</label>
+                </div>
+                <div *ngIf="formSubmitted && needSelectPrice && PriceRegForm.get('price.mdlValue').invalid">
+                    <small class="text-muted"><strong class="text-danger">Indicați prețul acceptat</strong>
+                    </small>
+                </div>
+            </div>
+
+            <div class="col-md-4" formGroupName="evaluation">
                 <div class="md-form-modified">
                     <mat-form-field class="w-100">
                         <input matInput [matDatepicker]="picker2" placeholder="Data expirarii"

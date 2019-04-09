@@ -31,8 +31,8 @@ public class TasksService {
                     " RREQ.critical AS critical, " +
                     " RREQ.reg_subject AS regSubject " +
                     " FROM registration_requests RREQ " +
-                    " LEFT JOIN nm_economic_agents COMP on COMP.id=RREQ.company_id " +
                     " LEFT JOIN registration_request_mandated_contact MANCONT on MANCONT.registration_request_id=RREQ.id " +
+                    " LEFT JOIN nm_economic_agents COMP on COMP.id=MANCONT.company_solicitant_id " +
                     " LEFT JOIN registration_request_steps STEP on (STEP.request_type_id=RREQ.type_id and STEP.code=RREQ.current_step) " +
                     " WHERE 1=1" ;
     private static final Logger LOGGER = LoggerFactory.getLogger(TasksService.class);
@@ -97,7 +97,11 @@ public class TasksService {
         }
 
         if (filter.getComanyId() != null) {
-            stringBuilder.append(" AND RREQ.company_id=:companyId");
+            stringBuilder.append(" AND MANCONT.company_solicitant_id=:companyId");
+        }
+
+        if (filter.getSubject() != null && !filter.getSubject().isEmpty()) {
+            stringBuilder.append(" AND upper(RREQ.reg_subject) like upper(:regSubject)");
         }
 
         if (filter.getProcessId() != null) {
@@ -135,6 +139,10 @@ public class TasksService {
 
         if (filter.getComanyId() != null) {
             query.setParameter("companyId", filter.getComanyId());
+        }
+
+        if (filter.getSubject() != null && !filter.getSubject().isEmpty()) {
+            query.setParameter("regSubject","%" +  filter.getSubject()+ "%");
         }
 
         if (filter.getProcessId() != null) {

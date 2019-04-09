@@ -19,4 +19,13 @@ public class RequestVariationTypeEntity
     @Basic
     @Column(name = "value")
     private String value;
+    @Basic
+    @Column(name = "quantity")
+    private Integer quantity;
+    @Basic
+    @Column(name = "comment")
+    private String comment;
+    @Basic
+    @Column(name = "code")
+    private String code;
 }

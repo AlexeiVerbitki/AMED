@@ -65,7 +65,7 @@ export class RegDrugControl implements OnInit, OnDestroy {
             'startDate': [new Date()],
             'endDate': [''],
             'currentStep': ['R'],
-            'company': [null, Validators.required],
+            'company': [null],
             'type': fb.group({
                 'code': ['ATAC', Validators.required]
             }),
@@ -126,15 +126,12 @@ export class RegDrugControl implements OnInit, OnDestroy {
             return;
         }
 
-        // if (this.documents.length === 0 || (this.rForm.get('company').invalid)) {
-        //     return;
-        // }
-
         this.formSubmitted = false;
 
         const useranameDB = this.authService.getUserName();
 
         const modelToSubmit: any = this.rForm.value;
+        modelToSubmit.company = null;
         modelToSubmit.requestHistories = [{
             startDate: this.rForm.get('startDate').value, endDate: new Date(), username: useranameDB, step: 'E'
         }];
@@ -148,7 +145,8 @@ export class RegDrugControl implements OnInit, OnDestroy {
             email: this.rForm.get('email').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value,
-            idnp: this.rForm.get('idnp').value
+            idnp: this.rForm.get('idnp').value,
+            companySolicitant: this.rForm.get('company').value
         }];
         modelToSubmit.currentStep = 'E';
         modelToSubmit.regSubject = this.rForm.get('regSubject').value;
@@ -183,7 +181,7 @@ export class RegDrugControl implements OnInit, OnDestroy {
     newAgent() {
         const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
             width: '1000px',
-            panelClass: 'materialLicense',
+            panelClass: 'custom-dialog-container',
             data: {
             },
             hasBackdrop: true

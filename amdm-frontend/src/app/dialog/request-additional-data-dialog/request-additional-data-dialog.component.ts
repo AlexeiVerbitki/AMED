@@ -67,21 +67,31 @@ export class RequestAdditionalDataDialogComponent implements OnInit {
         } else if (this.dataDialog.modalType == 'REQUEST_REMOVAL_DEFICIENCIES_GMP') {
             this.reqForm.get('docNumber').setValue('SD-' + this.dataDialog.requestNumber + '-' + this.dataDialog.nrOrdDoc);
         } else if (this.dataDialog.modalType == 'REQUEST_ADDITIONAL_DATA') {
-            const x = '\tPrin prezenta, Agenția Medicamentului și Dispozitivelor Medicale Vă informează, că în rezultatul expertizei specializate a dosarului produsului medicamentos ' + this.dataDialog.medicamentStr + ' depus pentru autorizare, s-a constatat că:';
-            let z = '\r\n\t-  c......';
-            if (this.dataDialog.expertStr) {
-                z = z + this.dataDialog.expertStr;
+             // const x = '\tPrin prezenta, Agenția Medicamentului și Dispozitivelor Medicale Vă informează, că în rezultatul expertizei specializate ' +
+             //     'a dosarului produsului medicamentos ' + this.dataDialog.medicamentStr + ' depus pentru autorizare, s-a constatat că:';
+            // let z = '\r\n\t-  c......';
+            //  if (this.dataDialog.expertStr) {
+            //      z = z + this.dataDialog.expertStr;
+            // }
+            //  const y = '\r\n\tMenţionăm, că în cazul în care obiecţiile expuse nu vor fi înlăturate în termenul stabilit, conform prevederilor pct. ' +
+            //      '46, sec. 1, capit.III al Regulamentului cu privire la autorizarea medicamentelor, aprobat prin ordinul Ministerului Sănătăţii nr.739 ' +
+            //      'din 23.07.2012 „Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi introducerea modificărilor postautorizare” ' +
+            //      'procedura de autorizare se va întrerupe.';
+            // this.reqForm.get('content').setValue(x + z + y);
+             if (this.dataDialog.expertStr) {
+                 this.reqForm.get('content').setValue(this.dataDialog.expertStr);
             }
-            const y = '\r\n\tMenţionăm, că în cazul în care obiecţiile expuse nu vor fi înlăturate în termenul stabilit, conform prevederilor pct. 46, sec. 1, capit.III al Regulamentului cu privire la autorizarea medicamentelor, aprobat prin ordinul Ministerului Sănătăţii nr.739 din 23.07.2012 „Cu privire la reglementarea autorizării produselor medicamentoase de uz uman şi introducerea modificărilor postautorizare” procedura de autorizare se va întrerupe.';
-            this.reqForm.get('content').setValue(x + z + y);
 
         } else if (this.dataDialog.modalType == 'NOTIFICATION') {
             this.title = 'Scrisoare de informare';
             this.reqForm.get('docNumber').setValue('NL-' + this.dataDialog.requestNumber);
-            const x = '\tPrin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale, Vă informeazăcă în baza ordinului „Cu privire la înregistrarea medicamentelor” Nr. _________';
+            const x = '\tPrin prezenta, Agenţia Medicamentului şi Dispozitivelor Medicale, Vă informeazăcă în baza ordinului ' +
+                '„Cu privire la înregistrarea medicamentelor” Nr. _________';
             const y = ', a fost întreruptă procedura de înregistrare a medicamentului din motivul: ' + this.dataDialog.motiv + ', pentru produsul medicamentos:';
             const z = '\r\n\t - ' + this.dataDialog.medicamentStr;
-            const w = '\r\n\tÎntreruperea procedurii nu prejudiciază dreptul deținătorului de a redepune cererea conform pct. _____, capitolul ___ al Ordinului MSRM Nr. ___ din ________ "Cu privire la reglementarea înregistrării produselor medicamentoase", cu modificările şi completările ulterioare.';
+            const w = '\r\n\tÎntreruperea procedurii nu prejudiciază dreptul deținătorului de a redepune cererea conform pct. _____, ' +
+                'capitolul ___ al Ordinului MSRM Nr. ___ din ________ "Cu privire la reglementarea înregistrării produselor medicamentoase", ' +
+                'cu modificările şi completările ulterioare.';
             this.reqForm.get('content').setValue(x + y + z + w);
         } else if (this.dataDialog.modalType == 'NOTIFICATION_GMP') {
            this.title = 'Scrisoare de informare cu neconformitati';

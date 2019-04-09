@@ -16,6 +16,7 @@ import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-drugs-destroy-evaluate',
@@ -40,6 +41,10 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
 
     medInputs = new Subject<string>();
     medLoading = false;
+
+    companii: Observable<any[]>;
+    loadingCompany = false;
+    companyInputs = new Subject<string>();
 
 
     pharmaceuticalFormTypes: any[];
@@ -106,6 +111,26 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
             );
 
 
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) { return true; }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
+
+
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             if (params['id']) {
                 this.requestId = params['id'];
@@ -156,7 +181,7 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         this.mForm = this.fb.group({
             'nrCererii': [{value: null, disabled: true}],
             'dataCererii': [{value: null, disabled: true}],
-            'company': [{value: null, disabled: true}, Validators.required],
+            'company': [null, Validators.required],
             'medicaments': [null, Validators.required],
             'forma': '',
             'unitOfMeasure': [null],
@@ -251,16 +276,18 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     }
 
 
-    private patchData(data) {
-        this.mForm.get('nrCererii').patchValue(data.requestNumber);
-        this.mForm.get('dataCererii').patchValue(new Date(data.startDate));
+    private patchData(pData) {
+        this.mForm.get('nrCererii').patchValue(pData.requestNumber);
+        this.mForm.get('dataCererii').patchValue(new Date(pData.startDate));
 
-        this.mForm.get('company').patchValue(data.medicamentAnnihilation.companyName);
+        this.mForm.get('company').patchValue(pData.company);
 
-        this.docs = data.documents;
+
+
+        this.docs = pData.documents;
         this.docs.forEach(doc => doc.isOld = true);
 
-        this.medicamentsToDestroy = data.medicamentAnnihilation.medicamentsMedicamentAnnihilationMeds;
+        this.medicamentsToDestroy = pData.medicamentAnnihilation.medicamentsMedicamentAnnihilationMeds;
         this.medicamentsToDestroy.forEach(mtd => {
             if (mtd.medicamentId) {
                 this.subscriptions.push(
@@ -287,8 +314,18 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         //     return;
         // }
 
+        if (this.mForm.get('company').invalid) {
+            this.errorHandlerService.showError('Exista date obligatorii incomplete.');
+            return;
+        }
+
         if (this.paymentTotal < 0) {
             this.errorHandlerService.showError('Nu s-a efectuat plata.');
+            return;
+        }
+
+        if (this.medicamentsToDestroy.length === 0) {
+            this.errorHandlerService.showError('Nu s-a adaugat nici un medicament pentru nimicire.');
             return;
         }
 
@@ -341,6 +378,8 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
         modelToSubmit.documents = this.docs;
         annihilationModel.medicamentsMedicamentAnnihilationMeds = this.medicamentsToDestroy;
 
+        modelToSubmit.company = this.mForm.get('company').value;
+
         modelToSubmit.requestHistories = [{
             startDate: this.startDate,
             endDate: this.endDate,
@@ -375,12 +414,12 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
     }
 
     generareTax() {
-        this.subscriptions.push(this.administrationService.getServiceChargeByCategory('BN').subscribe(data => {
+        this.subscriptions.push(this.administrationService.getServiceChargeByCategory('BN').subscribe(sc => {
                 const paymentOrder = {
                     date: new Date(),
                     amount: this.totalSum,
                     registrationRequestId: this.requestId,
-                    serviceCharge: data,
+                    serviceCharge: sc,
                     quantity: 1
 
                 };
@@ -525,6 +564,22 @@ export class DrugsDestroyEvaluateComponent implements OnInit, OnDestroy {
             if (result) {
                 this.medicamentsToDestroy.splice(index, 1);
                 this.calculateTotalSum();
+            }
+        });
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'custom-dialog-container',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
             }
         });
     }

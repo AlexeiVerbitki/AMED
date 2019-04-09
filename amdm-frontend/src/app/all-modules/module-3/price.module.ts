@@ -18,6 +18,7 @@ import {PipeModule} from '../../shared/pipe/pipe.module';
 import {RevaluationGenericsComponent} from './revaluation-generics/revaluation-generics.component';
 import {XchangeinfoModule} from '../../xchangeInfo/xchangeinfo.module';
 import {PriceRegCerereComponent} from './price-reg-cerere/price-reg-cerere.component';
+import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 
 @NgModule({
     entryComponents: [ReferencePriceComponent, PriceEditModalComponent],
@@ -31,6 +32,7 @@ import {PriceRegCerereComponent} from './price-reg-cerere/price-reg-cerere.compo
         MDBBootstrapModule.forRoot(),
         MaterialSharedModule.forRoot(),
         PipeModule,
+        EcAgentModule,
         XchangeinfoModule
     ],
     schemas: [],

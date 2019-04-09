@@ -195,17 +195,15 @@ export class PaymentClinicalTrialComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
             // console.log('currencyResult', result);
             if (result) {
-                // console.log('bon', bon);
-                console.log('this.regRequest', this.regRequest);
-                // console.log('result', result);
-
+                // console.log('this.regRequest', this.regRequest);
                 const dataModel = {
                     // clinicalTrial: this.regRequest.clinicalTrails,
                     requestType: this.regRequest.type.id,
                     clinicalTrialId: this.regRequest.clinicalTrails.id,
                     economicAgent: this.regRequest.company,
                     payOrder: bon,
-                    currency: result.currency
+                    mandatedContactEntity: this.regRequest.registrationRequestMandatedContacts.length > 0 ? this.regRequest.registrationRequestMandatedContacts[0] : null,
+                    currency: result.currency,
                 };
 
                 const observable = this.paymentService.generatePaymentNote(dataModel);

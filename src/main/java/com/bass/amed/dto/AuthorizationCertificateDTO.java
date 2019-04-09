@@ -15,8 +15,7 @@ public class AuthorizationCertificateDTO
     private List<String> activeSubstances;
     private String authorizationHolder;
     private String authorizationHolderCountry;
-    private String manufacture;
-    private String manufactureCountry;
+    private List<String> manufactureWithAddress;
     private String atcCode;
     private String termsOfValidity;
     private String registrationNumber;
@@ -28,4 +27,5 @@ public class AuthorizationCertificateDTO
     private String variationTip;
     private Integer requestId;
     private String srisoareDeAprobareNumber;
+    private Boolean isUnlimitedPeriod;
 }

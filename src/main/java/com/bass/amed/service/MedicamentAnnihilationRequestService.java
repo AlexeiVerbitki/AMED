@@ -65,10 +65,6 @@ public class MedicamentAnnihilationRequestService
         RegistrationRequestsEntity rrE = re.get();
         rrE.setMedicamentAnnihilation((MedicamentAnnihilationEntity) Hibernate.unproxy(re.get().getMedicamentAnnihilation()));
 
-        rrE.getMedicamentAnnihilation().setCompanyName(rrE.getMedicamentAnnihilation().getIdno() != null ? economicAgentsRepository.findFirstByIdnoEquals(rrE.getMedicamentAnnihilation().getIdno()).get().getName() : null);
-
-        //        rrE.getMedicamentAnnihilation().setMedicamentsMedicamentAnnihilationMeds(medicamentAnnihilationMedsRepository.findByMedicamentAnnihilationId(rrE.getMedicamentAnnihilation().getId()));
-
         rrE.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().forEach(ma ->
                 {
                     if (ma.getMedicamentId() != null)
@@ -152,6 +148,10 @@ public class MedicamentAnnihilationRequestService
             //insert
 //            List<MedicamentAnnihilationMedsEntity> rsNew = request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().stream().filter(rrr-> rrr.getId() == null).collect(Collectors.toList());
 
+            if (request.getCompany() != null)
+            {
+                r.setCompany(request.getCompany());
+            }
             r.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().clear();
             r.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds().addAll(request.getMedicamentAnnihilation().getMedicamentsMedicamentAnnihilationMeds());
 
@@ -250,7 +250,7 @@ public class MedicamentAnnihilationRequestService
             StringBuilder sb = new StringBuilder();
             sb.append("Salvare cerere pentru nimicire");
 
-            StringBuilder sb1 = new StringBuilder("Agentul economic ").append(request.getMedicamentAnnihilation().getCompanyName()).append(" cu IDNO ").append(request.getMedicamentAnnihilation().getIdno());
+            StringBuilder sb1 = new StringBuilder("Agentul economic ").append(request.getCompany().getName()).append(" cu IDNO ").append(request.getCompany().getIdno());
 
 
             auditLogService.save(new AuditLogEntity().withNewValue(sb.toString()).withCategoryName("MODULE").withSubCategoryName("MODULE_8").withField(sb1.toString()).withAction(Constants.AUDIT_ACTIONS.ADD.name()));

@@ -42,16 +42,35 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
-                <div class="md-form-modified">
-                    <div class="md-form">
-                        <input id="compSolicitant" mdbInputDirective type="text" class="form-control"
-                               formControlName="companyValue"
-                               [attr.disabled]="true">
-                        <label for="compSolicitant">Compania solicitant</label>
-                    </div>
+
+            <div class="col-md-3">
+                <div class="md-form-modified-select">
+                    <ng-select class="custom" [items]="companii | async"
+                               bindLabel="name"
+                               placeholder="Compania beneficiara"
+                               formControlName="company"
+                               [required]="true"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                    >
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div *ngIf="formSubmitted && cerereSolicAutorForm.get('company').invalid">
+                    <small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
+                    </small>
                 </div>
             </div>
+            <div class="col-md-1">
+                <div class="md-form">
+                    <button class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou" (click)="newAgent()"><i
+                            class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+                </div>
+            </div>
+
         </div>
 
 

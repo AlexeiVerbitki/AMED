@@ -69,7 +69,7 @@ export class RegCerereComponent implements OnInit, OnDestroy {
             'requestNumber': {value: null, disabled: true},
             'startDate': {value: new Date(), disabled: true},
             'currentStep': ['R'],
-            'company': [{value: null, disabled: false}, Validators.required],
+            'company': [{value: null, disabled: false}],
             'regSubject': ['', Validators.required],
 
             'registrationRequestMandatedContacts': this.fb.group({
@@ -79,7 +79,8 @@ export class RegCerereComponent implements OnInit, OnDestroy {
                 'phoneNumber': [null],
                 'email': [null, Validators.email],
                 'requestMandateNr': [null],
-                'requestMandateDate': [null]
+                'requestMandateDate': [null],
+                'companySolicitant': [null]
             }),
 
             'initiator': [null],
@@ -115,11 +116,11 @@ export class RegCerereComponent implements OnInit, OnDestroy {
 
     checkIndividual($event) {
         if ($event.checked) {
-            this.registerClinicalTrailForm.get('company').reset();
-            this.registerClinicalTrailForm.get('company').disable();
+            this.registerClinicalTrailForm.get('registrationRequestMandatedContacts.companySolicitant').reset();
+            this.registerClinicalTrailForm.get('registrationRequestMandatedContacts.companySolicitant').disable();
             this.enabledAddEcButton = false;
         } else {
-            this.registerClinicalTrailForm.get('company').enable();
+            this.registerClinicalTrailForm.get('registrationRequestMandatedContacts.companySolicitant').enable();
             this.enabledAddEcButton = true;
         }
     }

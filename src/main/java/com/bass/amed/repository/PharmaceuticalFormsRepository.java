@@ -11,4 +11,6 @@ public interface PharmaceuticalFormsRepository  extends JpaRepository<NmPharmace
     List<NmPharmaceuticalFormsEntity> findByType(NmPharmaceuticalFormTypesEntity type);
 
     List<NmPharmaceuticalFormsEntity> findByDescriptionStartingWithIgnoreCase(String partialDescr);
+
+    List<NmPharmaceuticalFormsEntity> findAllByOrderByDescriptionAsc();
 }

@@ -34,10 +34,10 @@ import {SelectInspectionDateForAfComponent} from '../../dialog/select-inspection
         PaymentModule
     ],
     schemas: [],
-    declarations: [QualifiedPersonDialogComponent, SearchMedicamentsDialogComponent,SelectInspectionDateForAfComponent,LaboratorDialogComponent, RegCerereGmpComponent, EvaluarePrimaraGmpComponent,
-        ProcessInterruptionComponent, AddDescriptionComponent],
+    declarations: [QualifiedPersonDialogComponent, SearchMedicamentsDialogComponent, SelectInspectionDateForAfComponent, LaboratorDialogComponent,
+        RegCerereGmpComponent, EvaluarePrimaraGmpComponent, ProcessInterruptionComponent, AddDescriptionComponent],
     entryComponents: [AddDescriptionComponent, LaboratorDialogComponent, QualifiedPersonDialogComponent,
-        SearchMedicamentsDialogComponent,SelectInspectionDateForAfComponent],
+        SearchMedicamentsDialogComponent, SelectInspectionDateForAfComponent],
     providers: [UploadFileService, RequestService, CanDeactivateGuard, LicenseService]
 })
 export class GMPModule {

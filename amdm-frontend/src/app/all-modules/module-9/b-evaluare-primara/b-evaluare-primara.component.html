@@ -18,18 +18,26 @@
                     </label>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="md-form" *ngIf="f.value.company">
-                    <input id="company" mdbInputDirective type="text" class="form-control"
-                           value={{f.value.company.name}} [attr.disabled]="true">
-                    <label for="company">Compania solicitant
-                    </label>
+            <div class="col-md-3">
+                <div class="md-form-modified">
+                    <ng-select [items]="companii | async"
+                               bindLabel="name"
+                               placeholder="Beneficiar"
+                               formControlName="company"
+                               [loading]="loadingCompany"
+                               [typeahead]="companyInputs"
+                               required="true">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}} <br/>
+                            <small class="form-text text-muted">{{item.idno}}</small>
+                        </ng-template>
+                    </ng-select>
                 </div>
-                <div class="md-form" *ngIf="!f.value.company">
-                    <input id="person" mdbInputDirective type="text" class="form-control"
-                           value={{mandatedContactName}} [attr.disabled]="true">
-                    <label for="person">Persoana fizica
-                    </label>
+            </div>
+            <div class="col-md-1" *ngIf="!isAnalizePage">
+                <div class="md-form">
+                    <button type="button" class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou"
+                            (click)="newAgent()"><i class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -98,7 +106,8 @@
                         </div>
                         <div class="col-6">
                             <div class="text-right fap text-white">
-                                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect
+                                <button type="button" class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl"
+                                        mdbWavesEffect
                                         (click)="requestAdditionalData()">Solicitare date aditionale
                                 </button>
                             </div>
@@ -129,7 +138,8 @@
                             </mat-checkbox>
                         </th>
                         <td>
-                            <button type="button" class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc(doc)">
+                            <button type="button" class="btn btn-default btn-sm waves-light" mdbWavesEffect
+                                    (click)="viewDoc(doc)">
                                 Vizualizare
                             </button>
                             <button type="button" class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect
@@ -140,7 +150,9 @@
                     </tr>
                     </tbody>
                 </table>
-                <div *ngIf="outDocuments.length === 0" class="text-center text-muted mt-3">Nu sunt inregistrari gasite!</div>
+                <div *ngIf="outDocuments.length === 0" class="text-center text-muted mt-3">Nu sunt inregistrari
+                    gasite!
+                </div>
             </div>
             <hr>
         </div>

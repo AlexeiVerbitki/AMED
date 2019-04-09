@@ -105,4 +105,8 @@ public class NmEconomicAgentsEntity {
         @JoinColumn(name = "economic_agent_id")}, inverseJoinColumns = {
         @JoinColumn(name = "bank_account_id")})
     private Set<NmBankAccountsEntity> bankAccounts = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH})
+    @JoinColumn(name = "country_id")
+    private NmCountriesEntity country;
 }

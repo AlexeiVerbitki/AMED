@@ -29,8 +29,8 @@ public class HomepageService {
                     " RREQ.critical AS critical, " +
                     " RREQ.reg_subject AS regSubject " +
                     " FROM registration_requests RREQ " +
-                    " LEFT JOIN nm_economic_agents COMP on COMP.id=RREQ.company_id " +
                     " LEFT JOIN registration_request_mandated_contact MANCONT on MANCONT.registration_request_id=RREQ.id " +
+                    " LEFT JOIN nm_economic_agents COMP on COMP.id=MANCONT.company_solicitant_id " +
                     " LEFT JOIN registration_request_steps STEP on (STEP.request_type_id=RREQ.type_id and STEP.code=RREQ.current_step) " +
                     " WHERE RREQ.current_step<>'F' " +
                     " AND RREQ.current_step<>'C' " +

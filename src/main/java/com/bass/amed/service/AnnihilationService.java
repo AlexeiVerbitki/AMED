@@ -168,7 +168,6 @@ public class AnnihilationService
             throw new CustomException("Nimicirea nu a fost gasita");
         }
 
-        mdOpt.get().setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(mdOpt.get().getIdno()).get().getLongName());
 
         mdOpt.get().getMedicamentsMedicamentAnnihilationMeds().forEach(ma ->
         {

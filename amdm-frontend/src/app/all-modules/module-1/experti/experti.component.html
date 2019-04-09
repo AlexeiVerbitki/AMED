@@ -35,7 +35,7 @@
 			</div>
 		</div>
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -115,7 +115,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 					<tr>
@@ -165,7 +165,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 					<tr>
@@ -203,7 +203,7 @@
 		</div>
 
 		<!-- Tabela substante auxiliare -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -328,7 +328,7 @@
 
 		</div>
 
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 		<table class="table table-widths text-center">
 			<thead class="bg-sidebar white-text">
 				<tr>
@@ -386,7 +386,7 @@
 			</div>
 
 			<!-- Card content -->
-			<div class="card-body card-body-cascade">
+			<div class="card-body card-body-cascade table-height">
 				<table class="table table-widths text-center">
 					<thead class="bg-sidebar white-text">
 					<tr>
@@ -431,7 +431,7 @@
 			</div>
 		</div>
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 		<table class="table table-widths-lg text-center">
 			<thead class="bg-sidebar white-text">
 				<tr>
@@ -443,7 +443,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let a of outputDocuments">
+				<tr *ngFor="let a of outputDocuments; let i = index">
 					<th scope="row">{{ a.name }}</th>
 					<th scope="row">{{ a.number }}</th>
 					<th scope="row">{{ a.status }}</th>
@@ -455,7 +455,7 @@
 					<td>
 						<button  *ngIf="a.docType.category!='LAB'" class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
 						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL' && modelToSubmit && !modelToSubmit.ddIncluded) ||( a.docType.category=='LAB' && !a.number)"
-						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(i, a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 					</td>
 				</tr>
 			</tbody>

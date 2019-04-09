@@ -44,12 +44,6 @@ export class MedicamentsOmComponent implements OnInit, AfterViewInit {
             return;
         }
 
-        this.loadOAsMethod();
-        if (this.oas.find(t => t.attached != 1)) {
-            this.errorHandlerService.showError('Exista ordine care nu au fost semnate.');
-            return;
-        }
-
         this.loadingService.show();
         let observable: Observable<any> = null;
         const y: any[] = [];

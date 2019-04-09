@@ -172,7 +172,7 @@ public class MedAnnihilationController
             List<ActDeReceptieDTO> dataList = new ArrayList();
             ActDeReceptieDTO       obj      = new ActDeReceptieDTO();
             obj.setNr(request.getRequestNumber());
-            obj.setCompanyName(economicAgentsRepository.findFirstByIdnoEquals(request.getMedicamentAnnihilation().getIdno()).get().getLongName());
+            obj.setCompanyName(request.getCompany().getLongName());
             obj.setDate(new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getStartDate()));
             obj.setAmedRepresentant(sysParamsRepository.findByCode(Constants.SysParams.NIMICIRE_DIRECTOR_SERVICE).get().getValue());
             obj.setRepresentatntName(request.getMedicamentAnnihilation().getFirstname() + ", " + request.getMedicamentAnnihilation().getLastname());
@@ -287,7 +287,7 @@ public class MedAnnihilationController
                                 p.setSeria(m.getSeria());
                                 p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                                 p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
-                                p.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                                p.setCompanyName(request.getCompany().getName());
                                 p.setFutilityCause(m.getUselessReason());
                                 p.setPrimaryPackage(m.getPrimaryPackage());
 
@@ -304,7 +304,7 @@ public class MedAnnihilationController
                             p.setSeria(m.getSeria());
                             p.setQuantity(String.valueOf(m.getQuantity()) + " " + String.valueOf(m.getUnitsOfMeasurement() != null ? m.getUnitsOfMeasurement().getDescription() : ""));
                             p.setMethodAnnihilation(m.getDestructionMethod().getDescription());
-                            p.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                            p.setCompanyName(request.getCompany().getName());
                             p.setFutilityCause(m.getUselessReason());
                             p.setPrimaryPackage(m.getPrimaryPackage());
 
@@ -340,8 +340,8 @@ public class MedAnnihilationController
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("nr", request.getRequestNumber());
             parameters.put("date", new SimpleDateFormat(Constants.Layouts.DATE_FORMAT).format(request.getStartDate()));
-            parameters.put("companyName", request.getMedicamentAnnihilation().getCompanyName());
-            parameters.put("amedRepresentant", request.getMedicamentAnnihilation().getCompanyName());
+            parameters.put("companyName", request.getCompany().getName());
+            parameters.put("amedRepresentant", request.getCompany().getName());
 
             if (president != null)
             {
@@ -386,7 +386,7 @@ public class MedAnnihilationController
                         if (med.isPresent())
                         {
                             ListaMedicamentelorPentruComisie l = new ListaMedicamentelorPentruComisie();
-                            l.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                            l.setCompanyName(request.getCompany().getName());
                             l.setAnihilationMethod(m.getDestructionMethod().getDescription());
                             l.setFutilityCause(m.getUselessReason());
                             l.setMedicamentName(med.get().getCommercialName());

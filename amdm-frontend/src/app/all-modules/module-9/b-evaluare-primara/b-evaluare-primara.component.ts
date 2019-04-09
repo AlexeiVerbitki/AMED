@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subscription} from 'rxjs/index';
+import {Observable, Subject, Subscription} from 'rxjs/index';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -18,6 +18,8 @@ import {DocumentService} from '../../../shared/service/document.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {CtMedType} from '../../../shared/enum/ct-med-type.enum';
 import {AddCtMedicamentComponent} from '../dialog/add-ct-medicament/add-ct-medicament.component';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-b-evaluare-primara',
@@ -58,6 +60,10 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     mandatedContactName: string;
     private amendmentIndex = -1;
+
+    companii: Observable<any[]>;
+    loadingCompany = false;
+    companyInputs = new Subject<string>();
 
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
@@ -130,6 +136,44 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.loadClinicalTrialTypes();
         this.loadPhasesList();
+        this.loadEconomicAgents();
+    }
+
+    loadEconomicAgents() {
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {},
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
     }
 
     loadClinicalTrialTypes() {
@@ -258,6 +302,7 @@ export class BEvaluarePrimaraComponent implements OnInit, OnDestroy {
                         this.clinicTrailAmendForm.get('startDate').setValue(new Date(data.startDate));
                         if (data.company) {
                             this.clinicTrailAmendForm.get('company').setValue(data.company);
+                            this.isAnalizePage ? this.clinicTrailAmendForm.get('company').disable() : this.clinicTrailAmendForm.get('company').enable();
                         } else {
                             this.mandatedContactName = data.registrationRequestMandatedContacts[0].mandatedFirstname.concat(' ')
                                 .concat(data.registrationRequestMandatedContacts[0].mandatedLastname);

@@ -23,6 +23,7 @@ import {AddManufactureComponent} from '../../../dialog/add-manufacture/add-manuf
 import {AddDivisionComponent} from '../../../dialog/add-division/add-division.component';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {saveAs} from 'file-saver';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-evaluare-primara',
@@ -71,6 +72,9 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
     loadingManufactureAsync = false;
     manufacturesAuthorizationsInputsAsync = new Subject<string>();
     medicamentHystory: any[] = [];
+    companii: Observable<any[]>;
+    loadingCompany = false;
+    companyInputs = new Subject<string>();
 
     constructor(public dialog: MatDialog,
                 private fb: FormBuilder,
@@ -92,9 +96,9 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [],
+            'regSubject': [null],
             'currentStep': ['X'],
             'documents': [],
-            'companyValue': [],
             'initiator': [null],
             'assignedUser': [null],
             'standard': [null],
@@ -127,7 +131,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                     'group': [null, Validators.required],
                     'medTypesValues': []
                 }),
-            'company': [''],
+            'company': [null, Validators.required],
             'recetaType': [''],
             'medicamentGroup': [''],
             'type': [],
@@ -174,6 +178,25 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 );
             })
         );
+
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) { return true; }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
     }
 
     clearAllDetails() {
@@ -265,10 +288,10 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
         this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
         this.eForm.get('initiator').setValue(data.initiator);
         this.eForm.get('startDate').setValue(data.startDate);
+        this.eForm.get('regSubject').setValue(data.regSubject);
         this.eForm.get('requestNumber').setValue(data.requestNumber);
         this.eForm.get('requestHistories').setValue(data.requestHistories);
         this.eForm.get('company').setValue(data.company);
-        this.eForm.get('companyValue').setValue(data.company.name);
         this.standarts = data.laboratorReferenceStandards;
     }
 
@@ -432,6 +455,8 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 }
             }
         }
+
+        this.outDocuments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
 
     loadAllQuickSearches(dataDB: any) {
@@ -674,7 +699,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             }
         }
 
-        if (this.divisions.length == 0 || this.activeSubstancesTable.length == 0 || this.manufacturesTable.length == 0
+        if (this.divisions.length == 0 || this.manufacturesTable.length == 0
             || this.paymentTotal < 0) {
             isFormInvalid = true;
         }
@@ -903,7 +928,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = true;
 
-        if (this.eForm.invalid) {
+        if (this.eForm.invalid && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
@@ -939,14 +964,25 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
             isFormInvalid = true;
         }
 
-        if (isFormInvalid) {
+        if (isFormInvalid && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
 
         this.formSubmitted = false;
 
-        const lenOutDoc = this.outDocuments.filter(r => r.docType.category === 'SL').length;
+        let magicNumber = '';
+        for (const outDoc of this.outDocuments) {
+            if (magicNumber < outDoc.number) {
+                magicNumber = outDoc.number;
+            }
+        }
+        const magicNumbers = magicNumber.split('-');
+
+        let nrOrdDoc = 1;
+        if (magicNumbers && magicNumbers.length > 2) {
+            nrOrdDoc = Number(magicNumbers[3]) + 1;
+        }
 
         let x = this.eForm.get('medicament.commercialName').value + ', ' + this.eForm.get('medicament.pharmaceuticalForm').value.description
             + ' ' + this.eForm.get('medicament.dose').value;
@@ -962,7 +998,7 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
                 requestId: this.eForm.get('id').value,
                 modalType: 'REQUEST_ADDITIONAL_DATA',
                 startDate: this.eForm.get('data').value,
-                nrOrdDoc: lenOutDoc + 1,
+                nrOrdDoc: nrOrdDoc,
                 medicamentStr: x,
                 companyName: this.eForm.get('company').value.name,
                 address: this.eForm.get('company').value.legalAddress,
@@ -988,7 +1024,8 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = true;
 
-        if (this.eForm.invalid || this.divisions.length == 0 || this.activeSubstancesTable.length == 0 || this.manufacturesTable.length == 0) {
+        if ((this.eForm.invalid || this.divisions.length == 0 || this.manufacturesTable.length == 0)
+            && this.eForm.get('type').value.code != 'MERG' && this.eForm.get('type').value.code != 'MERS') {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
@@ -1573,6 +1610,22 @@ export class EvaluarePrimaraComponent implements OnInit, OnDestroy {
 
     removeStandard(index) {
         this.standarts.splice(index, 1);
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'custom-dialog-container',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
     }
 }
 

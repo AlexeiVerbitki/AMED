@@ -26,42 +26,63 @@
 			</div>
 		</div>
 
-		<div class="row" formGroupName="company">
+		<div class="row">
 
-			<div class="col-md-5">
-				<div class="md-form">
-					<input id="compName" mdbInputDirective type="text" class="form-control"
-					       formControlName="name" [attr.disabled]="true">
-					<label for="compName">Compania solicitantă</label>
+			<div class="col-md-4">
+				<div class="md-form-modified-select">
+					<ng-select class="custom" [items]="companii | async"
+					           bindLabel="name"
+					           placeholder="Compania beneficiara"
+					           formControlName="benefCompany"
+					           [required]="true"
+					           (change)="companySelected($event)"
+					           [loading]="loadingCompany"
+					           [typeahead]="companyInputs">
+						<ng-template ng-option-tmp let-item="item">
+							{{item.name}} <br/>
+							<small class="form-text text-muted">{{item.idno}}</small>
+						</ng-template>
+					</ng-select>
+				</div>
+				<div *ngIf="formSubmitted && rForm.get('benefCompany').invalid">
+					<small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
+					</small>
 				</div>
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-1">
+				<div class="md-form">
+					<button class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou" (click)="newAgent()"><i
+							class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
+				</div>
+			</div>
+
+			<div class="col-md-2" formGroupName="company">
 				<div class="md-form">
 					<input id="idno" mdbInputDirective type="text" class="form-control" formControlName="idno">
 					<label for="idno">IDNO</label>
 				</div>
 			</div>
 
-			<div class="col-md-5">
+			<div class="col-md-5" formGroupName="company">
 				<div class="md-form">
 					<input id="adresa" mdbInputDirective type="text" class="form-control" formControlName="adresa">
 					<label for="adresa">Adresa</label>
 				</div>
 			</div>
 
-			<div class="col-md-3">
+			<div class="col-md-3" formGroupName="company">
 				<div class="md-form">
 					<input id="seria" mdbInputDirective type="text" class="form-control" formControlName="seria">
 					<label for="seria">Seria Licentei</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-3" formGroupName="company">
 				<div class="md-form">
 					<input id="nrLic" mdbInputDirective type="text" class="form-control" formControlName="nrLic">
 					<label for="nrLic">Numarul licentei</label>
 				</div>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-3" formGroupName="company">
 				<div class="md-form-modified">
 					<mat-form-field class="w-100">
 						<input id="dataEliberariiLic" matInput [matDatepicker]="picker9"
@@ -73,7 +94,7 @@
 			</div>
 
 			<div class="col-md-3">
-				<div class="md-form-modified">
+				<div class="md-form-modified" formGroupName="company">
 					<mat-form-field class="w-100">
 						<input id="dataExpirariiLic" matInput [matDatepicker]="picker3"
 						       placeholder="Data expirarii licentei" formControlName="dataExpirariiLic">

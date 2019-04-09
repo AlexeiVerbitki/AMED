@@ -42,7 +42,7 @@
 			</div>
 		</div>
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -107,7 +107,54 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-md-2">
+				<div class="md-form">
+					<mat-checkbox #transferCertificate [checked]="expertForm.get('medicament.transferCertificate').value" (change)="checkTransferCertificate(transferCertificate)">
+						Transfer certificat de înregistrare</mat-checkbox>
+				</div>
+			</div>
 		</div>
+		<div class="gradient-card-header bg-sidebar border-gradient">
+			<div class="container-fluid">
+				<!-- Title -->
+				<div class="row">
+					<div class="col-6">
+						<div class="card-header-title white-text">Variatii</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Card content -->
+		<div class="card-body card-body-cascade table-height">
+			<table class="table table-widths text-center">
+				<thead class="bg-sidebar white-text">
+				<tr>
+					<th scope="col">Nr.</th>
+					<th scope="col">Cod</th>
+					<th scope="col">Valoare</th>
+					<th scope="col">Cantitate</th>
+					<th scope="col">Comentariu</th>
+					<th scope="col">Actiuni</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let variation of variations;let i = index">
+					<td>{{ i + 1 }}</td>
+					<td>{{ variation.code }}</td>
+					<td>{{ variation.value }}</td>
+					<td>{{ variation.quantity }}</td>
+					<td>{{ variation.comment }}</td>
+					<td>
+						<button type="button" class="btn btn-mdb-color btn-sm waves-light"
+								(click)="editVariation(variation,i)" mdbWavesEffect><i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+						</button>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<div *ngIf="variations.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -117,14 +164,15 @@
 					</div>
 					<div class="col-6">
 						<div class="text-right fap text-white">
-							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addToAuthorizationOrder()" [disabled]="omAttached">Include in ordinul de aprobare</button>
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="addToAuthorizationOrder()" [disabled]="omAttached || omIncluded">Include in ordinul de aprobare</button>
+							<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="removeFromAuthorizationOrder()" [disabled]="omAttached || !omIncluded">Extrage din ordinul de aprobare</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -176,7 +224,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -217,7 +265,7 @@
 		</div>
 
 		<!-- Tabela substante auxiliare -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -354,7 +402,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -384,6 +432,61 @@
 		<hr>
 		<app-instruction (removeInstr)="removeInstr($event)" (addInstr)="addInstr($event)" [divisions]="divisions" [nrCerere]="expertForm.get('requestNumber').value" [modify]="true" [instructions]="instructions"></app-instruction>
 		<app-macheta (removeMaket)="removeMacheta($event)" (addMaket)="addMacheta($event)" [divisions]="divisions" [nrCerere]="expertForm.get('requestNumber').value" [modify]="true" [machets]="machets"></app-macheta>
+		<div class="row" >
+			<div class="col-12">
+				<div class="md-form">
+					<input id="standard" mdbInputDirective type="text" class="form-control" formControlName="standard">
+					<label for="standard">Standart de referinta</label>
+				</div>
+				<div *ngIf="formSubmitted && expertForm.get('standard').invalid">
+					<small class="text-muted"><strong class="text-danger">Standartul de referinta trebuie introdus</strong></small>
+				</div>
+			</div>
+		</div>
+		<div class="md-form-modified">
+			<div class="gradient-card-header bg-sidebar border-gradient">
+				<div class="container-fluid">
+					<!-- Title -->
+					<div class="row">
+						<div class="col-9">
+							<div class="card-header-title white-text">Standarte de referinta</div>
+						</div>
+						<div class="col-3">
+							<div class="text-right fap text-white">
+								<i (click)="addStandard()" class="fa fa-plus-circle fa-lg fa-mt" aria-hidden="true"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Card content -->
+			<div class="card-body card-body-cascade table-height">
+				<table class="table table-widths text-center">
+					<thead class="bg-sidebar white-text">
+					<tr>
+						<th scope="col">Nr.</th>
+						<th scope="col">Denumire</th>
+						<th scope="col">Actiuni</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr *ngFor="let standard of standarts;let i = index">
+						<td>{{ i + 1 }}</td>
+						<td>{{ standard.description }}</td>
+						<td class="align-middle">
+							<a role="button" class="text-danger" (click)="removeStandard(i)">
+								<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+							</a>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div *ngIf="standarts.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
+		</div>
+		<hr>
 		<div class="gradient-card-header bg-sidebar border-gradient">
 			<div class="container-fluid">
 				<!-- Title -->
@@ -405,7 +508,7 @@
 			</div>
 		</div>
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths-lg text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -417,7 +520,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<tr *ngFor="let a of outputDocuments">
+				<tr *ngFor="let a of outputDocuments; let i = index">
 					<th scope="row">{{ a.name }}</th>
 					<th scope="row">{{ a.number }}</th>
 					<th scope="row">{{ a.status }}</th>
@@ -429,18 +532,15 @@
 					<td>
 						<button  *ngIf="a.docType.category!='LAB'" class="btn btn-mdb-color btn-sm waves-light" mdbWavesEffect (click)="viewDoc(a)"><i class="fa fa-file fa-lg" aria-hidden="true"></i></button>
 						<button *ngIf="(a.status=='Nu este atasat' && a.responseReceived==false && a.docType.category=='SL' && modelToSubmit && !modelToSubmit.ddIncluded) ||( a.docType.category=='LAB' && !a.number)"
-						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
+						        class="btn btn-dark-red-color btn-sm waves-light" mdbWavesEffect (click)="remove(i, a)"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></button>
 					</td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
-		<!--<div *ngIf="formSubmitted && isNonAttachedDocuments">-->
-		<!--<small class="text-muted"><strong class="text-danger">Exista documente care nu au fost atasate</strong></small>-->
-		<!--</div>-->
 		<hr>
 		<div class="text-center">
-			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save()">Salvare date</button>
+			<button class="btn btn-dark-green-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="save(true)">Salvare date</button>
 			<button [disabled]="omAttached" class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="back()">Inapoi</button>
 			<button class="btn btn-mdb-color waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="success()">Finisare</button>
 			<button class="btn btn-danger waves-light btn-sm btn-sm-bl" mdbWavesEffect (click)="interruptProcess()">Intrerupere</button>

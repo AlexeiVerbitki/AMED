@@ -86,3 +86,9 @@ mat-header-cell {
     margin-bottom : 0em !important;
 }
 
+.table-height {
+    max-height : 250px;
+    width: 100%;
+    overflow: auto;
+}
+

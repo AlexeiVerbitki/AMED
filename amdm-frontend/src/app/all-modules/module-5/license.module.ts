@@ -16,7 +16,7 @@ import {LicenseDecisionDialogComponent} from '../../dialog/license-decision-dial
 import {MatDialogModule} from '@angular/material';
 import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 import {ViewCompletedLicenseComponent} from './view-completed-license/view-completed-license.component';
-import {AddLicenseFarmacistModule} from "../../dialog/add-license-farmacist/add-license-farmacist.module";
+import {AddLicenseFarmacistModule} from '../../dialog/add-license-farmacist/add-license-farmacist.module';
 
 @NgModule({
     imports: [

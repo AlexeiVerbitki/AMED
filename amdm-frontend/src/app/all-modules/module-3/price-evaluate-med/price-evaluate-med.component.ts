@@ -13,6 +13,7 @@ import {PriceEditModalComponent} from '../modal/price-edit-modal/price-edit-moda
 import {Decision, PriceReferenceType} from '../price-constants';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import {TableFilterPipe} from '../../../shared/pipe/table-filter.pipe';
 
 @Component({
     selector: 'app-price-evaluate-med', templateUrl: './price-evaluate-med.component.html', styleUrls: ['./price-evaluate-med.component.css'], providers: [PriceService]
@@ -29,8 +30,9 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     prevPrices: any[] = [];
     prevYearsImportPrices: any[] = [];
     relatedMeds: any[] = [];
-    avgRelatedMeds = 0;
+    avgRelatedMeds: any = {};
     minRefPrices: any[] = [];
+    pharmaceuticalPhorms: any[] = [];
     dciAndOriginAvgs: any[] = [];
     minOtherCountriesCatPrices: any[] = [];
     priceTypes: any[];
@@ -67,7 +69,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 folderNr: [null],
                 nationalPrice: [null],
                 type: [null],
-                nmPriceId: [null]
+                nmPriceId: [null],
+                mdlValue: [null, Validators.required]
             }),
             'evaluation': fb.group({
                 'expirationDate': [{value: null, disabled: true}, Validators.required],
@@ -106,6 +109,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             }),
             'type': [],
             'typeValue': {disabled: true, value: null},
+            'selectedPharnaceuticalForms': [],
             'requestHistories': [],
         });
     }
@@ -149,11 +153,35 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         });
     }
 
+    getAllPharmaceuticalForms() {
+        this.subscriptions.push(this.priceService.getAllPharamceuticalForms().subscribe(forms => {
+            this.pharmaceuticalPhorms = forms;
+        }));
+    }
+
+    updatePricesAfterXchange() {
+        this.medicaments.forEach(m => {
+            if(m.price.currency.shortDescription == 'MDL') {
+                return;
+            } else {
+                this.avgCurrencies.forEach(cur => {
+                    if (m.price.currency.id == cur.currency.id) {
+                        m.price.mdlValue = cur.value * m.price.value;
+                        let askedPrice = cur.value * m.price.askedPriceMdl;
+                        m.price.askedPriceMdl = askedPrice ? askedPrice : m.price.mdlValue;
+                        return;
+                    }
+                });
+            }
+        });
+    }
+
     ngOnInit() {
         this.navbarTitleService.showTitleMsg('Evaluarea cererii de inregistrare a pretului la medicamente');
 
         this.getDocumentsTypes();
         this.getAllPricesTypes();
+        this.getAllPharmaceuticalForms();
 
         this.subscriptions.push(this.activatedRoute.params.subscribe(params => {
             this.subscriptions.push(this.priceService.getPricesRequest(params['id']).subscribe(data => {
@@ -179,7 +207,13 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     if (data.price.medicament.internationalMedicamentName) {
                         this.getRelatedDCIMedicamentsPrices(data.price.medicament.internationalMedicamentName.id, data.price.id);
                     }
-                    data.price.medicament.price = {mdlValue: data.price.mdlValue, totalQuantity: data.price.totalQuantity, value: data.price.value, currency: data.price.currency};
+                    data.price.medicament.price = {
+                        mdlValue: data.price.mdlValue,
+                        askedPriceMdl: data.price.askedPriceMdl ? data.price.askedPriceMdl: data.price.mdlValue,
+                        totalQuantity: data.price.totalQuantity,
+                        value: data.price.value,
+                        currency: data.price.currency
+                    };
                     data.price.medicament.target = 'Medicamentul cu prețul solicitat';
                     data.price.medicament.rowType = 1;
                     this.medicaments.push(data.price.medicament);
@@ -213,6 +247,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                     this.PriceRegForm.get('price.currency').setValue(data.price.currency);
                     this.PriceRegForm.get('price.folderNr').setValue(data.price.folderNr);
                     this.PriceRegForm.get('price.type').setValue(data.price.type);
+                    this.PriceRegForm.get('price.mdlValue').setValue(+this.initialData.price.mdlValue);
                     const acceptType = this.priceTypes.find(type => type.description == 'Acceptat');
                     if (data.price.type.id == acceptType.id) {
                         this.PriceRegForm.get('evaluation.decision').setValue(this.decisions[0]);
@@ -280,6 +315,11 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 }
             }, error1 => console.log('getPricesRequest', error1)));
         }));
+
+        this.subscriptions.push(this.PriceRegForm.get('selectedPharnaceuticalForms').valueChanges.subscribe(value => {
+            this.calculateAvgRelatedMeds();
+            this.calculateAVGOriginAndDci();
+        }));
     }
 
     updateCurrentMedPrice() {
@@ -321,11 +361,26 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     }
 
     calculateAvgRelatedMeds() {
-        this.avgRelatedMeds = 0;
-        this.relatedMeds.forEach(m => this.avgRelatedMeds += m.mdlValue ? m.mdlValue : 0);
+        var filteredMeds = this.getFilteredAVGRelatedMeds();
+        let avgMDL = 0;
+        filteredMeds.forEach(m => {
+            avgMDL += m.mdlValue ? m.mdlValue : 0
+        });
         if (this.relatedMeds.length > 0) {
-            this.avgRelatedMeds /= this.relatedMeds.length;
+            avgMDL /= filteredMeds.length;
+            let avgUSD = this.nationalToCurrency(avgMDL, 'USD');
+            let avgEUR = this.nationalToCurrency(avgMDL, 'EUR');
+            this.avgRelatedMeds = {
+                avgMDL: avgMDL,
+                avgUSD: avgUSD,
+                avgEUR: avgEUR
+            }
         }
+    }
+
+    getFilteredAVGRelatedMeds() {
+        let filter = new TableFilterPipe();
+        return filter.transform(this.relatedMeds, 'pharmaceuticalFormId', this.PriceRegForm.get('selectedPharnaceuticalForms').value);
     }
 
     getRelatedDCIMedicamentsPrices(internationalNameId: string, id: number) {
@@ -355,17 +410,48 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             }
         });
         if (originPriceCount > 0) {
-            this.dciAndOriginAvgs.push({source: 'Media în țara de origine', avg: avgOriginCountry / originPriceCount});
+            let avgMDL = avgOriginCountry / originPriceCount;
+            let avgUSD = this.nationalToCurrency(avgMDL, 'USD');
+            let avgEUR = this.nationalToCurrency(avgMDL, 'EUR');
+            this.dciAndOriginAvgs.push({
+                source: 'Media în țara de origine',
+                avgMDL: avgMDL,
+                avgUSD: avgUSD,
+                avgEUR: avgEUR
+            });
         }
 
         if (this.avgRelatedMeds) {
-            this.dciAndOriginAvgs.push({source: 'Media DCI', avg: this.avgRelatedMeds});
+
+            this.dciAndOriginAvgs.push({
+                source: 'Media DCI',
+                avgMDL: this.avgRelatedMeds.avgMDL,
+                avgUSD: this.avgRelatedMeds.avgUSD,
+                avgEUR: this.avgRelatedMeds.avgEUR,
+            });
         }
 
-        let avg = 0;
-        this.dciAndOriginAvgs.forEach(v => avg += v.avg);
-        avg /= this.dciAndOriginAvgs.length;
-        this.dciAndOriginAvgs.push({source: 'Media', avg: avg});
+        let avgMDL = 0, avgLength = this.dciAndOriginAvgs.length;
+        let avgEUR = 0;
+        let avgUSD = 0;
+        this.dciAndOriginAvgs.forEach(v => {
+            if(!v.avgMDL) {
+                avgLength--;
+            }
+            avgMDL += (v.avgMDL ? v.avgMDL : 0);
+            avgEUR += (v.avgEUR ? v.avgEUR : 0);
+            avgUSD += (v.avgUSD ? v.avgUSD : 0);
+        });
+        avgMDL /= avgLength;
+        avgEUR /= avgLength;
+        avgUSD /= avgLength;
+        this.dciAndOriginAvgs.push({source: 'Media', avgMDL: avgMDL, avgEUR: avgEUR, avgUSD: avgUSD});
+    }
+
+
+    nationalToCurrency(amount: number, requiredCurrency: string) {
+        let cur = this.avgCurrencies.find(c => c.currency.shortDescription == requiredCurrency);
+        return amount / cur.value;
     }
 
     convertToNationalCurrencyPrice() {
@@ -387,7 +473,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
     }
 
     currentMedPriceChanged(i: number, newMdlPrice: string) {
-        this.medicaments[i].price.mdlValue = +newMdlPrice;
+        this.medicaments[i].price.askedPriceMdl = +newMdlPrice;
+        this.PriceRegForm.get('price.mdlValue').setValue(+newMdlPrice);
 
         const avgCur = this.avgCurrencies.find(cur => cur.currency.code == this.medicaments[i].price.currency.code);
         this.medicaments[i].price.value = (+newMdlPrice / avgCur.value);
@@ -395,6 +482,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
 
     currencyChanged($event) {
         this.avgCurrencies = $event;
+        this.updatePricesAfterXchange();
         this.convertToNationalCurrencyPrice();
         this.processReferencePrices(this.refPrices);
         this.updateCurrentMedPrice();
@@ -603,7 +691,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         });
 
         const similarRegisteredMedicaments: any[] = [];
-        this.relatedMeds.forEach(p => {
+        this.getFilteredAVGRelatedMeds().forEach(p => {
             similarRegisteredMedicaments.push({
                 medicamentInfo: {
                     medicineCode: p.code, commercialName: p.name, pharmaceuticalForm: p.pharmaceuticalForm, dose: p.dose, division: p.division
@@ -612,9 +700,14 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
             });
         });
 
-        const sourceAveragePrices = new Map<string, number>();
+        const sourceAveragePrices: any[] = [];
         this.dciAndOriginAvgs.forEach(p => {
-            sourceAveragePrices[p.source.toString()] = p.avg;
+            sourceAveragePrices.push({
+                source: p.source,
+                mdl: p.avgMDL,
+                eur: p.avgEUR,
+                usd: p.avgUSD
+            })
         });
 
         const previousYearsPrices = new Map<string, number>();
@@ -629,11 +722,17 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
                 priceMdl: currMed.price.mdlValue, priceCurrency: currMed.price.value, currency: currMed.price.currency.shortDescription,
             }], min1Mdl: this.minRefPrices[0] ? this.minRefPrices[0].xchRateRefVal : 0, min1Eur: this.minRefPrices[0] ? this.minRefPrices[0].xchRateEurVal : 0,
 
-            medicamentStatus: this.medicamentOriginalType ? 'Original' : 'Generic', medicamentOriginalPriceList: originalMeds,
-            averageRateEuro: averageRateEuro ? averageRateEuro.value : undefined, averageRateUsd: averageRateUsd ? averageRateUsd.value : undefined,
-            medicamentReferenceCountryPriceList: medicamentReferenceCountryPriceList, previousPriceRegistrations: previousPriceRegistrations,
-            originCountryMedicamentPriceList: originCountryMedicamentPriceList, minimalPricesAverages: minimalPricesAverages,
-            similarRegisteredMedicaments: similarRegisteredMedicaments, sourceAveragePrices: sourceAveragePrices, previousYearsPrices: previousYearsPrices,
+            medicamentStatus: this.medicamentOriginalType ? 'Original' : 'Generic',
+            medicamentOriginalPriceList: originalMeds,
+            averageRateEuro: averageRateEuro ? averageRateEuro.value : undefined,
+            averageRateUsd: averageRateUsd ? averageRateUsd.value : undefined,
+            medicamentReferenceCountryPriceList: medicamentReferenceCountryPriceList,
+            previousPriceRegistrations: previousPriceRegistrations,
+            originCountryMedicamentPriceList: originCountryMedicamentPriceList,
+            minimalPricesAverages: minimalPricesAverages,
+            similarRegisteredMedicaments: similarRegisteredMedicaments,
+            sourceAveragePrices: sourceAveragePrices,
+            previousYearsPrices: previousYearsPrices,
             expertName: this.priceService.getUsername(), creationFileDate: new Date(),
         };
 
@@ -678,7 +777,7 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         }
 
         const priceAcceptCondition: boolean = ((requestStatus == 'AF' || requestStatus == 'C') && uploadedEvaluationFile != undefined && !this.hasUnloadedDocs());
-        const canFinishEvaluate: boolean = this.medicaments[0].price.mdlValue > 0 && (decision.invalid || priceAcceptCondition);
+        const canFinishEvaluate: boolean = this.PriceRegForm.get('price.mdlValue').valid && (decision.invalid || priceAcceptCondition);
 
 
         if (!canFinishEvaluate) {
@@ -720,8 +819,8 @@ export class PriceEvaluateMedComponent implements OnInit, OnDestroy {
         // let orderNr = this.documents.find(d => d.docType.category == 'OP');
 
         priceModel.price = {
-            id: price.id, value: this.medicaments[0].price.value, type: acceptType, currency: price.currency, mdlValue: this.medicaments[0].price.mdlValue,
-            referencePrices: this.refPrices, medicament: {id: this.PriceRegForm.get('medicament.id').value},
+            id: price.id, value: this.medicaments[0].price.value, type: acceptType, currency: price.currency, mdlValue: this.PriceRegForm.get('price.mdlValue').value,
+            askedPriceMdl: this.medicaments[0].price.askedPriceMdl, referencePrices: this.refPrices, medicament: {id: this.PriceRegForm.get('medicament.id').value},
         };
 
 

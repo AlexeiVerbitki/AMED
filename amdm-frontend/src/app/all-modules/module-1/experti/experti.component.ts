@@ -64,6 +64,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [],
+            'regSubject': [null],
             'currentStep': ['F'],
             'medicamentName': [],
             'initiator': [''],
@@ -129,6 +130,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                         this.expertForm.get('id').setValue(data.id);
                         this.expertForm.get('initiator').setValue(data.initiator);
                         this.expertForm.get('startDate').setValue(data.startDate);
+                        this.expertForm.get('regSubject').setValue(data.regSubject);
                         this.expertForm.get('requestNumber').setValue(data.requestNumber);
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
@@ -340,7 +342,9 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             this.divisions.forEach(t => d + t.description + '; ');
             const a: any[] = [];
             this.activeSubstancesTable.forEach(t => a.push(t.activeSubstance.description + ' ' + t.quantity + ' ' + t.unitsOfMeasurement.description));
-            const b = this.manufacturesTable.find(t => t.producatorProdusFinit);
+            const manufacutresWithAddress = [];
+            this.manufacturesTable.filter(t => t.producatorProdusFinit).forEach(t => manufacutresWithAddress.push(t.manufacture.description + ', '
+                + t.manufacture.country.description));
             const o = this.documents.find(t => t.docType.category == 'OA');
 
             const m = {
@@ -351,14 +355,14 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                 activeSubstances: a,
                 authorizationHolder: this.expertForm.get('medicament.authorizationHolder').value,
                 authorizationHolderCountry: this.expertForm.get('medicament.authorizationHolderCountry').value,
-                manufacture: b.manufacture.description,
-                manufactureCountry: b.manufacture.country.description,
+                manufactureWithAddress: manufacutresWithAddress,
                 atcCode: this.expertForm.get('medicament.atcCode').value,
                 termsOfValidity: this.expertForm.get('medicament.termsOfValidity').value,
                 registrationNumber: this.expertForm.get('medicament.registrationNumber').value,
                 registrationDate: o.dateOfIssue,
                 orderNumber: o.number,
-                orderDate: o.dateOfIssue
+                orderDate: o.dateOfIssue,
+                isUnlimitedPeriod: this.expertForm.get('type').value.code == 'MERG' || this.expertForm.get('type').value.code == 'MERS'
             };
 
             this.subscriptions.push(this.documentService.viewMedicamentAuthorizationCertificate(m).subscribe(data => {
@@ -445,7 +449,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                 this.errorHandlerService.showError('Exista divizari fara informatii.');
                 return;
             }
-            if (this.expertForm.get('type').value.code != 'MERG' && this.expertForm.get('type').value.code != 'MERS' &&!findMachet) {
+            if (this.expertForm.get('type').value.code != 'MERG' && this.expertForm.get('type').value.code != 'MERS' && !findMachet) {
                 this.errorHandlerService.showError('Exista divizari fara machete.');
                 return;
             }
@@ -600,6 +604,8 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                 }
             }
         }
+
+        this.outputDocuments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
@@ -671,7 +677,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
     addToAuthorizationOrder() {
         this.formSubmitted = true;
 
-        if (this.expertForm.invalid) {
+        if (this.expertForm.invalid && this.expertForm.get('type').value.code != 'MERG' && this.expertForm.get('type').value.code != 'MERS') {
             this.errorHandlerService.showError('Exista cimpuri obligatorii necompletate.');
             return;
         }
@@ -971,7 +977,18 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const lenOutDoc = this.outputDocuments.filter(r => r.docType.category === 'SL').length;
+        let magicNumber = '';
+        for (const outDoc of this.outputDocuments) {
+            if (magicNumber < outDoc.number) {
+                magicNumber = outDoc.number;
+            }
+        }
+        const magicNumbers = magicNumber.split('-');
+
+        let nrOrdDoc = 1;
+        if (magicNumbers && magicNumbers.length > 2) {
+            nrOrdDoc = Number(magicNumbers[3]) + 1;
+        }
 
         let x = this.expertForm.get('medicament.commercialName').value + ', ' + this.expertForm.get('medicament.pharmaceuticalForm').value.description
             + ' ' + this.expertForm.get('medicament.dose').value;
@@ -998,7 +1015,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                 requestId: this.expertForm.get('id').value,
                 modalType: 'REQUEST_ADDITIONAL_DATA',
                 startDate: this.expertForm.get('data').value,
-                nrOrdDoc: lenOutDoc + 1,
+                nrOrdDoc: nrOrdDoc,
                 medicamentStr: x,
                 expertStr: y,
                 companyName: this.expertForm.get('company').value.name,
@@ -1054,7 +1071,7 @@ export class ExpertiComponent implements OnInit, OnDestroy {
         }
     }
 
-    remove(doc: any) {
+    remove(index, doc: any) {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur(a)?',
@@ -1066,11 +1083,11 @@ export class ExpertiComponent implements OnInit, OnDestroy {
             if (result) {
                 if (doc.docType.category == 'LAB') {
                     this.subscriptions.push(this.requestService.removeLaboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
-                            this.outputDocuments.forEach((item, index) => {
-                                if (item === doc) {
+                            // this.outputDocuments.forEach((item, index) => {
+                            //     if (item === doc) {
                                     this.outputDocuments.splice(index, 1);
-                                }
-                            });
+                            //     }
+                            // });
                             this.save(false);
                         }, error => console.log(error))
                     );
@@ -1078,11 +1095,12 @@ export class ExpertiComponent implements OnInit, OnDestroy {
                 }
 
                 this.loadingService.show();
-                this.outputDocuments.forEach((item, index) => {
-                    if (item === doc) {
-                        this.outputDocuments.splice(index, 1);
-                    }
-                });
+                // this.outputDocuments.forEach((item, index) => {
+                //     if (item === doc) {
+                this.outputDocuments.splice(index, 1);
+                this.modelToSubmit.outputDocuments =  this.outputDocuments;
+                //     }
+                // });
 
                 if (doc.docType.category == 'SL') {
                     for (const exp of this.expertList) {

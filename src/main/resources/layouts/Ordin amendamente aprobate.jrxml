@@ -68,7 +68,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="DejaVu Sans" size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " +$P{date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Nr. ________ din ___/___/______"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="0" y="90" width="535" height="30" uuid="354735f7-8d20-49cf-b842-959a6fcab171"/>

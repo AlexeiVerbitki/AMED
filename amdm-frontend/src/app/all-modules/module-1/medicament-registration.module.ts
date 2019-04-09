@@ -17,6 +17,7 @@ import {ExpertComiteeModule} from '../../common/expert-comitee/expert-comitee.mo
 import {CanDeactivateGuard} from '../../shared/auth-guard/can-deactivate-guard.service';
 import {InstructionModule} from '../../common/instruction/instruction.module';
 import {MachetaModule} from '../../common/macheta/macheta.module';
+import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
 
 @NgModule({
     imports: [
@@ -30,6 +31,7 @@ import {MachetaModule} from '../../common/macheta/macheta.module';
         InstructionModule,
         MachetaModule,
         PaymentModule,
+        EcAgentModule,
         ExpertComiteeModule
 
     ],

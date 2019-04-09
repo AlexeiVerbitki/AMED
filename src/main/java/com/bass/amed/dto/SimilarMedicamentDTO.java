@@ -26,5 +26,5 @@ public class SimilarMedicamentDTO implements Serializable
     private BigDecimal mdlValue;
     private BigDecimal price;
     private String currency;
-
+    private Integer pharmaceuticalFormId;
 }

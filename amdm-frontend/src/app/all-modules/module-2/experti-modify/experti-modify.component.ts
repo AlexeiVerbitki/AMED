@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Document} from '../../../models/document';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RequestService} from '../../../shared/service/request.service';
@@ -23,10 +23,10 @@ import {
     TodoItemFlatNode
 } from '../../../dialog/select-variation-type/select-variation-type.component';
 import {SelectionModel} from '@angular/cdk/collections';
-import {AddLaboratorStandardsComponent} from '../../../dialog/add-laborator-standards/add-laborator-standards.component';
 import {AddDivisionComponent} from '../../../dialog/add-division/add-division.component';
 import {isNumeric} from 'rxjs/internal-compatibility';
 import {SelectDocumentNumberComponent} from '../../../dialog/select-document-number/select-document-number.component';
+import {EditVariationComponent} from '../../../dialog/edit-variation/edit-variation.component';
 
 @Component({
     selector: 'app-experti',
@@ -55,17 +55,15 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
     instructions: any[] = [];
     machets: any[] = [];
     registrationRequestMandatedContacts: any[] = [];
-    chairmans: any[];
-    farmacologs: any[];
-    farmacists: any[];
-    medics: any[];
     omAttached = false;
+    omIncluded = false;
     omApproved = false;
     expertList: any[] = [];
     variationTypesIds: string;
     variationTypesIdsTemp: string;
-    standarts: any[];
+    standarts: any[] = [];
     docTypesInitial: any[];
+    variations: any[] = [];
 
     constructor(private fb: FormBuilder,
                 private authService: AuthService,
@@ -86,6 +84,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [],
+            'regSubject': [null],
             'currentStep': ['F'],
             'medicamentName': [],
             'medicaments': [[]],
@@ -94,6 +93,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
             'assignedUser': [''],
             'companyValue': [''],
             'division': [null],
+            'standard': [null],
             'labResponse': [null],
             'divisionBonDePlata': [null],
             'medicament':
@@ -124,7 +124,8 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                     'documents': [],
                     'status': ['F'],
                     'experts': [''],
-                    'groupTo': ['']
+                    'groupTo': [''],
+                    'transferCertificate': [null]
                 }),
             'company': [''],
             'recetaType': [''],
@@ -149,6 +150,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                         this.expertForm.get('id').setValue(data.id);
                         this.expertForm.get('initiator').setValue(data.initiator);
                         this.expertForm.get('startDate').setValue(data.startDate);
+                        this.expertForm.get('regSubject').setValue(data.regSubject);
                         this.expertForm.get('requestNumber').setValue(data.requestNumber);
                         this.expertForm.get('companyValue').setValue(data.company.name);
                         this.expertForm.get('company').setValue(data.company);
@@ -193,6 +195,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                         this.expertForm.get('medicament.authorizationHolderAddress').setValue(data.medicamentHistory[0].authorizationHolderTo.address);
                         this.expertForm.get('medicament.originaleTo').setValue(data.medicamentHistory[0].originaleTo);
                         this.expertForm.get('medicament.orphanTo').setValue(data.medicamentHistory[0].orphanTo);
+                        this.expertForm.get('medicament.transferCertificate').setValue(data.medicamentHistory[0].transferCertificate);
                         let medTypes = '';
                         for (const mt of data.medicamentHistory[0].medicamentTypesHistory) {
                             medTypes = medTypes + mt.type.description + '; ';
@@ -214,6 +217,9 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                                 machets: entry.instructionsHistory.filter(t => t.type == 'M'),
                                 approved: entry.approved
                             });
+                            if (entry.approved) {
+                                this.omIncluded = true;
+                            }
                         }
                         this.expertForm.get('medicament.atcCodeTo').setValue(data.medicamentHistory[0].atcCodeTo);
                         this.activeSubstancesTable = data.medicamentHistory[0].activeSubstancesHistory;
@@ -238,7 +244,10 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                         this.omApproved = data.medicamentHistory[0].approved == 1;
                         this.checkOutputDocumentsStatus();
                         this.subscriptions.push(
-                            this.medicamentService.getMedicamentsByFilter({registerNumber: data.medicamentHistory[0].registrationNumber}
+                            this.medicamentService.getMedicamentsByFilter({
+                                    registerNumber: data.medicamentHistory[0].registrationNumber,
+                                    expiratedMedicaments: true
+                                }
                             ).subscribe(request => {
                                     this.medicamentsDetails = request.body;
                                 },
@@ -252,6 +261,14 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                                         const t = new TodoItemFlatNode();
                                         t.item = this.getVariationCodeById(v.variation.id, v.value);
                                         this.checklistSelection.selected.push(t);
+                                    }
+                                }
+                                this.fillVariationsTable();
+                                for (const v of data.variations) {
+                                    const dbVar = this.variations.find(t => t.id == v.variation.id && t.value == v.value);
+                                    if (dbVar) {
+                                        dbVar.comment = v.comment;
+                                        dbVar.quantity = v.quantity;
                                     }
                                 }
                             }
@@ -304,6 +321,35 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 error => console.log(error)
             )
         );
+    }
+
+    fillVariationsTable() {
+        const selectedVariationsIds = [];
+        for (const sel of this.checklistSelection.selected) {
+            const xid = this.getVariationId(sel.item);
+            if (isNumeric(xid)) {
+                const values = sel.item.split(' - ');
+                selectedVariationsIds.push({id: xid, value : values[1]});
+                const existingId = this.variations.find(t => t.id == xid && t.value ==  values[1]);
+                if (!existingId) {
+                    this.variations.push({
+                        id: xid,
+                        code: values[0],
+                        value: values[1],
+                        quantity: 1,
+                        comment: ''
+                    });
+                }
+            }
+        }
+        const variationsClone = Object.assign([], this.variations);
+        for (const variation of variationsClone) {
+            const existingId = selectedVariationsIds.find(t => t.id == variation.id && t.value == variation.value);
+            if (!existingId) {
+                this.variations.splice(this.variations.indexOf(variation), 1);
+            }
+        }
+        this.variations.sort((a, b) => a.id - b.id);
     }
 
     getVariationCodeById(id: string, value: string): string {
@@ -464,7 +510,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                         medName: this.expertForm.get('medicamentName').value,
                         orderNumber: o.number,
                         requestId: this.expertForm.get('id').value,
-                        srisoareDeAprobareNumber : result.docNr
+                        srisoareDeAprobareNumber: result.docNr
                     };
                     this.subscriptions.push(this.documentService.viewScrisoareDeAprobare(m).subscribe(data => {
                             const file = new Blob([data], {type: 'application/pdf'});
@@ -553,11 +599,14 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         x.assignedUser = usernameDB;
 
         x.variations = [];
-        for (const sel of this.checklistSelection.selected) {
-            const xid = this.getVariationId(sel.item);
-            if (isNumeric(xid)) {
-                x.variations.push({variation: {id: xid}, value: this.getVariationValue(sel.item)});
-            }
+        for (const variation of this.variations) {
+            x.variations.push({
+                variation: {id: variation.id},
+                value: variation.value,
+                quantity: variation.quantity,
+                comment: variation.comment,
+                code: variation.code
+            });
         }
 
         x.requestHistories.push({
@@ -580,6 +629,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
 
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
         x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
+        x.medicamentHistory[0].transferCertificate = this.expertForm.get('medicament.transferCertificate').value;
 
         x.medicamentHistory[0].divisionHistory = this.divisions;
         x.medicamentHistory[0].divisionHistory.forEach(t => {
@@ -666,21 +716,12 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 }
             }
         }
+
+        this.outputDocuments.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     }
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
 
-        // if(!this.rForm.dirty){
-        //     return true;
-        // }
-        // const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
-        //     data: {
-        //         message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
-        //         confirm: false,
-        //     }
-        // });
-        //
-        // return dialogRef.afterClosed();
         return true;
 
     }
@@ -741,13 +782,16 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         element.approved = value.checked;
     }
 
+    removeFromAuthorizationOrder() {
+        this.subscriptions.push(this.requestService.removeMedicamentsFromAprobationOrder(this.expertForm.get('id').value).subscribe(data => {
+                this.loadingService.hide();
+                this.errorHandlerService.showSuccess('Medicamentele au fost extrase din ordinul de aprobare');
+                this.omIncluded = false;
+            }, error => this.loadingService.hide())
+        );
+    }
+
     addToAuthorizationOrder() {
-        const rl = this.documents.find(r => r.docType.category == 'RL');
-        const lab = this.outputDocuments.find(r => r.docType.category == 'LAB');
-        if (lab && !rl) {
-            this.errorHandlerService.showError('Rezultatul laboratorului nu a fost atasat.');
-            return;
-        }
         this.formSubmitted = true;
 
         if (this.expertForm.invalid) {
@@ -775,6 +819,8 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.requestService.setMedicamentModifyApproved(this.expertForm.get('id').value).subscribe(data => {
                 this.omApproved = true;
                 this.loadingService.hide();
+                this.errorHandlerService.showSuccess('Medicamentele au fost incluse in ordinul de aprobare');
+                this.omIncluded = true;
             }, error => this.loadingService.hide())
         );
     }
@@ -796,7 +842,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
 
-                this.save();
+                this.save(false);
 
                 this.loadingService.show();
 
@@ -814,15 +860,18 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 x.registrationRequestMandatedContacts = this.registrationRequestMandatedContacts;
 
                 x.documents = this.documents;
-                x.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'MP' &&  t.docType.category != 'SAV');
+                x.outputDocuments = this.outputDocuments.filter(t => t.docType.category != 'MP' && t.docType.category != 'SAV');
                 x.expertList = this.expertList;
 
                 x.variations = [];
-                for (const sel of this.checklistSelection.selected) {
-                    const xid = this.getVariationId(sel.item);
-                    if (isNumeric(xid)) {
-                        x.variations.push({variation: {id: xid}, value: this.getVariationValue(sel.item)});
-                    }
+                for (const variation of this.variations) {
+                    x.variations.push({
+                        variation: {id: variation.id},
+                        value: variation.value,
+                        quantity: variation.quantity,
+                        comment: variation.comment,
+                        code: variation.code
+                    });
                 }
 
                 x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
@@ -860,7 +909,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
 
     }
 
-    save() {
+    save(showSuccess) {
         this.loadingService.show();
 
         const x = this.modelToSubmit;
@@ -894,19 +943,26 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         });
 
         x.variations = [];
-        for (const sel of this.checklistSelection.selected) {
-            const xid = this.getVariationId(sel.item);
-            if (isNumeric(xid)) {
-                x.variations.push({variation: {id: xid}, value: this.getVariationValue(sel.item)});
-            }
+        for (const variation of this.variations) {
+            x.variations.push({
+                variation: {id: variation.id},
+                value: variation.value,
+                quantity: variation.quantity,
+                comment: variation.comment,
+                code: variation.code
+            });
         }
 
         x.medicamentHistory[0].atcCodeTo = this.expertForm.get('medicament.atcCodeTo').value;
         x.medicamentHistory[0].registrationDate = this.expertForm.get('medicament.registrationDate').value;
+        x.medicamentHistory[0].transferCertificate = this.expertForm.get('medicament.transferCertificate').value;
         x.expertList = this.expertList;
 
         this.subscriptions.push(this.requestService.addMedicamentHistoryRequest(x).subscribe(data => {
                 this.loadingService.hide();
+                if (showSuccess) {
+                    this.errorHandlerService.showSuccess('Datele au fost salvate.');
+                }
             }, error => this.loadingService.hide())
         );
     }
@@ -1019,7 +1075,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
 
     isDisabledLabButton(): boolean {
         return this.outputDocuments.some(elem => {
-            return elem.docType.category == 'RL' ? true : false;
+            return elem.docType.category == 'LAB' ? true : false;
         });
     }
 
@@ -1030,9 +1086,20 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.save();
+        this.save(false);
 
-        const lenOutDoc = this.outputDocuments.filter(r => r.docType.category === 'SL').length;
+        let magicNumber = '';
+        for (const outDoc of this.outputDocuments) {
+            if (magicNumber < outDoc.number) {
+                magicNumber = outDoc.number;
+            }
+        }
+        const magicNumbers = magicNumber.split('-');
+
+        let nrOrdDoc = 1;
+        if (magicNumbers && magicNumbers.length > 2) {
+            nrOrdDoc = Number(magicNumbers[3]) + 1;
+        }
 
         let x = this.expertForm.get('medicament.commercialNameTo').value + ', ' + this.expertForm.get('medicament.pharmaceuticalFormTo').value.description
             + ' ' + this.expertForm.get('medicament.doseTo').value;
@@ -1059,7 +1126,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
                 requestId: this.expertForm.get('id').value,
                 modalType: 'REQUEST_ADDITIONAL_DATA',
                 startDate: this.expertForm.get('data').value,
-                nrOrdDoc: lenOutDoc + 1,
+                nrOrdDoc: nrOrdDoc,
                 medicamentStr: x,
                 expertStr: y,
                 companyName: this.expertForm.get('company').value.name,
@@ -1095,31 +1162,17 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = false;
 
-        const dialogConfig2 = new MatDialogConfig();
+        this.subscriptions.push(this.requestService.laboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
+                this.outputDocuments.push({
+                    name: 'Solicitare desfasurare analize de laborator',
+                    docType: this.docTypesInitial.find(r => r.category == 'LAB'),
+                    status: 'Urmeaza a fi inclus in actul de predare-primire',
+                    date: new Date()
+                });
+                this.save(false);
+            }, error => console.log(error))
+        );
 
-        dialogConfig2.disableClose = false;
-        dialogConfig2.autoFocus = true;
-        dialogConfig2.hasBackdrop = true;
-
-        dialogConfig2.width = '600px';
-
-        const dialogRef = this.dialog.open(AddLaboratorStandardsComponent, dialogConfig2);
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result && result.response) {
-                this.subscriptions.push(this.requestService.laboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
-                        this.outputDocuments.push({
-                            name: 'Solicitare desfasurare analize de laborator',
-                            docType: this.docTypesInitial.find(r => r.category == 'LAB'),
-                            status: 'Urmeaza a fi inclus in actul de predare-primire',
-                            date: new Date()
-                        });
-                        this.standarts = result.standards;
-                        this.save();
-                    }, error => console.log(error))
-                );
-            }
-        });
 
     }
 
@@ -1131,7 +1184,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         }
     }
 
-    remove(doc: any) {
+    remove(index, doc: any) {
         const dialogRef2 = this.dialogConfirmation.open(ConfirmationDialogComponent, {
             data: {
                 message: 'Sunteti sigur(a)?',
@@ -1142,13 +1195,9 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogRef2.afterClosed().subscribe(result => {
             if (result) {
                 if (doc.docType.category == 'LAB') {
-                    this.subscriptions.push(this.requestService.removeLaboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {
-                            this.outputDocuments.forEach((item, index) => {
-                                if (item === doc) {
-                                    this.outputDocuments.splice(index, 1);
-                                }
-                            });
-                            this.save();
+                    this.subscriptions.push(this.requestService.removeLaboratorAnalysis(this.expertForm.get('id').value).subscribe(data => {                           
+                            this.outputDocuments.splice(index, 1);                          
+                            this.save(false);
                         }, error => console.log(error))
                     );
                     return;
@@ -1156,11 +1205,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
 
                 this.loadingService.show();
                 this.modelToSubmit.outputDocuments = Object.assign([], this.outputDocuments);
-                this.modelToSubmit.outputDocuments.forEach((item, index) => {
-                    if (item === doc) {
-                        this.modelToSubmit.outputDocuments.splice(index, 1);
-                    }
-                });
+                this.modelToSubmit.outputDocuments.splice(index, 1);   
 
                 if (doc.docType.category == 'SL') {
                     for (const exp of this.expertList) {
@@ -1190,7 +1235,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogConfig2.panelClass = 'custom-dialog-container';
 
         dialogConfig2.width = '600px';
-        dialogConfig2.data = {division : division, disabledMainFields : true};
+        dialogConfig2.data = {division: division, disabledMainFields: true};
 
         const dialogRef = this.dialog.open(AddDivisionComponent, dialogConfig2);
 
@@ -1209,7 +1254,6 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogConfig2.disableClose = false;
         dialogConfig2.autoFocus = true;
         dialogConfig2.hasBackdrop = true;
-        // dialogConfig2.panelClass = 'overflow-ys';
 
         dialogConfig2.width = '1000px';
         dialogConfig2.height = '800px';
@@ -1221,7 +1265,7 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe(result => {
                 if (result && result.response) {
                     this.checklistSelection = result.values;
-                    //console.log(result.values);
+                   this.fillVariationsTable();
                 }
             }
         );
@@ -1237,6 +1281,42 @@ export class ExpertiModifyComponent implements OnInit, OnDestroy {
         } else {
             return this.variationTypesIds.substr(i, k - 1);
         }
+    }
+
+    addStandard() {
+        if (this.expertForm.get('standard').value) {
+            this.standarts.push({description: this.expertForm.get('standard').value});
+            this.expertForm.get('standard').setValue(null);
+        }
+    }
+
+    removeStandard(index) {
+        this.standarts.splice(index, 1);
+    }
+
+    editVariation(variation: any, index: number) {
+        const dialogConfig2 = new MatDialogConfig();
+
+        dialogConfig2.disableClose = false;
+        dialogConfig2.autoFocus = true;
+        dialogConfig2.hasBackdrop = true;
+        dialogConfig2.panelClass = 'custom-dialog-container';
+
+        dialogConfig2.width = '600px';
+        dialogConfig2.data = {variation: variation};
+
+        const dialogRef = this.dialog.open(EditVariationComponent, dialogConfig2);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.response) {
+                this.variations[index].quantity = result.quantity;
+                this.variations[index].comment = result.comment;
+            }
+        });
+    }
+
+    checkTransferCertificate(value: any) {
+        this.expertForm.get('medicament.transferCertificate').setValue(value.checked);
     }
 
 }

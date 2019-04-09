@@ -19,16 +19,10 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="md-form" *ngIf="f.value.company">
+                <div class="md-form">
                     <input id="company" mdbInputDirective type="text" class="form-control"
-                           value={{f.value.company.name}} [attr.disabled]="true">
-                    <label for="company">Compania solicitant
-                    </label>
-                </div>
-                <div class="md-form" *ngIf="!f.value.company">
-                    <input id="person" mdbInputDirective type="text" class="form-control"
-                           value={{mandatedContactName}} [attr.disabled]="true">
-                    <label for="person">Persoana fizica
+                           value={{f.value.company?.name}} [attr.disabled]="true">
+                    <label for="company">Beneficiar
                     </label>
                 </div>
             </div>

@@ -50,7 +50,7 @@ public class EconomicAgentsController
     {
         logger.debug("Save economic agents");
 
-        if ( economicAgentsRepository.findAllByIdno(nmEconomicAgentsEntities.get(0).getIdno()).size() > 1)
+        if (nmEconomicAgentsEntities.get(0).getIdno() != null && economicAgentsRepository.findAllByIdno(nmEconomicAgentsEntities.get(0).getIdno()).size() > 1)
         {
             throw new CustomException("Idno already exists");
         }

@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -884,6 +885,28 @@ public class RequestController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/remove-medicaments-from-history-authorization-order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public ResponseEntity<Void> removeMedicamentsFromOM(@RequestBody Integer id) throws CustomException {
+        LOGGER.debug("Remove medicaments from apobation order");
+        RegistrationRequestsEntity registrationRequestsEntity = requestRepository.findById(id).orElse(new RegistrationRequestsEntity());
+        boolean isOMGenerated = registrationRequestsEntity.getMedicamentHistory().stream().anyMatch(t->t.getOmNumber()!=null && !t.getOmNumber().isEmpty());
+        if(isOMGenerated)
+        {
+            throw new CustomException("Ordinul de aprobare a fost deja emis.");
+        }
+
+        RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
+        historyEntity.setUsername(SecurityUtils.getCurrentUser().orElse(""));
+        historyEntity.setStep("ROM");
+        historyEntity.setStartDate(new Timestamp(new Date().getTime()));
+        historyEntity.setEndDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+        registrationRequestsEntity.getRequestHistories().add(historyEntity);
+
+        medicamentRepository.approveMedicamentModify(registrationRequestsEntity.getMedicamentHistory().stream().findFirst().orElse(new MedicamentHistoryEntity()).getId(), false);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/laborator-analysis", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Void> laboratorAnalysis(@RequestBody Integer requestId) throws CustomException
@@ -931,6 +954,11 @@ public class RequestController
     {
         LOGGER.debug("Approve medicament modifications");
         RegistrationRequestsEntity registrationRequestsEntity = requestRepository.findById(id).orElse(new RegistrationRequestsEntity());
+        boolean isOMGenerated = registrationRequestsEntity.getMedicamentHistory().stream().anyMatch(t->t.getOmNumber()!=null && !t.getOmNumber().isEmpty());
+        if(isOMGenerated)
+        {
+            throw new CustomException("Ordinul de aprobare a fost deja emis.");
+        }
 
         RegistrationRequestHistoryEntity historyEntity = new RegistrationRequestHistoryEntity();
         historyEntity.setUsername(SecurityUtils.getCurrentUser().orElse(""));
@@ -1547,6 +1575,7 @@ public class RequestController
         medicamentHistoryEntityForUpdate.setCommercialNameTo(medicamentHistoryEntity.getCommercialNameTo());
         medicamentHistoryEntityForUpdate.setOriginaleTo(medicamentHistoryEntity.getOriginaleTo());
         medicamentHistoryEntityForUpdate.setOrphanTo(medicamentHistoryEntity.getOrphanTo());
+        medicamentHistoryEntityForUpdate.setTransferCertificate(medicamentHistoryEntity.getTransferCertificate());
         medicamentHistoryEntityForUpdate.setStatus("F");
     }
 
@@ -1720,6 +1749,7 @@ public class RequestController
         medicamentHistoryEntity.setStatus("F");
         medicamentHistoryEntityForUpdate.setOmNumber(medicamentHistoryEntity.getOmNumber());
         medicamentHistoryEntityForUpdate.setApproved(true);
+        medicamentHistoryEntityForUpdate.setApproveDate(LocalDate.now());
         return medicamentHistoryEntityForUpdate;
     }
 
@@ -2193,26 +2223,20 @@ public class RequestController
 
             HashMap<String, Double> map = new HashMap();
 
-            for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList())
-            {
+            for (ImportAuthorizationDetailsEntity entity : request.getImportAuthorizationEntity().getImportAuthorizationDetailsEntityList()) {
                 /*Create a map Key is the code value is the amount
                  *
                  * if the jey exists add the sum, if id doesn't creaet the key and add the value*/
 
-                if (entity != null && entity.getApproved() == true)
-                {
-                    if ((entity.getCustomsCode() != null) && autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode())))
-                    {
-                        for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++)
-                        {
-                            if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode()))
-                            {
+                if (entity != null && entity.getApproved() == true) {
+                    if ((entity.getCustomsCode() != null) && autorizationImportDataSet2ArrayList.stream().anyMatch(x -> x.getProductCode().equalsIgnoreCase(entity.getCustomsCode().getCode()))) {
+                        for (int i = 0; i < autorizationImportDataSet2ArrayList.size(); i++) {
+                            if (autorizationImportDataSet2ArrayList.get(i).getProductCode().equals(entity.getCustomsCode().getCode())) {
                                 autorizationImportDataSet2ArrayList.get(i).setAmount(AmountUtils.round(autorizationImportDataSet2ArrayList.get(i).getAmount() + entity.getSumm(), 2));
                             }
                         }
                     }
-                    else
-                    {
+                    else {
 
                         AutorizationImportDataSet2 dataSet2 = new AutorizationImportDataSet2();
                         dataSet2.setAmount(AmountUtils.round(entity.getSumm(), 2));

@@ -59,6 +59,7 @@
 	<parameter name="date" class="java.lang.String"/>
 	<parameter name="nr" class="java.lang.String"/>
 	<parameter name="genDir" class="java.lang.String"/>
+	<parameter name="anexxes" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -75,7 +76,7 @@
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="619" splitType="Stretch">
+		<band height="357" splitType="Stretch">
 			<textField>
 				<reportElement x="1" y="80" width="273" height="23" uuid="0c09378d-be6f-41ad-ad18-f4c28972e82f"/>
 				<textElement>
@@ -83,20 +84,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA["Nr. " + $P{nr} + " din " + $P{date}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="320" y="510" width="210" height="20" uuid="9c72c804-99d2-42d4-8c38-28919fc98912"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="3" y="510" width="224" height="20" uuid="1f4ec0d2-824f-4dba-82d9-2f92de781c7e"/>
-				<textElement>
-					<font fontName="DejaVu Sans" isBold="true" isItalic="true"/>
-				</textElement>
-				<text><![CDATA[Director general]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="0" y="110" width="274" height="30" uuid="a8e79063-ce17-49b8-88d6-5406c82ee2c8"/>
 				<textElement textAlignment="Left">
@@ -129,17 +116,29 @@ mun. Chișinău
 				<text><![CDATA[O R D O N:
 ]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="0" y="320" width="535" height="170" uuid="21da8bc6-e062-4727-aa4a-b3b607e679ff"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="327" width="535" height="30" uuid="733601ba-7454-4891-82a7-984d595f5b79"/>
 				<textElement>
-					<font fontName="DejaVu Sans" size="11"/>
+					<font fontName="DejaVu Sans"/>
 				</textElement>
-				<text><![CDATA[1.	A autoriza pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat produsele medicamentoase autohtone fără plata taxei de autorizare, conform anexei nr. 1.
-2.	A autoriza pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat produsele medicamentoase de import cu achitarea taxei de autorizare corespunzătoare fiecărui produs, conform anexei nr. 2.
-3.	A autoriza repetat pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat produsele medicamentoase autohtone fără plata taxei de autorizare, conform anexei nr. 3.
-4. 	A autoriza repetat pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat produsele medicamentoase de import cu achitarea taxei de autorizare corespunzătoare fiecărui tip de produs, conform anexei nr. 4.
-6.	Controlul executării prezentului ordin mi-l asum.]]></text>
+				<textFieldExpression><![CDATA[$P{anexxes}.replaceAll("\\|","\n")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="35">
+			<staticText>
+				<reportElement x="4" y="15" width="224" height="20" uuid="1f341d79-cd38-4ca7-a69e-dd9ecda0b2fd"/>
+				<textElement>
+					<font fontName="DejaVu Sans" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Director general]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="321" y="15" width="210" height="20" uuid="0a3c35e4-618d-487c-8497-b58a9b0aa26c"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

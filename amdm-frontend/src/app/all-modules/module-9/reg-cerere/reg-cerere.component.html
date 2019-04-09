@@ -21,12 +21,12 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" formGroupName="registrationRequestMandatedContacts">
                 <div class="md-form-modified">
                     <ng-select [items]="companii | async"
                                bindLabel="name"
                                placeholder="Solicitantul"
-                               formControlName="company"
+                               formControlName="companySolicitant"
                                [loading]="loadingCompany"
                                [typeahead]="companyInputs"
                                required="true">

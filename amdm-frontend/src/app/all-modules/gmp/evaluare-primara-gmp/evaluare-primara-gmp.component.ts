@@ -136,6 +136,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
             'startDateValue': {disabled: true, value: new Date()},
             'requestNumber': [null],
             'startDate': [null],
+            'regSubject': [null],
             'documents': [],
             'typeFara': [null],
             'licenseId': [null],
@@ -923,6 +924,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
         this.registrationRequestMandatedContacts = data.registrationRequestMandatedContacts;
         this.eForm.get('initiator').setValue(data.initiator);
         this.eForm.get('startDate').setValue(data.startDate);
+        this.eForm.get('regSubject').setValue(data.regSubject);
         this.eForm.get('startDateValue').setValue(new Date(data.startDate));
         this.eForm.get('requestNumber').setValue(data.requestNumber);
         this.eForm.get('requestHistories').setValue(data.requestHistories);
@@ -1663,6 +1665,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                     gmpAuthorizations: [],
                     requestNumber: this.eForm.get('requestNumber').value,
                     startDate: this.eForm.get('startDate').value,
+                    regSubject: this.eForm.get('regSubject').value,
                     type: this.eForm.get('type').value,
                     company: this.eForm.get('company').value,
                 };
@@ -3139,7 +3142,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = true;
 
-        const lenOutDoc = this.outDocuments.filter(r => r.docType.category === 'SL').length;
+        let magicNumber = '';
+        for (const outDoc of this.outDocuments) {
+            if (magicNumber < outDoc.number) {
+                magicNumber = outDoc.number;
+            }
+        }
+        const magicNumbers = magicNumber.split('-');
+
+        let nrOrdDoc = 1;
+        if (magicNumbers && magicNumbers.length > 2) {
+            nrOrdDoc = Number(magicNumbers[3]) + 1;
+        }
 
         const dialogRef2 = this.dialog.open(RequestAdditionalDataDialogComponent, {
             width: '1000px',
@@ -3149,7 +3163,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 requestId: this.eForm.get('id').value,
                 modalType: 'REQUEST_ADDITIONAL_DATA_GMP',
                 startDate: this.eForm.get('startDate').value,
-                nrOrdDoc: lenOutDoc + 1,
+                nrOrdDoc: nrOrdDoc,
                 companyName: this.eForm.get('company').value.name,
                 address: this.eForm.get('company').value.legalAddress,
                 registrationRequestMandatedContact: this.registrationRequestMandatedContacts[0]
@@ -3170,7 +3184,18 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = true;
 
-        const lenOutDoc = this.outDocuments.filter(r => r.docType.category === 'SD').length;
+        let magicNumber = '';
+        for (const outDoc of this.outDocuments) {
+            if (magicNumber < outDoc.number) {
+                magicNumber = outDoc.number;
+            }
+        }
+        const magicNumbers = magicNumber.split('-');
+
+        let nrOrdDoc = 1;
+        if (magicNumbers && magicNumbers.length > 2) {
+            nrOrdDoc = Number(magicNumbers[3]) + 1;
+        }
 
         const dialogRef2 = this.dialog.open(RequestAdditionalDataDialogComponent, {
             width: '1000px',
@@ -3180,7 +3205,7 @@ export class EvaluarePrimaraGmpComponent implements OnInit, OnDestroy {
                 requestId: this.eForm.get('id').value,
                 modalType: 'REQUEST_REMOVAL_DEFICIENCIES_GMP',
                 startDate: this.eForm.get('startDate').value,
-                nrOrdDoc: lenOutDoc + 1,
+                nrOrdDoc: nrOrdDoc,
                 companyName: this.eForm.get('company').value.name,
                 address: this.eForm.get('company').value.legalAddress,
                 registrationRequestMandatedContact: this.registrationRequestMandatedContacts[0]

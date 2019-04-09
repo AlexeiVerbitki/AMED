@@ -75,6 +75,10 @@ export class AdministrationService {
         return this.http.get('/api/administration/all-pharamceutical-forms', {params: {typeId: typeId}});
     }
 
+    getAllPharamceuticalForms(): Observable<any> {
+        return this.http.get('/api/administration/get-all-pharamceutical-forms', {});
+    }
+
     getAllMedicamentGroups(): Observable<any> {
         return this.http.get('/api/administration/all-medicament-groups', {});
     }
@@ -121,6 +125,10 @@ export class AdministrationService {
 
     getCountries(): Observable<any> {
         return this.http.get('/api/administration/countries');
+    }
+
+    getCountriesDetailed(): Observable<any> {
+        return this.http.get('/api/administration/countries-detailed');
     }
 
     getCurrenciesShort(): Observable<any> {

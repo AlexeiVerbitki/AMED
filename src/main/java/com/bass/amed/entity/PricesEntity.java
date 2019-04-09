@@ -22,6 +22,10 @@ public class PricesEntity
     @Column(name = "value")
     private Double value;
 
+    @Basic
+    @Column(name = "asked_price_mdl")
+    private Double askedPriceMdl;
+
     @OneToOne(fetch = FetchType.EAGER) //, cascade = CascadeType.DETACH)
     @JoinColumn(name = "type_id")
     private PriceTypesEntity type;

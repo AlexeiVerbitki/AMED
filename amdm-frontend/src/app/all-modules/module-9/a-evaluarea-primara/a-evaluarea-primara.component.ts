@@ -1,13 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Document} from '../../../models/document';
-import {Subscription} from 'rxjs/index';
+import {Observable, Subject, Subscription} from 'rxjs/index';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RequestService} from '../../../shared/service/request.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {AdministrationService} from '../../../shared/service/administration.service';
-import {Receipt} from '../../../models/receipt';
-import {PaymentOrder} from '../../../models/paymentOrder';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {MatDialog, MatDialogConfig, MatRadioChange} from '@angular/material';
 import {DocumentService} from '../../../shared/service/document.service';
@@ -19,6 +17,8 @@ import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-e
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {AddCtMedicamentComponent} from '../dialog/add-ct-medicament/add-ct-medicament.component';
 import {CtMedType} from '../../../shared/enum/ct-med-type.enum';
+import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-a-evaluarea-primara',
@@ -64,6 +64,10 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
 
     mandatedContactName: string;
 
+    companii: Observable<any[]>;
+    loadingCompany = false;
+    companyInputs = new Subject<string>();
+
     constructor(private fb: FormBuilder,
                 public dialog: MatDialog,
                 private requestService: RequestService,
@@ -87,7 +91,7 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
             'id': [''],
             'requestNumber': {value: '', disabled: true},
             'startDate': {value: '', disabled: true},
-            'company': [null],
+            'company': [null, Validators.required],
             'type': [''],
             'typeCode': [''],
             'initiator': [null],
@@ -134,6 +138,45 @@ export class AEvaluareaPrimaraComponent implements OnInit, OnDestroy {
         this.loadClinicalTrialTypes();
         this.loadPhasesList();
         this.loadInvestigatorsList();
+        this.loadEconomicAgents();
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
+    }
+
+    loadEconomicAgents() {
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) {
+                        return true;
+                    }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap((val: string) => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
     }
 
     loadClinicalTrialTypes() {

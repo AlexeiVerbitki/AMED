@@ -13,6 +13,7 @@ import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-gua
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {PriceService} from '../../../shared/service/prices.service';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -44,7 +45,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
-            'idnp': [null,  [Validators.required, Validators.maxLength(13)]],
+            'idnp': [null],
             'id': [null],
             'folderNumber': [null],
             'startDate': [new Date()],
@@ -119,7 +120,7 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
         this.formSubmitted = true;
 
         console.log(this.rForm);
-        if (!this.rForm.valid || !this.rForm.get('idnp').value) {
+        if (!this.rForm.valid || (this.rForm.get('idnp').value && this.rForm.get('idnp').invalid)) {
             return;
         }
 
@@ -147,7 +148,8 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
             requestMandateNr : this.rForm.get('requestMandateNr').value,
             requestMandateDate : this.rForm.get('requestMandateDate').value,
             id : this.rForm.get('registrationRequestMandatedContactsId').value,
-            idnp : this.rForm.get('idnp').value
+            idnp : this.rForm.get('idnp').value,
+            companySolicitant: this.rForm.get('company').value
         }];
 
         this.formSubmitted = true;
@@ -162,6 +164,22 @@ export class PriceRegCerereComponent implements OnInit, OnDestroy, CanModuleDeac
                 this.loadingService.hide();
             }, error => this.loadingService.hide())
         );
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
     }
 
     ngOnDestroy(): void {

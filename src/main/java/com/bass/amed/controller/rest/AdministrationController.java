@@ -18,6 +18,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.hibernate.JDBCException;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -192,6 +193,12 @@ public class AdministrationController {
         NmPharmaceuticalFormTypesEntity typesEntity = new NmPharmaceuticalFormTypesEntity();
         typesEntity.setId(typeId);
         return new ResponseEntity<>(pharmaceuticalFormsRepository.findByType(typesEntity), HttpStatus.OK);
+    }
+
+    @RequestMapping("/get-all-pharamceutical-forms")
+    public ResponseEntity<List<NmPharmaceuticalFormsEntity>> retrieveAllPharmaceuticalForms() {
+        LOGGER.debug("Retrieve all pharmaceutical forms");
+        return new ResponseEntity<>(pharmaceuticalFormsRepository.findAllByOrderByDescriptionAsc(), HttpStatus.OK);
     }
 
     @RequestMapping("/all-medicament-groups")
@@ -392,6 +399,12 @@ public class AdministrationController {
     public ResponseEntity<List<GetCountriesMinimalProjection>> retrieveCountries() {
         LOGGER.debug("Retrieve all Countries");
         return new ResponseEntity<>(nmCountriesRepository.findAllOnlyIdAndAndDescriptionBy(), HttpStatus.OK);
+    }
+
+    @GetMapping("/countries-detailed")
+    public ResponseEntity<List<NmCountriesEntity>> retrieveCountriesDetailed() {
+        LOGGER.debug("Retrieve all Countries with all details");
+        return new ResponseEntity<>(nmCountriesRepository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/customs-points")

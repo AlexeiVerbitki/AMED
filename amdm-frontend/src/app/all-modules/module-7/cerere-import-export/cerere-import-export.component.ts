@@ -21,6 +21,7 @@ import {DrugDecisionsService} from '../../../shared/service/drugs/drugdecisions.
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {CpcdAuthLangComponent} from '../cpcd-auth-lang/cpcd-auth-lang.component';
 import {AddActiveSubstanceDialogComponent} from '../add-active-substance-dialog/add-active-substance-dialog.component';
+import {AddEcAgentComponent} from "../../../administration/economic-agent/add-ec-agent/add-ec-agent.component";
 
 @Component({
     selector: 'app-cerere-import-export',
@@ -47,6 +48,11 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
     selectedSubstance: any;
     allSubstanceUnits: any[];
     selectedSubstancesTable: any[] = [];
+
+    companii: Observable<any[]>;
+    loadingCompany = false;
+    companyInputs = new Subject<string>();
+
     disabled: boolean;
     hasError: boolean;
     reqReqInitData: any;
@@ -77,7 +83,8 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
                 private navbarTitleService: NavbarTitleService,
                 private drugDecisionsService: DrugDecisionsService,
                 public dialogLanguage: MatDialog,
-                public dialogActiveSubstance: MatDialog, ) {
+                public dialogActiveSubstance: MatDialog,
+                public dialog: MatDialog,) {
 
         this.cerereImpExpForm = fb.group({
             'id': [],
@@ -86,8 +93,7 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
             'requestNumber': [null, Validators.required],
             'initiator': [''],
             'assignedUser': [''],
-            'company': [''],
-            'companyValue': [],
+            'company': [null, Validators.required],
             'currentStep': ['E'],
             'documents': [],
             'drugCheckDecision':
@@ -145,6 +151,25 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
             )
         );
 
+        this.companii =
+            this.companyInputs.pipe(
+                filter((result: string) => {
+                    if (result && result.length > 2) { return true; }
+                }),
+                debounceTime(400),
+                distinctUntilChanged(),
+                tap(() => {
+                    this.loadingCompany = true;
+
+                }),
+                flatMap(term =>
+
+                    this.administrationService.getCompanyNamesAndIdnoList(term).pipe(
+                        tap(() => this.loadingCompany = false)
+                    )
+                )
+            );
+
         this.onChanges();
 
     }
@@ -163,7 +188,6 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
                         this.cerereImpExpForm.get('type').setValue(data.type);
                         this.cerereImpExpForm.get('typeValue').setValue(data.type.code);
                         this.cerereImpExpForm.get('company').setValue(data.company);
-                        this.cerereImpExpForm.get('companyValue').setValue(data.company.name);
                         this.documents = data.documents;
                         this.outDocuments = data.outputDocuments;
                         this.documents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -415,7 +439,7 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
 
         this.formSubmitted = false;
 
-        this.cerereImpExpForm.get('company').setValue(this.cerereImpExpForm.value.company);
+        // this.cerereImpExpForm.get('company').setValue(this.cerereImpExpForm.value.company);
 
         const modelToSubmit: any = this.cerereImpExpForm.value;
 
@@ -501,6 +525,7 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
         }
 
         modelToSubmit.medicaments = [];
+        modelToSubmit.company = this.cerereImpExpForm.get('company').value;
 
     }
 
@@ -547,7 +572,7 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
             const data = {
                 requestNumber: this.cerereImpExpForm.get('requestNumber').value,
                 protocolDate: this.cerereImpExpForm.get('drugCheckDecision.protocolDate').value,
-                companyValue: this.cerereImpExpForm.get('companyValue').value,
+                companyValue: this.cerereImpExpForm.get('company').value.name,
                 dataExp: this.cerereImpExpForm.get('drugCheckDecision.expireDate').value,
                 details: this.selectedSubstancesTable,
                 authorizationType: authorizationType.value,
@@ -652,10 +677,10 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
                     username: usernameDB, step: 'E'
                 });
 
-                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(data => {
+                this.subscriptions.push(this.drugDecisionsService.addAuthorizationDetails(modelToSubmit).subscribe(() => {
                         this.loadingService.hide();
                         this.router.navigate(['dashboard/module']);
-                    }, error => this.loadingService.hide())
+                    }, () => this.loadingService.hide())
                 );
             }
         });
@@ -686,6 +711,22 @@ export class CerereImportExportComponent implements OnInit, OnDestroy {
         dialogRef2.afterClosed().subscribe(result => {
             if (result.success) {
                 substance.details = result.details;
+            }
+        });
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'custom-dialog-container',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
             }
         });
     }

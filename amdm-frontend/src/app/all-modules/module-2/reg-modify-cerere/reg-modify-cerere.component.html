@@ -22,23 +22,26 @@
 		<hr>
 		<app-document [documents]="documents" [nrCerere]="rForm.get('requestNumber').value" [dcTypes]="docTypes"></app-document>
 		<div class="row">
-			<div class="col-md-4">
+
+			<div class="col-md-3">
 				<div class="md-form-modified">
 					<ng-select [items]="companii | async"
 					           bindLabel="name"
 					           placeholder="Compania solicitant"
 					           formControlName="company"
 					           [loading]="loadingCompany"
-					           [typeahead]="companyInputs"
-					           required="true">
+					           [typeahead]="companyInputs">
 						<ng-template ng-option-tmp let-item="item">
 							{{item.name}} <br/>
 							<small class="form-text text-muted">{{item.idno}}</small>
 						</ng-template>
 					</ng-select>
-					<div *ngIf="formSubmitted && rForm.get('company').invalid">
-						<small class="text-muted"><strong class="text-danger">Compania solicitantă trebuie selectată</strong></small>
-					</div>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="md-form">
+					<button class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou" (click)="newAgent()"><i
+							class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
 				</div>
 			</div>
 		</div>

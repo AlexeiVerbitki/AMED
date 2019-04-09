@@ -231,7 +231,7 @@ public class PriceDocsController {
         parameters.put("fisaDeEvaluare11", new JRBeanCollectionDataSource(fisaDeEvaluare.getOriginCountryMedicamentPriceList()));
         parameters.put("fisaDeEvaluare12", new JRBeanCollectionDataSource(fisaDeEvaluare.getMinimalPricesAverages()));
         parameters.put("fisaDeEvaluare13", new JRBeanCollectionDataSource(fisaDeEvaluare.getSimilarRegisteredMedicaments()));
-        parameters.put("fisaDeEvaluare14", new JRBeanCollectionDataSource(fisaDeEvaluare.getSourceAveragePrices().entrySet()));// fisaDeEvaluare14); sourceAveragePrices
+        parameters.put("fisaDeEvaluare14", new JRBeanCollectionDataSource(fisaDeEvaluare.getSourceAveragePrices()));// fisaDeEvaluare14); sourceAveragePrices
         parameters.put("fisaDeEvaluare15", new JRBeanCollectionDataSource(fisaDeEv15Map.entrySet()));
         parameters.put("expertName",       "_______________________");// fisaDeEvaluare.getExpertName());
         parameters.put("creationFileDate", "_______________________");//sdf.format(fisaDeEvaluare.getCreationFileDate()));

@@ -253,8 +253,16 @@ public class DocumentsController {
             if (category.equals("OI")) {
                 request.getMedicaments().stream().forEach(t -> t.setStatus("C"));
                 closeRequest(request);
+                jobSchedulerComponent.jobUnschedule("/wait-evaluation-medicament-registration", request.getId());
+                jobSchedulerComponent.jobUnschedule("/set-expired-request", request.getId());
+                request.getOutputDocuments().stream().filter(t -> t.getDocType().getCategory().equals("SL")).collect(Collectors.toList()).forEach(t ->
+                        jobSchedulerComponent.jobUnschedule("/wait-request-additional-data-response" + t.getId(), request.getId()));
             } else if (category.equals("OIM")) {
                 closeRequest(request);
+                jobSchedulerComponent.jobUnschedule("/wait-evaluation-medicament-registration", request.getId());
+                jobSchedulerComponent.jobUnschedule("/set-expired-request", request.getId());
+                request.getOutputDocuments().stream().filter(t -> t.getDocType().getCategory().equals("SL")).collect(Collectors.toList()).forEach(t ->
+                        jobSchedulerComponent.jobUnschedule("/wait-request-additional-data-response" + t.getId(), request.getId()));
             } else if (category.equals("DDC")) {
                 clinicalTrailsService.unscheduleClientDetailsDataCT(request.getId());
                 clinicalTrailsService.scheduleFinisLimitCT(request.getId(), request.getRequestNumber());
@@ -363,12 +371,12 @@ public class DocumentsController {
                     if (manufactures.isEmpty()) {
                         ddDTO.setAutorizationOwner(medicamentEntity.getAuthorizationHolder().getDescription());
                     } else {
-                        ddDTO.setAutorizationOwner(medicamentEntity.getAuthorizationHolder().getDescription() + " / " + manufactures.stream().map(t -> t.getManufacture().getDescription() + " " + t.getManufacture().getAddress() + " " + t.getManufacture().getCountry().getDescription()).collect(Collectors.joining("; ")));
+                        ddDTO.setAutorizationOwner(medicamentEntity.getAuthorizationHolder().getDescription() + " / " + manufactures.stream().map(t -> t.getManufacture().getDescription() + " " + t.getManufacture().getCountry().getDescription()).collect(Collectors.joining("; ")));
                     }
                     Set<String> expertsSet = req.getExpertList().stream().map(t -> t.getIntern() ? t.getExpert().getName() : t.getExpertName()).collect(Collectors.toSet());
                     ddDTO.setExpertName(expertsSet.stream().collect(Collectors.joining("\n")));
                     ddDTO.setMedicamentNameDosePharmform(medicamentEntity.getCommercialName() + " " + medicamentEntity.getDose() + " " + medicamentEntity.getPharmaceuticalForm().getDescription());
-                    ddDTO.setNotes("");
+                    ddDTO.setNotes(req.getType().getDescription());
                     ddDTO.setRegistrationNrDate(req.getRequestNumber() + " " + sdf.format(req.getStartDate()));
                     ddListDTO.add(ddDTO);
                 }
@@ -426,36 +434,44 @@ public class DocumentsController {
                 ids.add(req.getId());
             }
             //load full info about requests
+            long transfCert = 0l;
             List<NmManufacturesEntity> manufactures = new ArrayList<>();
             List<RegistrationRequestsEntity> fullInfoRequests = regRequestRepository.findRequestWithMedicamentHistoryInfo(ids);
             for (RegistrationRequestsEntity req : fullInfoRequests) {
                 DispozitieDeDistribuireDTO ddDTO = new DispozitieDeDistribuireDTO();
                 MedicamentHistoryEntity medicamentEntity = req.getMedicamentHistory().stream().findFirst().orElse(new MedicamentHistoryEntity());
                 if (medicamentEntity != null && medicamentEntity.getId() != null) {
+                    if (Boolean.TRUE.equals(medicamentEntity.getTransferCertificate())) {
+                        transfCert++;
+                    }
                     List<MedicamentManufactureHistoryEntity> manufacturesHist =
                             medicamentEntity.getManufacturesHistory().stream().filter(t -> Boolean.TRUE.equals(t.getProducatorProdusFinitTo())).collect(Collectors.toList());
                     if (manufacturesHist.isEmpty()) {
                         ddDTO.setAutorizationOwner(medicamentEntity.getAuthorizationHolderTo().getDescription());
                     } else {
                         ddDTO.setAutorizationOwner(medicamentEntity.getAuthorizationHolderTo().getDescription() + " / " + manufacturesHist.stream().map(t -> t.getManufacture().getDescription() + " " + t.getManufacture().getAddress() + " " + t.getManufacture().getCountry().getDescription()).collect(Collectors.joining("; ")));
-                        manufacturesHist.forEach(t -> manufactures.add(t.getManufacture()));
+                        manufacturesHist.stream().filter(t -> t.getProducatorProdusFinitTo()).forEach(t -> manufactures.add(t.getManufacture()));
                     }
                     ddDTO.setExpertName(req.getExpertList().stream().map(t -> {
                         return t.getIntern() ? t.getExpert().getName() : t.getExpertName();
-                    }).collect(Collectors.joining(";")));
+                    }).collect(Collectors.joining("\n")));
                     ddDTO.setMedicamentNameDosePharmform(medicamentEntity.getCommercialNameTo() + " " + medicamentEntity.getDoseTo() + " " + medicamentEntity.getPharmaceuticalFormTo().getDescription());
                     ddDTO.setNotes("");
                     ddDTO.setRegistrationNrDate(req.getRequestNumber() + " " + sdf.format(req.getStartDate()));
-                    Set<String> vars = req.getVariations().stream().map(t -> t.getValue()).collect(Collectors.toSet());
+                    Set<String> vars = req.getVariations().stream().map(t -> t.getCode() + " - " + t.getValue() + " : " + t.getQuantity()).collect(Collectors.toSet());
+                    if(Boolean.TRUE.equals(medicamentEntity.getTransferCertificate()))
+                    {
+                        vars.add("Transfer de Certificat");
+                    }
                     List<String> varsList = new ArrayList<String>(vars);
                     Collections.sort(varsList, (p1, p2) -> p1.compareTo(p2));
-                    ddDTO.setMedification(varsList.stream().collect(Collectors.joining(",")));
+                    ddDTO.setMedification(varsList.stream().collect(Collectors.joining("; ")));
                     ddListDTO.add(ddDTO);
                 }
             }
             JRBeanCollectionDataSource ddListJRBean = new JRBeanCollectionDataSource(ddListDTO);
             parameters.put("dsipozitiaModificareDataset", ddListJRBean);
-            parameters.put("totalPreparations", String.valueOf(ddListDTO.size()));
+            parameters.put("totalPreparations", String.valueOf(manufactures.size()));
             long mdCount = manufactures.stream().filter(t -> t.getCountry().getCode().equals("MD")).count();
             long eurCount = manufactures.stream().filter(t -> t.getCountry().getGroup() != null && t.getCountry().getGroup().getCategory().equals("EUR")).count();
             long csiCount = manufactures.stream().filter(t -> t.getCountry().getGroup() != null && t.getCountry().getGroup().getCategory().equals("CSI")).count();
@@ -465,13 +481,14 @@ public class DocumentsController {
             parameters.put("others", String.valueOf(manufactures.size() - eurCount - csiCount));
             long variations1 = 0l;
             long variations2 = 0l;
-            long transfCert = 0l;
             for (RegistrationRequestsEntity req : requests) {
-                if (req.getVariations().size() > 1) {
-                    variations1 += req.getVariations().stream().filter(rv -> rv.getValue().startsWith("I") && !rv.getValue().startsWith("II")).collect(Collectors.toList()).stream().count();
-                    variations2 += req.getVariations().stream().filter(rv -> rv.getValue().startsWith("II")).collect(Collectors.toList()).stream().count();
-                } else if (req.getVariations().size() == 1) {
-                    transfCert += req.getVariations().stream().filter(rv -> rv.getVariation().getCode().equals("A.1")).collect(Collectors.toList()).stream().count();
+                for (RequestVariationTypeEntity variation : req.getVariations()) {
+                    if (variation.getValue().startsWith("I") && !variation.getValue().startsWith("II")) {
+                        variations1 += variation.getQuantity();
+                    }
+                    if (variation.getValue().startsWith("II")) {
+                        variations2 += variation.getQuantity();
+                    }
                 }
             }
             parameters.put("variations1", String.valueOf(variations1));
@@ -766,7 +783,6 @@ public class DocumentsController {
             parameters1.put("date", sdf.format(new Date()));
             parameters1.put("nr", String.valueOf(seq.getId()));
             parameters1.put("genDir", sysParamsRepository.findByCode(Constants.SysParams.DIRECTOR_GENERAL).get().getValue());
-            JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, parameters1, new JREmptyDataSource());
 
             List<MedicamentePentruOrdinDTO> medMD = new ArrayList<>();
             List<MedicamentePentruOrdinDTO> medImport = new ArrayList<>();
@@ -837,6 +853,30 @@ public class DocumentsController {
             }
 
             List<JasperPrint> jasperPrints = new ArrayList<>();
+
+            String annexxes = "";
+            int i = 0;
+            if (!medMD.isEmpty()) {
+                annexxes += ++i + ".\tA autoriza pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat " +
+                        "produsele medicamentoase autohtone fără plata taxei de autorizare, conform anexei nr. 1.|";
+            }
+            if (!medImport.isEmpty()) {
+                annexxes += ++i + ".\tA autoriza pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat " +
+                        "produsele medicamentoase de import cu achitarea taxei de autorizare corespunzătoare fiecărui " +
+                        "produs, conform anexei nr. 2.|";
+            }
+            if (!medRepetatMD.isEmpty()) {
+                annexxes += ++i + ".\tA autoriza repetat pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat " +
+                        "produsele medicamentoase autohtone fără plata taxei de autorizare, conform anexei nr. 3.|";
+            }
+            if (!medRepetatImport.isEmpty()) {
+                annexxes += ++i + ".\tA autoriza repetat pe teritoriul Republicii Moldova și a include în Nomenclatorul de Stat " +
+                        "produsele medicamentoase de import cu achitarea taxei de autorizare corespunzătoare fiecărui " +
+                        "tip de produs, conform anexei nr. 4.|";
+            }
+            annexxes += ++i + ".\tControlul executării prezentului ordin mi-l asum.";
+            parameters1.put("anexxes", annexxes);
+            JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, parameters1, new JREmptyDataSource());
             jasperPrints.add(jasperPrint1);
             if (!medMD.isEmpty()) {
                 ResourceLoader resourceLoader2 = new DefaultResourceLoader();
@@ -973,10 +1013,14 @@ public class DocumentsController {
                 medicamentePentruOrdinDTO.setMedicamentName(history.getCommercialNameTo());
                 medicamentePentruOrdinDTO.setPharmaceutiFormDoseDivision(history.getPharmaceuticalFormTo().getDescription() + ", " + history.getDoseTo() + ", " + history.getDivisionHistory().stream().map(t -> Utils.getConcatenatedDivisionHistory(t)).collect(Collectors.joining("; ")));
                 RegistrationRequestsEntity req = regRequestRepository.findById(history.getRequestId()).orElse(new RegistrationRequestsEntity());
-                Set<String> vars = req.getVariations().stream().map(t -> t.getValue()).collect(Collectors.toSet());
+                Set<String> vars = req.getVariations().stream().map(t -> t.getCode() + " - " + t.getValue() + " : " + t.getQuantity()).collect(Collectors.toSet());
+                if(Boolean.TRUE.equals(history.getTransferCertificate()))
+                {
+                    vars.add("Transfer \nde Certificat");
+                }
                 List<String> varsList = new ArrayList<String>(vars);
                 Collections.sort(varsList, (p1, p2) -> p1.compareTo(p2));
-                medicamentePentruOrdinDTO.setModificationType(varsList.stream().collect(Collectors.joining(",")));
+                medicamentePentruOrdinDTO.setModificationType(varsList.stream().collect(Collectors.joining("; ")));
                 medicamentePentruOrdinDTO.setRegistrationNrDate(sdf.format(history.getRegistrationDate()));
                 anex1.add(medicamentePentruOrdinDTO);
             }
@@ -1077,15 +1121,14 @@ public class DocumentsController {
         Set<Integer> actIds = new HashSet<>();
         for (RegistrationRequestsEntity req : requests) {
             ids.add(req.getId());
-            Optional<OutputDocumentsEntity> outDocument = req.getOutputDocuments().stream().filter(t->t.getDocType().getCategory().equals("LAB")).findAny();
-            if(outDocument.isPresent()) {
+            Optional<OutputDocumentsEntity> outDocument = req.getOutputDocuments().stream().filter(t -> t.getDocType().getCategory().equals("LAB")).findAny();
+            if (outDocument.isPresent()) {
                 actIds.add(outDocument.get().getId());
             }
         }
         regRequestRepository.setLabNumber(ids, null);
         outputDocumentsRepository.deleteById(document.getId());
-        for(Integer id : actIds)
-        {
+        for (Integer id : actIds) {
             outputDocumentsRepository.deleteById(id);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -1221,7 +1264,7 @@ public class DocumentsController {
                     order.setNumber(String.valueOf(seq.getId()));
                     order.setCurrency(bonDePlataDTO.getCurrency());
                     order.setAmountExchanged(AmountUtils.round(order.getQuantity() * order.getAmount() / coeficient, 2));
-                    if("BS".equals(order.getServiceCharge().getCategory())) {
+                    if ("BS".equals(order.getServiceCharge().getCategory())) {
                         order.setNumber(null);
                     }
                     paymentOrderRepository.save(order);
@@ -1342,11 +1385,17 @@ public class DocumentsController {
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("medName", certificateDTO.getMedName());
             parameters.put("formFarmDosePakageSize", certificateDTO.getPharmaceuticalPhorm() + " " + certificateDTO.getDose() + " " + certificateDTO.getDivisions());
-            String composition = "substanţe active: " + certificateDTO.getActiveSubstances().stream().collect(Collectors.joining("; "));
+            String composition = "";
+            if (certificateDTO.getActiveSubstances().size() > 3) {
+                composition = "substanţe active: combinatie";
+            } else {
+                composition = "substanţe active: " + certificateDTO.getActiveSubstances().stream().collect(Collectors.joining("; "));
+            }
+
             composition += "\r\nexcipienţi: anexa 1";
             parameters.put("composition", composition);
             parameters.put("marketingAutorizationHolder", certificateDTO.getAuthorizationHolder() + "," + certificateDTO.getAuthorizationHolderCountry());
-            parameters.put("manufacturer", certificateDTO.getManufacture() + "," + certificateDTO.getManufactureCountry());
+            parameters.put("manufacturer", certificateDTO.getManufactureWithAddress().stream().collect(Collectors.joining("\n")));
             parameters.put("atcClassification", certificateDTO.getAtcCode());
             parameters.put("shelfLife", certificateDTO.getTermsOfValidity() + " luni");
             SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy", new Locale("ro", "RO"));
@@ -1359,6 +1408,11 @@ public class DocumentsController {
             parameters.put("orderDateMD", sdf.format(certificateDTO.getOrderDate()));
             SimpleDateFormat sdfEn = new SimpleDateFormat("dd MMMM yyyy", new Locale("en", "EN"));
             parameters.put("orderDateEN", sdfEn.format(certificateDTO.getOrderDate()));
+            if (certificateDTO.getIsUnlimitedPeriod()) {
+                parameters.put("validety", "nelimitată");
+            } else {
+                parameters.put("validety", "de 5 ani");
+            }
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             bytes = JasperExportManager.exportReportToPdf(jasperPrint);
@@ -2880,7 +2934,7 @@ public class DocumentsController {
             JRBeanCollectionDataSource itemsBonAnihilare2MedicamenteJRBean = new JRBeanCollectionDataSource(bon2List);
 
 
-            NmEconomicAgentsEntity ecAgent = economicAgentsRepository.findFirstByIdnoEquals(request.getMedicamentAnnihilation().getIdno()).get();
+            NmEconomicAgentsEntity ecAgent = request.getCompany();
 
             /* Map to hold Jasper report Parameters */
             Map<String, Object> parameters = new HashMap<>();
@@ -3134,9 +3188,7 @@ public class DocumentsController {
             outputDocumentsEntity.setPath(docPath);
             outputDocumentsRepository.save(outputDocumentsEntity);
         } catch (IOException |
-                JRException e)
-
-        {
+                JRException e) {
             throw new CustomException(e.getMessage(), e);
         }
 
@@ -3286,7 +3338,7 @@ public class DocumentsController {
                             Optional<MedicamentEntity> med = medicamentRepository.findById(m.getMedicamentId());
                             if (med.isPresent()) {
                                 ListaMedicamentelorPentruComisie l = new ListaMedicamentelorPentruComisie();
-                                l.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                                l.setCompanyName(request.getCompany().getName());
                                 l.setAnihilationMethod(m.getDestructionMethod().getDescription());
                                 l.setFutilityCause(m.getUselessReason());
                                 l.setMedicamentName(med.get().getCommercialName());
@@ -3301,7 +3353,7 @@ public class DocumentsController {
                         } else {
                             ListaMedicamentelorPentruComisie l = new ListaMedicamentelorPentruComisie();
 
-                            l.setCompanyName(request.getMedicamentAnnihilation().getCompanyName());
+                            l.setCompanyName(request.getCompany().getName());
                             l.setAnihilationMethod(m.getDestructionMethod().getDescription());
                             l.setFutilityCause(m.getUselessReason());
                             l.setMedicamentName(m.getNotRegisteredName());
@@ -3612,15 +3664,17 @@ public class DocumentsController {
                     List<String> investigators =
                             medInst.getSubdivisionsList().stream().map(subdiv ->
                                     subdiv.getInvestigatorsList().stream().filter(invest ->
-                                            invest.getIsMain() == Boolean.TRUE).findAny().get())
+                                            Boolean.TRUE.equals(invest.getIsMain())).findAny().get())
                                     .map(mainInvestig -> mainInvestig.getNmInvestigator().getFirstName().concat(" ").concat(mainInvestig.getNmInvestigator().getLastName()))
                                     .collect(Collectors.toList());
                     sb.append(String.join(" si ", investigators));
                     sb.append("|");
                 });
-                sb.deleteCharAt(sb.lastIndexOf("|"));
-                if(registrationRequestsEntity.getClinicalTrails().getMedicalInstitutions().size()==1
-                        && registrationRequestsEntity.getClinicalTrails().getMedicalInstitutions().stream().findAny().get().getSubdivisionsList().size() == 1 ){
+                if (sb.length() > 0) {
+                    sb.deleteCharAt(sb.lastIndexOf("|"));
+                }
+                if (registrationRequestsEntity.getClinicalTrails().getMedicalInstitutions().size() == 1
+                        && registrationRequestsEntity.getClinicalTrails().getMedicalInstitutions().stream().findAny().get().getSubdivisionsList().size() == 1) {
                     sb.append("| va organiza studiul clinic:|");
                 } else {
                     sb.append("| vor organiza studiul clinic:|");

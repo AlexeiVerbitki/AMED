@@ -23,10 +23,31 @@
 			              (documentModified)="documentModified($event)"></app-document>
 		</div>
 		<div class="row">
-			<div class="col">
+			<div class="col-md-3">
+				<div class="md-form-modified-select">
+					<ng-select class="custom" [items]="companii | async"
+							   bindLabel="name"
+							   placeholder="Compania beneficiara"
+							   formControlName="company"
+							   [required]="true"
+							   [loading]="loadingCompany"
+							   [typeahead]="companyInputs"
+					>
+						<ng-template ng-option-tmp let-item="item">
+							{{item.name}} <br/>
+							<small class="form-text text-muted">{{item.idno}}</small>
+						</ng-template>
+					</ng-select>
+				</div>
+				<div *ngIf="formSubmitted && eForm.get('company').invalid">
+					<small class="text-muted"><strong class="text-danger">Compania beneficiara trebuie selectata</strong>
+					</small>
+				</div>
+			</div>
+			<div class="col-md-1">
 				<div class="md-form">
-					<input id="compSolicitant" mdbInputDirective type="text" class="form-control" formControlName="companyValue" [attr.disabled]="true">
-					<label for="compSolicitant">Compania solicitant</label>
+					<button class="btn btn-mdb-color btn-sm" mdbTooltip="Agent economic nou" (click)="newAgent()"><i
+							class="fa fa-plus fa-lg" aria-hidden="true"></i></button>
 				</div>
 			</div>
 			<div class="col">
@@ -89,7 +110,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">
+		<div class="card-body card-body-cascade table-height" *ngIf="eForm.get('type').value && (eForm.get('type').value.code=='MERG' || eForm.get('type').value.code=='MERS')">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -143,7 +164,7 @@
 		</div>
 
 		<!-- Card content -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -204,7 +225,7 @@
 		</div>
 
 		<!-- Tabela substante active -->
-		<div class="card-body card-body-cascade">
+		<div class="card-body card-body-cascade table-height">
 			<table class="table table-widths text-center">
 				<thead class="bg-sidebar white-text">
 				<tr>
@@ -236,9 +257,9 @@
 			</table>
 		</div>
 		<div *ngIf="activeSubstancesTable.length === 0" class="text-center text-muted mt-3"> Nu sunt inregistrari gasite!</div>
-		<div *ngIf="formSubmitted && activeSubstancesTable.length==0">
-			<small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>
-		</div>
+<!--		<div *ngIf="formSubmitted && activeSubstancesTable.length==0">-->
+<!--			<small class="text-muted"><strong class="text-danger">Nici o substanta activa nu a fost adaugata</strong></small>-->
+<!--		</div>-->
 		<hr>
 		<!--Substante auxiliare-->
 		<div class="gradient-card-header bg-sidebar border-gradient">
@@ -259,7 +280,7 @@
 
 		<!-- Tabela substante auxiliare -->
 		<div class="card-body card-body-cascade">
-			<table class="table table-widths text-center">
+			<table class="table table-widths text-center table-height">
 				<thead class="bg-sidebar white-text">
 				<tr>
 					<th scope="col">Nr.</th>
@@ -447,7 +468,7 @@
 
 		<!-- Card content -->
 		<div class="card-body card-body-cascade">
-			<table class="table table-widths text-center">
+			<table class="table table-widths text-center table-height">
 				<thead class="bg-sidebar white-text">
 				<tr>
 					<th scope="col">Denumire</th>
@@ -518,7 +539,7 @@
 
 			<!-- Card content -->
 			<div class="card-body card-body-cascade">
-				<table class="table table-widths text-center">
+				<table class="table table-widths text-center table-height">
 					<thead class="bg-sidebar white-text">
 					<tr>
 						<th scope="col">Nr.</th>
@@ -565,7 +586,7 @@
 
 		<!-- Card content -->
 		<div class="card-body card-body-cascade">
-			<table class="table table-widths-lg text-center">
+			<table class="table table-widths-lg text-center table-height">
 				<thead class="bg-sidebar white-text">
 				<tr>
 					<th scope="col">Denumirea</th>

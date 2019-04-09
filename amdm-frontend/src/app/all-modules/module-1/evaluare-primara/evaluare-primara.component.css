@@ -37,3 +37,9 @@ label.required:not(:empty):after,
   margin-left: 15px;
   margin-top: 15px;
 }
+
+.table-height {
+  max-height : 250px;
+  width: 100%;
+  overflow: auto;
+}

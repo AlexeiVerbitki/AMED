@@ -103,7 +103,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
         this.mForm = this.fb.group({
             'nrCererii': [{value: null, disabled: true}, Validators.required],
             'dataCererii': [{value: null, disabled: true}],
-            'company': [null, Validators.required],
+            'company': [null],
             'telefonContact': [null, [Validators.maxLength(9), Validators.pattern('[0-9]+')]],
             'emailContact': [null, Validators.email],
             'persResDepCereriiFirstname': [null, Validators.required],
@@ -142,8 +142,6 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
 
 
 
-        annihilationModel.idno = this.mForm.get('company').value.idno;
-
         modelToSubmit.medicamentAnnihilation = annihilationModel;
         modelToSubmit.requestNumber = this.mForm.get('nrCererii').value;
 
@@ -169,6 +167,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
             requestMandateNr : this.mForm.get('nrProcurii1').value,
             requestMandateDate : this.mForm.get('dataProcurii1').value,
             idnp : this.mForm.get('idnp').value,
+            companySolicitant: this.mForm.get('company').value
         }];
 
 
@@ -189,7 +188,7 @@ export class DrugsDestroyRegisterComponent implements OnInit, OnDestroy {
     newAgent() {
         const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
             width: '1000px',
-            panelClass: 'materialLicense',
+            panelClass: 'custom-dialog-container',
             data: {
             },
             hasBackdrop: true

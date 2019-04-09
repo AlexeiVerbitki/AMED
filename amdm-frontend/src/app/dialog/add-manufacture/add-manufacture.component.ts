@@ -63,10 +63,10 @@ export class AddManufactureComponent implements OnInit {
     }
 
     this.wasManufactureAdded = false;
-    const test = this.dataDialog.manufacturesTable.find(r => r.manufacture.id == this.aForm.get('manufacture').value.id);
-    if (test) {
-       this.wasManufactureAdded = true;
-    }
+    // const test = this.dataDialog.manufacturesTable.find(r => r.manufacture.id == this.aForm.get('manufacture').value.id);
+    // if (test) {
+    //    this.wasManufactureAdded = true;
+    // }
 
     this.aForm.get('manufactureCountry').setValue(this.aForm.get('manufacture').value.country.description);
     this.aForm.get('manufactureAddress').setValue(this.aForm.get('manufacture').value.address);

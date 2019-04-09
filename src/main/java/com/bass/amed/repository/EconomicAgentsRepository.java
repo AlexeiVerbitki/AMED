@@ -27,7 +27,7 @@ public interface EconomicAgentsRepository extends JpaRepository<NmEconomicAgents
 
 
 
-    @Query(value = "SELECT * FROM nm_economic_agents m WHERE (upper(m.name) like upper(CONCAT(?1, '%')) or m.idno = ?2 ) group by idno", nativeQuery = true)
+    @Query(value = "SELECT * FROM nm_economic_agents m WHERE (upper(m.name) like upper(CONCAT(?1, '%')) or m.idno = ?2 ) and m.idno is not null group by idno", nativeQuery = true)
     List<LicenseCompanyProjection> getLicenseDetails(String name , String idno);
 
     Optional<NmEconomicAgentsEntity> findFirstByIdnoEqualsAndLicenseIdIsNotNull(String idno);

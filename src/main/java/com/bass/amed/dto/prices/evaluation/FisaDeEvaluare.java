@@ -1,7 +1,5 @@
 package com.bass.amed.dto.prices.evaluation;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +46,7 @@ public class FisaDeEvaluare {
 	@Transient
 	private List<FisaDeEvaluare13> similarRegisteredMedicaments;
 	@Transient
-	private Map<String, Double> sourceAveragePrices;
+	private List<FisaDeEvaluare14> sourceAveragePrices;
 	@Transient
 	private Map<Integer, Double> previousYearsPrices;
 
@@ -58,50 +56,6 @@ public class FisaDeEvaluare {
 
 	public FisaDeEvaluare() {
 
-	}
-
-	public FisaDeEvaluare(String cimOwner, String countryOwner, String manufacturer, String countryManufacturer,
-			Date applicationDate, List<FisaDeEvaluare4> medicamentClaimedPriceList, String medicamentStatus,
-			List<FisaDeEvaluare6> medicamentOriginalPriceList, Double averageRateEuro, Double averageRateUsd,
-			List<FisaDeEvaluare8> medicamentReferenceCountryPriceList, Double min1Mdl, Double min2Mdl, Double min3Mdl,
-			Double medMdl, Double min1Eur, Double min2Eur, Double min3Eur, Double medEur, Double min1Usd,
-			Double min2Usd, Double min3Usd, Double medUsd, List<FisaDeEvaluare10> previousPriceRegistrations,
-			List<FisaDeEvaluare11> originCountryMedicamentPriceList, List<FisaDeEvaluare12> minimalPricesAverages,
-			List<FisaDeEvaluare13> similarRegisteredMedicaments, Map<String, Double> sourceAveragePrices,
-			Map<Integer, Double> previousYearsPrices, String expertName, Date creationFileDate,
-			String chiefSectionName) {
-		this.cimOwner = cimOwner;
-		this.countryOwner = countryOwner;
-		this.manufacturer = manufacturer;
-		this.countryManufacturer = countryManufacturer;
-		this.applicationDate = applicationDate;
-		this.medicamentClaimedPriceList = medicamentClaimedPriceList;
-		this.medicamentStatus = medicamentStatus;
-		this.medicamentOriginalPriceList = medicamentOriginalPriceList;
-		this.averageRateEuro = averageRateEuro;
-		this.averageRateUsd = averageRateUsd;
-		this.medicamentReferenceCountryPriceList = medicamentReferenceCountryPriceList;
-		this.min1Mdl = min1Mdl;
-		this.min2Mdl = min2Mdl;
-		this.min3Mdl = min3Mdl;
-		this.medMdl = medMdl;
-		this.min1Eur = min1Eur;
-		this.min2Eur = min2Eur;
-		this.min3Eur = min3Eur;
-		this.medEur = medEur;
-		this.min1Usd = min1Usd;
-		this.min2Usd = min2Usd;
-		this.min3Usd = min3Usd;
-		this.medUsd = medUsd;
-		this.previousPriceRegistrations = previousPriceRegistrations;
-		this.originCountryMedicamentPriceList = originCountryMedicamentPriceList;
-		this.minimalPricesAverages = minimalPricesAverages;
-		this.similarRegisteredMedicaments = similarRegisteredMedicaments;
-		this.sourceAveragePrices = sourceAveragePrices;
-		this.previousYearsPrices = previousYearsPrices;
-		this.expertName = expertName;
-		this.creationFileDate = creationFileDate;
-		this.chiefSectionName = chiefSectionName;
 	}
 
 	public String getCimOwner() {
@@ -320,11 +274,11 @@ public class FisaDeEvaluare {
 		this.similarRegisteredMedicaments = similarRegisteredMedicaments;
 	}
 
-	public Map<String, Double> getSourceAveragePrices() {
+	public List<FisaDeEvaluare14> getSourceAveragePrices() {
 		return sourceAveragePrices;
 	}
 
-	public void setSourceAveragePrices(Map<String, Double> sourceAveragePrices) {
+	public void setSourceAveragePrices(List<FisaDeEvaluare14> sourceAveragePrices) {
 		this.sourceAveragePrices = sourceAveragePrices;
 	}
 

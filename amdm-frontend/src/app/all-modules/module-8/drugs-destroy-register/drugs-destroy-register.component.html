@@ -23,9 +23,8 @@
                 <div class="md-form-modified-select">
                     <ng-select class="custom" [items]="companii | async"
                                bindLabel="name"
-                               placeholder="Agentul economic"
+                               placeholder="Compania solicitanta"
                                formControlName="company"
-                               [required]="true"
                                [loading]="loadingCompany"
                                [typeahead]="companyInputs"
                     >
@@ -34,10 +33,6 @@
                             <small class="form-text text-muted">{{item.idno}}</small>
                         </ng-template>
                     </ng-select>
-                </div>
-                <div *ngIf="mFormSubbmitted && !mForm.get('company').valid">
-                    <small class="text-muted"><strong class="text-danger">Agentul economic trebuie introdus</strong>
-                    </small>
                 </div>
             </div>
             <div class="col-md-1">

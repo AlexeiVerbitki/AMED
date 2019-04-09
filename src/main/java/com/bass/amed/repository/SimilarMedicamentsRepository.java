@@ -19,6 +19,7 @@ public interface SimilarMedicamentsRepository extends JpaRepository<SimilarMedic
             "       p.id                  priceId,\n" +
             "       p.price               price,\n" +
             "       cur.short_description currency,\n" +
+            "       m.pharmaceutical_form_id pharmaceuticalFormId,\n" +
             "       p.price_mdl           mdlValue\n" +
             "FROM nm_prices p left join medicament m on p.medicament_id = m.id\n" +
             "       left join nm_pharmaceutical_forms npf on m.pharmaceutical_form_id = npf.id\n" +

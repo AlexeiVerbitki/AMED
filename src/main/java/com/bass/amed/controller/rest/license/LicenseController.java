@@ -60,9 +60,6 @@ public class LicenseController {
     private LicenseActivityTypeRepository licenseActivityTypeRepository;
 
     @Autowired
-    private LicenseMandatedContactRepository licenseMandatedContactRepository;
-
-    @Autowired
     private LocalityService localityService;
 
     @Autowired
@@ -82,7 +79,7 @@ public class LicenseController {
         logger.debug("Add license" + request);
 
         request.setType(requestTypeRepository.findByCode("LICEL").get());
-        request.getLicense().setStatus("A");
+//        request.getLicense().setStatus("A");
 
         licenseRegistrationRequestService.saveNewLicense(request);
 

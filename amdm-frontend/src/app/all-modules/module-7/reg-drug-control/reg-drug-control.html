@@ -52,11 +52,10 @@
                 <div class="md-form-modified">
                     <ng-select [items]="companies | async"
                                bindLabel="name"
-                               placeholder="Compania solicitant"
+                               placeholder="Compania solicitanta"
                                formControlName="company"
                                [loading]="loadingCompany"
-                               [typeahead]="companyInputs"
-                               required="true">
+                               [typeahead]="companyInputs" >
                         <ng-template ng-option-tmp let-item="item">
                             {{item.name}} <br/>
                             <small class="form-text text-muted">{{item.idno}}</small>

@@ -13,6 +13,7 @@ import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/ope
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {GDPService} from '../../../shared/service/gdp.service';
 import {ConfirmationDialogComponent} from '../../../dialog/confirmation-dialog.component';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -45,7 +46,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
         this.rForm = fb.group({
             'data': {disabled: true, value: new Date()},
             'requestNumber': [null],
-            'idnp': [null, [Validators.required, Validators.maxLength(13)]],
+            'idnp': [null],
             'id': [null],
             'startDate': [new Date()],
             'currentStep': ['E'],
@@ -151,6 +152,23 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     }
 
 
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'materialLicense',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
+    }
+
+
     checkIDNP($event) {
         if ($event.target.value.trim().length === 0) {
             this.rForm.get('idnp').setErrors(null);
@@ -170,7 +188,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
         this.formSubmitted = true;
 
-        if (!this.rForm.valid || !this.rForm.get('idnp').value) {
+        if (!this.rForm.valid || (this.rForm.get('idnp').value && this.rForm.get('idnp').invalid)) {
             return;
         }
 
@@ -196,6 +214,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             email: this.rForm.get('email').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value,
+            companySolicitant: this.rForm.get('company').value,
             id: this.rForm.get('registrationRequestMandatedContactsId').value,
             idnp: this.rForm.get('idnp').value
         }];

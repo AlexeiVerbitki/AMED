@@ -18,6 +18,8 @@ import {ExpertiModifyComponent} from './experti-modify/experti-modify.component'
 import {ProcessInterruptionModifyComponent} from './process-interruption-modify/process-interruption-modify.component';
 import {InstructionModule} from '../../common/instruction/instruction.module';
 import {MachetaModule} from '../../common/macheta/macheta.module';
+import {EcAgentModule} from '../../administration/economic-agent/ec-agent.module';
+import {EditVariationComponent} from '../../dialog/edit-variation/edit-variation.component';
 
 @NgModule({
     imports: [
@@ -32,11 +34,13 @@ import {MachetaModule} from '../../common/macheta/macheta.module';
         InstructionModule,
         MachetaModule,
         PaymentModule,
+        EcAgentModule,
         ExpertComiteeModule,
     ],
     schemas: [],
-    declarations: [RegModifyCerereComponent, EvaluarePrimaraModifyComponent, ExpertiModifyComponent, ProcessInterruptionModifyComponent],
-    providers: [UploadFileService, RequestService, CanDeactivateGuard, PriceService]
+    declarations: [RegModifyCerereComponent, EvaluarePrimaraModifyComponent, ExpertiModifyComponent, ProcessInterruptionModifyComponent, EditVariationComponent],
+    providers: [UploadFileService, RequestService, CanDeactivateGuard, PriceService],
+    entryComponents: [EditVariationComponent]
 })
 export class PostModifyModule {
 }

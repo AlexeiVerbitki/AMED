@@ -40,6 +40,10 @@ export class PriceService {
         return this.administrationService.getAllDocTypes();
     }
 
+    getAllPharamceuticalForms(): Observable<any> {
+        return this.administrationService.getAllPharamceuticalForms();
+    }
+
     getMedicamentById(id: string): any {
         return this.medicamentService.getMedicamentById(id);
     }

@@ -820,55 +820,56 @@ public final class AuditUtils
         dummyEntities.add(fillAuditLogEntity("compania solicitantă", request.getLicense().getCompanyName(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
         dummyEntities.add(fillAuditLogEntity("tip cerere", request.getType().getDescription(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
 
-        LicenseMandatedContactEntity lm = request.getLicense().getDetail().getLicenseMandatedContacts().stream().findFirst().get();
-        dummyEntities.add(fillAuditLogEntity("nume solicitant", lm.getRequestPersonLastname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
-        dummyEntities.add(fillAuditLogEntity("prenume solicitant", lm.getRequestPersonLastname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+        RegistrationRequestMandatedContactEntity lmPrimary = request.getRegistrationRequestMandatedContacts().stream().filter(mc -> mc.getPrimary()).findFirst().get();
+        RegistrationRequestMandatedContactEntity lmSecondary = request.getRegistrationRequestMandatedContacts().stream().filter(mc -> !mc.getPrimary()).findFirst().get();
+        dummyEntities.add(fillAuditLogEntity("nume solicitant", lmPrimary.getMandatedLastname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+        dummyEntities.add(fillAuditLogEntity("prenume solicitant", lmPrimary.getMandatedFirstname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
 
-        if (lm.getEmail() != null)
+        if (lmPrimary.getEmail() != null)
         {
-            dummyEntities.add(fillAuditLogEntity("email", lm.getEmail(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+            dummyEntities.add(fillAuditLogEntity("email", lmPrimary.getEmail(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
         }
-        if (lm.getIdnp() != null && !lm.getIdnp().isEmpty())
+        if (lmPrimary.getIdnp() != null && !lmPrimary.getIdnp().isEmpty())
         {
-            dummyEntities.add(fillAuditLogEntity("IDNP", lm.getIdnp(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+            dummyEntities.add(fillAuditLogEntity("IDNP", lmPrimary.getIdnp(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
         }
-        if (lm.getPhoneNumber() != null)
+        if (lmPrimary.getPhoneNumber() != null)
         {
-            dummyEntities.add(fillAuditLogEntity("numar de telefon", lm.getPhoneNumber(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+            dummyEntities.add(fillAuditLogEntity("numar de telefon", lmPrimary.getPhoneNumber(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
         }
-        if (lm.getRequestMandateDate() != null)
+        if (lmPrimary.getRequestMandateDate() != null)
         {
-            dummyEntities.add(fillAuditLogEntity("data procura", lm.getRequestMandateDate(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+            dummyEntities.add(fillAuditLogEntity("data procura", lmPrimary.getRequestMandateDate(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
         }
-        if (lm.getRequestMandateNr() != null)
+        if (lmPrimary.getRequestMandateNr() != null)
         {
-            dummyEntities.add(fillAuditLogEntity("numar procura", lm.getRequestMandateNr(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+            dummyEntities.add(fillAuditLogEntity("numar procura", lmPrimary.getRequestMandateNr(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
         }
 
-        if (lm.getNewMandatedLastname() != null && !lm.getNewMandatedLastname().isEmpty())
+        if (lmSecondary.getMandatedLastname() != null && !lmSecondary.getMandatedLastname().isEmpty())
         {
-            dummyEntities.add(fillAuditLogEntity("nume solicitant la eliberare", lm.getNewMandatedLastname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
-            dummyEntities.add(fillAuditLogEntity("prenume solicitant la eliberare", lm.getNewMandatedFirstname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+            dummyEntities.add(fillAuditLogEntity("nume solicitant la eliberare", lmSecondary.getMandatedLastname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+            dummyEntities.add(fillAuditLogEntity("prenume solicitant la eliberare", lmSecondary.getMandatedFirstname(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
 
-            if (lm.getNewEmail() != null)
+            if (lmSecondary.getEmail() != null)
             {
-                dummyEntities.add(fillAuditLogEntity("email la eliberare", lm.getNewEmail(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+                dummyEntities.add(fillAuditLogEntity("email la eliberare", lmSecondary.getEmail(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
             }
-            if (lm.getNewIdnp() != null)
+            if (lmSecondary.getIdnp() != null)
             {
-                dummyEntities.add(fillAuditLogEntity("IDNP la eliberare", lm.getNewIdnp(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+                dummyEntities.add(fillAuditLogEntity("IDNP la eliberare", lmSecondary.getIdnp(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
             }
-            if (lm.getNewPhoneNumber() != null)
+            if (lmSecondary.getPhoneNumber() != null)
             {
-                dummyEntities.add(fillAuditLogEntity("numar de telefon la eliberare", lm.getNewPhoneNumber(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+                dummyEntities.add(fillAuditLogEntity("numar de telefon la eliberare", lmSecondary.getPhoneNumber(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
             }
-            if (lm.getNewMandatedDate() != null)
+            if (lmSecondary.getRequestMandateDate() != null)
             {
-                dummyEntities.add(fillAuditLogEntity("data procura la eliberare", lm.getNewMandatedDate(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+                dummyEntities.add(fillAuditLogEntity("data procura la eliberare", lmSecondary.getRequestMandateDate(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
             }
-            if (lm.getNewMandatedNr() != null)
+            if (lmSecondary.getRequestMandateNr() != null)
             {
-                dummyEntities.add(fillAuditLogEntity("numar procura la eliberare", lm.getNewMandatedNr(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
+                dummyEntities.add(fillAuditLogEntity("numar procura la eliberare", lmSecondary.getRequestMandateNr(), request.getId(), request.getId(), Constants.AUDIT_ACTIONS.ADD.name(), Constants.AUDIT_CATEGORIES.MODULE.name(), Constants.AUDIT_SUBCATEGORIES.MODULE_5.name()));
             }
         }
 

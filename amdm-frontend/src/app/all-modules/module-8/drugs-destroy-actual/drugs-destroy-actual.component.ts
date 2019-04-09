@@ -142,7 +142,7 @@ export class DrugsDestroyActualComponent implements OnInit, OnDestroy {
     private patchData(data) {
         this.mForm.get('nrCererii').patchValue(data.requestNumber);
         this.mForm.get('dataCererii').patchValue(new Date(data.startDate));
-        this.mForm.get('company').patchValue(data.medicamentAnnihilation.companyName);
+        this.mForm.get('company').patchValue(data.company.name);
         this.kForm.get('firstname').patchValue(data.medicamentAnnihilation.firstname);
         this.kForm.get('lastname').patchValue(data.medicamentAnnihilation.lastname);
 

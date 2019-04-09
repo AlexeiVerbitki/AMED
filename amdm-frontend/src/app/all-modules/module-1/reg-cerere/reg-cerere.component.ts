@@ -17,6 +17,7 @@ import {CanModuleDeactivate} from '../../../shared/auth-guard/can-deactivate-gua
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {ScrAuthorRolesService} from '../../../shared/auth-guard/scr-author-roles.service';
+import {AddEcAgentComponent} from '../../../administration/economic-agent/add-ec-agent/add-ec-agent.component';
 
 @Component({
     selector: 'app-reg-cerere',
@@ -62,7 +63,7 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             'requestMandateNr': [null],
             'requestMandateDate': [null],
             'idnp': [null, [Validators.maxLength(13), Validators.minLength(13), Validators.pattern('[0-9]+')]],
-            'company': [null, Validators.required],
+            'company': [null],
             'initiator': [''],
             'assignedUser': [''],
             'regSubject': ['', Validators.required],
@@ -122,8 +123,8 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
 
 
         this.formSubmitted = true;
-        if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid || this.rForm.get('company').invalid
-            || this.rForm.get('idnp').invalid) {
+        if (this.rForm.get('mandatedFirstname').invalid || this.rForm.get('mandatedLastname').invalid 
+            || this.rForm.get('idnp').invalid || this.rForm.get('regSubject').invalid) {
             return;
         }
 
@@ -158,10 +159,12 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
             email: this.rForm.get('email').value,
             requestMandateNr: this.rForm.get('requestMandateNr').value,
             requestMandateDate: this.rForm.get('requestMandateDate').value,
-            idnp: this.rForm.get('idnp').value
+            idnp: this.rForm.get('idnp').value,
+            companySolicitant: this.rForm.get('company').value
         }];
         modelToSubmit.type = {code: 'MEDF'};
 
+        modelToSubmit.company = null;
         this.subscriptions.push(this.requestService.addMedicamentRequest(modelToSubmit).subscribe(data => {
                 this.loadingService.hide();
                 if (this.roleSrv.isRightAssigned('scr_module_2') || this.roleSrv.isRightAssigned('scr_admin')) {
@@ -180,20 +183,23 @@ export class RegCerereComponent implements OnInit, OnDestroy, CanModuleDeactivat
     }
 
     canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
-
-        // if(!this.rForm.dirty){
-        //     return true;
-        // }
-        // const dialogRef = this.dialogConfirmation.open(ConfirmationDialogComponent, {
-        //     data: {
-        //         message: 'Toate datele colectate nu vor fi salvate, sunteti sigur(a)?',
-        //         confirm: false,
-        //     size: 'sm',
-        //     }
-        // });
-        //
-        // return dialogRef.afterClosed();
         return true;
 
+    }
+
+    newAgent() {
+        const dialogRef2 = this.dialog.open(AddEcAgentComponent, {
+            width: '1000px',
+            panelClass: 'custom-dialog-container',
+            data: {
+            },
+            hasBackdrop: true
+        });
+
+        dialogRef2.afterClosed().subscribe(result => {
+            if (result && result.success) {
+                //Do nothing
+            }
+        });
     }
 }

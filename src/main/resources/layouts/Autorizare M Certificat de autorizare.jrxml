@@ -23,6 +23,7 @@
 	<parameter name="orderNumber" class="java.lang.String"/>
 	<parameter name="orderDateMD" class="java.lang.String"/>
 	<parameter name="orderDateEN" class="java.lang.String"/>
+	<parameter name="validety" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -30,21 +31,7 @@
 		<band height="55"/>
 	</pageHeader>
 	<detail>
-		<band height="645" splitType="Stretch">
-			<textField>
-				<reportElement x="260" y="621" width="260" height="18" uuid="b95d47c7-e211-40ac-bd76-9fe8db9ebb4b"/>
-				<textElement textAlignment="Right">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="2" y="620" width="138" height="20" uuid="e42d0182-e6a0-484a-950c-59b648faf225"/>
-				<textElement textAlignment="Left">
-					<font fontName="DejaVu Sans" size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Directorul general]]></text>
-			</staticText>
+		<band height="310" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="20" width="520" height="30" uuid="6a771e0b-2335-4b38-8a63-c0e6808ea939"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
@@ -185,146 +172,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{manufacturer}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="310" width="279" height="18" uuid="0d0790ec-7aeb-4db7-9833-ac64029575cf"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Clasificare ATC:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="328" width="279" height="12" uuid="72b8090f-e907-4b32-bde4-5a91656b3c53"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<text><![CDATA[ATC classification: ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="310" width="241" height="30" uuid="a924d95b-7ea0-46c1-a4f3-605c30bb03e8"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{atcClassification}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="340" width="279" height="18" uuid="d67d40f1-0dba-44b0-a891-2f75acad32ab"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Termen de valabilitate:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="358" width="279" height="12" uuid="52bccc9f-d588-4f27-b1bb-f131b79c1088"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<text><![CDATA[Shelf life:]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="340" width="241" height="30" uuid="d7daa544-b6c6-4e12-854a-ef67736b1f70"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{shelfLife}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="370" width="279" height="18" uuid="6e94b720-7479-4efd-96b2-2ea89bf35810"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Număr de înregistrare, data emiterei:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="388" width="279" height="12" uuid="3127dbf4-d9bc-4836-8034-89524c55b5bf"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<text><![CDATA[Registration number and date of issue: ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="370" width="241" height="30" uuid="6117cc24-0fa3-4d61-9c3c-a037209e5a39"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{registrationNumberDateIssue}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="400" width="241" height="30" uuid="ea4fca82-39b1-4e31-8327-41f7369da87d"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{summary}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="418" width="279" height="12" uuid="1d4a780e-08ec-4665-b043-6854726fbe66"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<text><![CDATA[Summary of the product and patient information leaflet]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="400" width="279" height="18" uuid="8f69bef9-f276-49fc-8da5-5e4b1c3881f6"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Rezumatul caracteristicilor produsului şi prospect:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="430" width="279" height="18" uuid="acf25b67-8658-4c44-b228-c7ebdd020362"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Instrucţiunea pentru administrare]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="448" width="279" height="12" uuid="69613d92-cd47-4036-a272-7900767c2f0e"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<text><![CDATA[Instructions for administration]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="430" width="241" height="30" uuid="c6ba6d36-6810-4a8c-b6c0-fa70fa322a52"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{instructions}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="460" width="279" height="18" uuid="5faa4c0f-b58e-440b-a5eb-c13f7631cc36"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Informaţii privind etichetarea ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="478" width="279" height="12" uuid="81fb298e-3b63-43db-87d1-3ed9eea1d8ef"/>
-				<textElement verticalAlignment="Top">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<text><![CDATA[Information on the labeling ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="279" y="460" width="241" height="30" uuid="8507d271-566d-4742-9f12-1bec0392f2e5"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{labeling}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="509" width="520" height="59" uuid="876baf1c-4679-480b-94bc-91d41b4f87d5"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Parametrii de calitate ai produsului sunt cei prevăzuţi în documentaţia care a stat la baza eliberării prezentului Certificat de Înregistrare. Orice modificare a datelor specificate în Certificatul de Înregistrare sau în documentaţia de autorizare trebuie raportată şi aprobată de Agenţia Medicamentului şi Dispozitivelor Medicale. Prezentul Certificat de Înregistrare are o valabilitate de 5 ani de la data emiterii şi nu condiţionează importul.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="568" width="520" height="31" uuid="62fc8c22-f69e-4c83-9958-edb344b1c082"/>
-				<textElement verticalAlignment="Top">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[The quality of the product is that which is stipulated by the documentations which were the basis for giving this particular Marketing Authorization. Any modification of the data stipulated by the Marketing Authorization or documentation must be reported to the Medicines and Medical Devices Agency and have ]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="0" y="90" width="520" height="19" uuid="8731f0a0-2e3c-4f5c-9212-a8b5f64ac937"/>
 				<textElement textAlignment="Center">
@@ -338,6 +185,162 @@
 					<font fontName="DejaVu Sans"/>
 				</textElement>
 				<textFieldExpression><![CDATA["in accordance with order of MMDA RM (nr. "+$P{orderNumber}+" from "+$P{orderDateEN}+")"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="332">
+			<staticText>
+				<reportElement x="4" y="312" width="138" height="20" uuid="be59917c-8988-4827-86df-1e6e6749577b"/>
+				<textElement textAlignment="Left">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Directorul general]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="262" y="313" width="260" height="18" uuid="c86637b6-f896-4e24-8d90-c0ec1c85730d"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{genDir}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="260" width="520" height="31" uuid="6e3653e9-8787-4dc0-9b9d-5c4f2c04a562"/>
+				<textElement verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[The quality of the product is that which is stipulated by the documentations which were the basis for giving this particular Marketing Authorization. Any modification of the data stipulated by the Marketing Authorization or documentation must be reported to the Medicines and Medical Devices Agency and have ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="152" width="279" height="18" uuid="927540ed-2fe8-4f8e-9737-53f38a031658"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Informaţii privind etichetarea ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="281" y="152" width="241" height="30" uuid="be8ffbf4-1499-4cad-8520-04fbd9926567"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{labeling}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="170" width="279" height="12" uuid="65cafe81-894c-437b-b53c-0b73fcf7bdfb"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Information on the labeling ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="140" width="279" height="12" uuid="05f02010-aede-4dce-8b5f-609873e52001"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Instructions for administration]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="122" width="279" height="18" uuid="f00dcdcd-8242-4772-ad92-5af61dae8755"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Instrucţiunea pentru administrare]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="281" y="122" width="241" height="30" uuid="fbab00c2-a365-4c8e-a903-75171535d11e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{instructions}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="281" y="92" width="241" height="30" uuid="5ddea115-9f79-441b-9f10-cb3573f978d5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{summary}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="281" y="62" width="241" height="30" uuid="58ddc171-1d0e-4158-b626-9dfd5155a416"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{registrationNumberDateIssue}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="281" y="32" width="241" height="30" uuid="57182c35-bf82-4443-bf53-4c65cb0c9350"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{shelfLife}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="281" y="2" width="241" height="30" uuid="91c3fc45-48b6-41ce-abd1-d1e62deccbcf"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{atcClassification}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="2" width="279" height="18" uuid="7c25be92-477e-4b8a-b2a6-67954825dcef"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clasificare ATC:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="20" width="279" height="12" uuid="22bc9fdf-f9c5-4f3e-a8af-85819bc16937"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ATC classification: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="32" width="279" height="18" uuid="69e1afad-a091-4804-ad81-91351a76946f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Termen de valabilitate:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="50" width="279" height="12" uuid="b422a59c-c3d6-40f0-b05b-71384b764549"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Shelf life:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="62" width="279" height="18" uuid="302030b2-de69-479a-adaa-3d97c25c007d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Număr de înregistrare, data emiterei:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="80" width="279" height="12" uuid="870e1360-54ed-4e20-981b-7cc5ccef4a37"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Registration number and date of issue: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="92" width="279" height="18" uuid="a500b37d-9a39-42ec-842f-d23ffd8b778e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rezumatul caracteristicilor produsului şi prospect:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="110" width="279" height="12" uuid="22ce3e2a-ebce-4013-9edf-303617e089d8"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Summary of the product and patient information leaflet]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="180" width="522" height="70" uuid="b058b88e-982b-40c4-94f3-437b0e18fa1a"/>
+				<textElement>
+					<font fontName="DejaVu Sans" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Parametrii de calitate ai produsului sunt cei prevăzuţi în documentaţia care a stat la baza eliberării prezentului Certificat de Înregistrare. Orice modificare a datelor specificate în Certificatul de Înregistrare sau în documentaţia de autorizare trebuie raportată şi aprobată de Agenţia Medicamentului şi Dispozitivelor Medicale. Prezentul Certificat de Înregistrare are o valabilitate " + $P{validety} + " de la data emiterii şi nu condiţionează importul."]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

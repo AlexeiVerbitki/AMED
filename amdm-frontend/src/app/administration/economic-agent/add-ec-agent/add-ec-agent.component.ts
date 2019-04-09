@@ -26,6 +26,8 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
     ecAgentParentInitial: any;
     ecAgentFilialsInitial: any[];
 
+    countries: any[] = [];
+
     pharmacyRepresentantProf: any;
     // farmacistiPerAddress: any[] = [];
     filiale: any[] = [];
@@ -36,6 +38,9 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
     oForm: FormGroup;
     rFormSubbmitted = false;
     oFormSubbmitted = false;
+    
+    mdCode = 'MD';
+    countryIsMd = false;
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -53,6 +58,8 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initFormData();
         this.subscriptions.push(
+            this.administrationService.getCountriesDetailed().subscribe(data => this.countries = data));
+        this.subscriptions.push(
             this.licenseService.loadEcAgentTypes().subscribe(data => this.ecAgentTypes = data));
         this.subscriptions.push(
             this.administrationService.getAllStates().subscribe(data => {
@@ -61,7 +68,6 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                         this.forEdit = true;
                         this.subscriptions.push(
                             this.administrationService.getParentAgentEcForIdno(this.dataDialog.idno).subscribe(data => {
-                                console.log('patch', data);
                                 this.ecAgentParentInitial = data.body;
                                 this.patchData(data.body);
                             }));
@@ -74,25 +80,39 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
         }
 
 
-
-
         this.onChanges();
     }
 
 
     private initFormData() {
         this.rForm = this.fb.group({
-            'idno': [{value : null, disabled: this.dataDialog.idno ? true : false }, [Validators.required, Validators.maxLength(13), Validators.pattern('[0-9]+')]],
-            'code': [{value : null, disabled: true }],
-            'shortName': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }, Validators.required],
-            'longName': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }],
-            'registrationDate': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }, Validators.required],
-            'legalAddress': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }, Validators.required],
-            'tipIntreprindereMain': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }, Validators.required],
-            'stateMain': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }, Validators.required],
-            'localityForStateMain': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }, Validators.required],
-            'streetMain': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }],
-            'directorMain': [{value : null, disabled: this.dataDialog.onlyNewFilial ? true : false }],
+            'idno': [{
+                value: null,
+                disabled: this.dataDialog.idno ? true : false
+            }],
+            'code': [{value: null, disabled: true}],
+            'shortName': [{value: null, disabled: this.dataDialog.onlyNewFilial ? true : false}, Validators.required],
+            'longName': [{value: null, disabled: this.dataDialog.onlyNewFilial ? true : false}],
+            'registrationDate': [{
+                value: null,
+                disabled: this.dataDialog.onlyNewFilial ? true : false
+            }],
+            'legalAddress': [{
+                value: null,
+                disabled: this.dataDialog.onlyNewFilial ? true : false
+            }],
+            'tipIntreprindereMain': [{
+                value: null,
+                disabled: this.dataDialog.onlyNewFilial ? true : false
+            }, Validators.required],
+            'stateMain': [{value: null, disabled: this.dataDialog.onlyNewFilial ? true : false}, Validators.required],
+            'localityForStateMain': [{
+                value: null,
+                disabled: this.dataDialog.onlyNewFilial ? true : false
+            }, Validators.required],
+            'streetMain': [{value: null, disabled: this.dataDialog.onlyNewFilial ? true : false}],
+            'directorMain': [{value: null, disabled: this.dataDialog.onlyNewFilial ? true : false}],
+            'country': [null, Validators.required],
         });
 
         this.oForm = this.fb.group({
@@ -128,8 +148,7 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                 this.filiale.forEach(fl => {
                     fl.companyType = fl.type.description;
 
-                    if (fl.locality)
-                    {
+                    if (fl.locality) {
                         fl.address = this.states.find(st => st.id === fl.locality.stateId).description + ', ' + fl.locality.description + ', ' + fl.street;
                     }
                 });
@@ -156,37 +175,71 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
         }
 
 
-
-
     }
 
     onChanges(): void {
-        this.oForm.get('state').valueChanges.subscribe(val => {
-            if (val) {
-                this.subscriptions.push(
-                    this.administrationService.getLocalitiesByState(val.id).subscribe(data => this.localitiesForState = data));
-            } else {
-                this.localitiesForState = [];
-                this.oForm.get('localityForState').setValue(null);
-            }
-        });
+        // if (this.countryIsMd)
+        // {
+            this.oForm.get('state').valueChanges.subscribe(val => {
+                if (val) {
+                    this.subscriptions.push(
+                        this.administrationService.getLocalitiesByState(val.id).subscribe(data => this.localitiesForState = data));
+                } else {
+                    this.localitiesForState = [];
+                    this.oForm.get('localityForState').setValue(null);
+                }
+            });
+
+            this.rForm.get('stateMain').valueChanges.subscribe(val => {
+                if (val) {
+                    this.subscriptions.push(
+                        this.administrationService.getLocalitiesByState(val.id).subscribe(data => this.localitiesForStateMain = data));
+                } else {
+                    this.localitiesForStateMain = [];
+                    this.rForm.get('localityForStateMain').setValue(null);
+                }
+            });
+
+            this.oForm.get('tipIntreprindere').valueChanges.subscribe(val => {
+                if (val) {
+                    this.pharmacyRepresentantProf = val.representant;
+                } else {
+                    this.pharmacyRepresentantProf = null;
+                }
+            });
+        // }
 
 
-        this.rForm.get('stateMain').valueChanges.subscribe(val => {
-            if (val) {
-                this.subscriptions.push(
-                    this.administrationService.getLocalitiesByState(val.id).subscribe(data => this.localitiesForStateMain = data));
-            } else {
-                this.localitiesForStateMain = [];
-                this.rForm.get('localityForStateMain').setValue(null);
-            }
-        });
+        this.rForm.get('country').valueChanges.subscribe(val => {
+            this.countryIsMd = false;
 
-        this.oForm.get('tipIntreprindere').valueChanges.subscribe(val => {
+            this.rForm.get('idno').setValidators(null);
+            this.rForm.get('registrationDate').setValidators(null);
+            this.rForm.get('stateMain').setValidators(null);
+            this.rForm.get('localityForStateMain').setValidators(null);
+
+            this.rForm.get('idno').updateValueAndValidity();
+            this.rForm.get('registrationDate').updateValueAndValidity();
+            this.rForm.get('stateMain').updateValueAndValidity();
+            this.rForm.get('localityForStateMain').updateValueAndValidity();
+
+
             if (val) {
-                this.pharmacyRepresentantProf = val.representant;
+                if (val.code === this.mdCode)
+                {
+                    this.countryIsMd = true;
+                    this.rForm.get('idno').setValidators([Validators.required, Validators.maxLength(13), Validators.pattern('[0-9]+')]);
+                    this.rForm.get('registrationDate').setValidators(Validators.required);
+                    this.rForm.get('stateMain').setValidators(Validators.required);
+                    this.rForm.get('localityForStateMain').setValidators(Validators.required);
+
+                    this.rForm.get('idno').updateValueAndValidity();
+                    this.rForm.get('registrationDate').updateValueAndValidity();
+                    this.rForm.get('stateMain').updateValueAndValidity();
+                    this.rForm.get('localityForStateMain').updateValueAndValidity();
+                }
             } else {
-                this.pharmacyRepresentantProf = null;
+
             }
         });
     }
@@ -259,10 +312,6 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
         this.rFormSubbmitted = false;
 
         const modelToSubmit: any[] = this.composeModel();
-
-        console.log('model', modelToSubmit);
-
-
         let response;
 
         if (this.forEdit) {
@@ -273,9 +322,10 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                     };
                     this.dialogRef.close(response);
 
-                },  error => { response = {
-                    success: false
-                };
+                }, error => {
+                    response = {
+                        success: false
+                    };
                 }));
         } else {
             this.subscriptions.push(
@@ -285,9 +335,10 @@ export class AddEcAgentComponent implements OnInit, OnDestroy {
                     };
                     this.dialogRef.close(response);
 
-                },  error => { response = {
-                    success: false
-                };
+                }, error => {
+                    response = {
+                        success: false
+                    };
                 }));
         }
 
