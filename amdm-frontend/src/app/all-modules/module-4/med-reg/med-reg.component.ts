@@ -594,7 +594,10 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
     parseSpecification(files: FileList){
 
+        this.loadingService.show();
+
         var documents: FileList = files;
+        let cellsWithErrors = [];
 
         let cellExists: boolean;
         console.log('documents', documents);
@@ -615,9 +618,17 @@ export class MedRegComponent implements OnInit, OnDestroy {
         reader.onload = function (e) {
             var data = new Uint8Array(reader.result);
             excelSheet = XLSX.read(data, {type: 'array'});
-            excelSheet.Sheets.Medicamente_Rom_Engl.P10.v ? cellExists = true : cellExists = false;
+
+            if (excelSheet.Sheets && excelSheet.Sheets.Medicamente_Rom_Engl && (excelSheet.Sheets.Medicamente_Rom_Engl.B10 || excelSheet.Sheets.Medicamente_Rom_Engl.P10)){
+                cellExists = true;
+            } else{
+                cellExists = false;
+                nn.errorHandlerService.showError("Documentul nu contine date valide");
+                nn.loadingService.hide();
+                return;
+            }
             console.log('excelSheet', excelSheet);
-            let cellsWithErrors = [];
+
             //=====================
             /* loop through every cell manually */
 
@@ -628,7 +639,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 // for (var C = range.s.c; C <= range.e.c; ++C) {
                 let rowToBeParsed: any ={};
 
-                //Go through cells ina  row
+                //Go through cells in a  row
                 for (let C = 1; C < columns.length; C++) {
                     /* find the cell object */
                     // console.log('Row : ' + R);
@@ -636,9 +647,9 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     var cellref = XLSX.utils.encode_cell({c: C, r: R}); // construct A1 reference for cell
                     if (!sheet[cellref]) {
                         let cellNumber: number = R+1;
-                        // cellsWithErrors.push(cellref);
+                        cellsWithErrors.push(cellref);
                         // console.log(columns[C] + cellNumber + ": empty cell")
-                        break; // if cell doesn't exist, move on
+                        // break; // if cell doesn't exist, move on
                     } else {
 
                         var cell = sheet[cellref];
@@ -646,20 +657,20 @@ export class MedRegComponent implements OnInit, OnDestroy {
                         console.log(columns[C] + cellNumber +": " +cell.v);
 
                         switch (C) {
-                            case  1: {rowToBeParsed.codeAmed =                    cell.v; break;}
-                            case  2: {rowToBeParsed.customsCode =                 cell.v; break;}
-                            case  3: {rowToBeParsed.name =                        cell.v; break;}
-                            case  4: {rowToBeParsed.pharmaceuticalForm =          cell.v; break;}
-                            case  5: {rowToBeParsed.dose =                        cell.v; break;}
-                            case  6: {rowToBeParsed.unitsOfMeasurement =          cell.v; break;}
-                            case  7: {rowToBeParsed.quantity =                    cell.v; break;}
-                            case  8: {rowToBeParsed.price =                       cell.v; break;}
-                            case  9: {rowToBeParsed.summ =                        cell.v; break;}
-                            case 11: {rowToBeParsed.producer =                    cell.v; break;}
-                            case 12: {rowToBeParsed.registrationNumber =          cell.v; break;}
-                            case 13: {rowToBeParsed.registrationDate =            cell.v; break;}
-                            case 14: {rowToBeParsed.atcCode =                     cell.v; break;}
-                            case 15: {rowToBeParsed.internationalMedicamentName = cell.v; break;}
+                            case  1: { cell.v ? rowToBeParsed.codeAmed =  cell.v : rowToBeParsed.codeAmed= null; /*if(!rowToBeParsed.codeAmed || rowToBeParsed.codeAmed == undefined)                {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  2: {rowToBeParsed.customsCode =                 cell.v; /*if(!rowToBeParsed.customsCode || rowToBeParsed.customsCode == undefined)                                 {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  3: {rowToBeParsed.name =                        cell.v; /*if(!rowToBeParsed.name || rowToBeParsed.name == undefined)                                               {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  4: {rowToBeParsed.pharmaceuticalForm =          cell.v; /*if(!rowToBeParsed.pharmaceuticalForm || rowToBeParsed.pharmaceuticalForm == undefined)                   {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  5: {rowToBeParsed.dose =                        cell.v; /*if(!rowToBeParsed.dose || rowToBeParsed.dose == undefined)                                               {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  6: {rowToBeParsed.unitsOfMeasurement =          cell.v; /*if(!rowToBeParsed.unitsOfMeasurement || rowToBeParsed.unitsOfMeasurement == undefined)                   {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  7: {rowToBeParsed.quantity =                    cell.v; /*if(!rowToBeParsed.quantity || rowToBeParsed.quantity == undefined)                                       {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  8: {rowToBeParsed.price =                       cell.v; /*if(!rowToBeParsed.price || rowToBeParsed.price == undefined)                                             {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  9: {rowToBeParsed.summ =                        cell.v; /*if(!rowToBeParsed.summ || rowToBeParsed.summ == undefined)                                               {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 11: {rowToBeParsed.producer =                    cell.v; /*if(!rowToBeParsed.producer || rowToBeParsed.producer == undefined)                                       {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 12: {rowToBeParsed.registrationNumber =          cell.v; /*if(!rowToBeParsed.registrationNumber || rowToBeParsed.registrationNumber == undefined)                   {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 13: {rowToBeParsed.registrationDate =            cell.v; /*if(!rowToBeParsed.registrationDate || rowToBeParsed.registrationDate == undefined)                       {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 14: {rowToBeParsed.atcCode =                     cell.v; /*if(!rowToBeParsed.atcCode || rowToBeParsed.atcCode == undefined)                                         {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 15: {rowToBeParsed.internationalMedicamentName = cell.v; /*if(!rowToBeParsed.internationalMedicamentName || rowToBeParsed.internationalMedicamentName == undefined) {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
                             // case  :  {rowToBeParsed.currency =                    cell.v; break;}
                             // case  :  {rowToBeParsed.expirationDate =              cell.v; break;}
 
@@ -668,14 +679,9 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 };
                 let unitOfImportForPush: any ={};
 
-                // if(rowToBeParsed.codeAmed) {
-                //     nn.subscriptions.push(nn.medicamentService.getMedicamentByNameWithPrice(rowToBeParsed.codeAmed).subscribe(val => {
-                //         console.log('val', val);
-                //     }));
-                // }
-
 //===================================================================================================
-                if(rowToBeParsed.codeAmed &&
+                if(nn.importData.importAuthorizationEntity.medType === 1 &&
+                    rowToBeParsed.codeAmed &&
                    rowToBeParsed.customsCode &&
                    rowToBeParsed.name &&
                    rowToBeParsed.pharmaceuticalForm &&
@@ -691,28 +697,43 @@ export class MedRegComponent implements OnInit, OnDestroy {
                    rowToBeParsed.internationalMedicamentName
                    ){
                     nn.validRows.push(rowToBeParsed);
-                    // nn.pushToUnitOfImportTable2(rowToBeParsed);
                 }
+
+                if(nn.importData.importAuthorizationEntity.medType === 2 &&
+                    rowToBeParsed.customsCode &&
+                    rowToBeParsed.name &&
+                    rowToBeParsed.pharmaceuticalForm &&
+                    rowToBeParsed.dose &&
+                    rowToBeParsed.unitsOfMeasurement &&
+                    rowToBeParsed.quantity &&
+                    rowToBeParsed.price &&
+                    rowToBeParsed.summ &&
+                    rowToBeParsed.producer &&
+                    // rowToBeParsed.registrationNumber &&
+                    // rowToBeParsed.registrationDate &&
+                    rowToBeParsed.atcCode &&
+                    rowToBeParsed.internationalMedicamentName
+                ){
+                    nn.validRows.push(rowToBeParsed);
+                }
+
 
             }
 
             console.log('validRows',nn.validRows)
-            // for (let i = 0; i < nn.validRows.length; i++) {
-            //     if(nn.validRows[i].codeAmed) {
-            //         nn.subscriptions.push(nn.medicamentService.getMedicamentByNameWithPrice(nn.validRows[i].codeAmed).subscribe(val => {
-            //             console.log('val', val);
-            //
-            //
-            //         }));
-            //     }
-            // }
-        nn.parseRow();
+
+            if(nn.importData.importAuthorizationEntity.medType === 1){
+                nn.parseRowWithAmed();
+            }
+            if(nn.importData.importAuthorizationEntity.medType === 2){
+                nn.parseRowNoAmed();
+            }
         };
 
     }
 
-    async parseRow() {
-        this.loadingService.show();
+    async parseRowWithAmed() {
+
         this.validRows.forEach(row => {
             console.log('row', row);
 
@@ -790,10 +811,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                             unitOfImportWithCodeAmed.atcCode = atcCode[0];
                         })));
 
-                        if (val.registrationDate) {
-                            // console.log('registrationDate', val.registrationDate);
-                            unitOfImportWithCodeAmed.registrationDate = val.registrationDate;
-                        }
+                        unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
                         //=============================================================
 
 
@@ -840,21 +858,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                                         }
                                         this.pushToTableOrNot(exchangeDate, contractCurrency, priceInContractCurrency, medicamentPrice,unitOfImportWithCodeAmed);
                                     }
-                                    // const exchangeCurrency = this.exchangeCurrenciesForPeriod.find(x => x.currency.shortDescription == contractCurrency.shortDescription);
-                                    // if (medicamentPrice && medicamentPrice.priceMdl && exchangeCurrency && exchangeCurrency.value) {
-                                    //     priceInContractCurrency = medicamentPrice.priceMdl / exchangeCurrency.value;
-                                    // }
-                                    // if (this.userPrice > priceInContractCurrency) {
-                                    //     // this.invalidPrice = true;
-                                    //     console.log(val.name + ' price is higher than the contract price', priceInContractCurrency);
-                                    // } else {
-                                    //     this.unitOfImportTable.push(unitOfImportWithCodeAmed);
-                                    //     console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
-                                    // }
-
                                 }            ));
-
-
                             }
 
 
@@ -875,7 +879,111 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
         })
         this.loadingService.hide();
+
     }
+
+    async parseRowNoAmed() {
+
+        this.validRows.forEach(row => {
+            console.log('row', row);
+
+            let unitOfImportWithCodeAmed: any = {};
+            let val: any = {};
+
+                    val = row;
+                    // console.log('val', row);
+
+                    if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
+                        this.invalidCurrency = true;
+                        this.loadingService.hide();
+                        this.errorHandlerService.showError("Valuta specificatiei trebuie selectată");
+                    } else {
+                        this.invalidCurrency = false;
+                        unitOfImportWithCodeAmed.currency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+
+
+                    }
+
+                    if (this.invalidCurrency == false && val) {
+                        unitOfImportWithCodeAmed.approved = false;
+                        // if(val){
+                        //     unitOfImportWithCodeAmed.medicament  = val;
+                        // }
+                        if (val.pharmaceuticalForm) {
+                            unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
+                        }
+                        if (val.dose) {
+                            unitOfImportWithCodeAmed.dose = val.dose;
+                        }
+                        if (val.unitsOfMeasurement) {
+                            unitOfImportWithCodeAmed.unitsOfMeasurement = val.unitsOfMeasurement;
+                        }
+                        if (val.name) {
+                            unitOfImportWithCodeAmed.name = val.commercialName;
+                        }else {
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');
+                        }
+                        if (val.commercialName) {
+                            unitOfImportWithCodeAmed.commercialName = val.commercialName;
+                        }
+                        if (val.internationalMedicamentName) {
+                            unitOfImportWithCodeAmed.internationalMedicamentName = val.internationalMedicamentName;
+                        }
+                        // if (val.registrationNumber) {
+                        //     unitOfImportWithCodeAmed.registrationNumber = val.registrationNumber;
+                        // }
+                        // if (val.registrationDate) {
+                        //     unitOfImportWithCodeAmed.registrationDate = new Date(val.registrationDate);
+                        // }
+                        // if (val.expirationDate) {
+                        //     unitOfImportWithCodeAmed.expirationDate = new Date(val.expirationDate);
+                        // }
+
+                        if (row.quantity) {
+                            unitOfImportWithCodeAmed.quantity = row.quantity;
+                        }
+
+
+                        if (val.customsCode) {
+                            unitOfImportWithCodeAmed.customsCode = val.customsCode;
+                        }
+
+                        // console.log('val.manufactures', val.manufactures);
+                        if (val.producer) {
+                            unitOfImportWithCodeAmed.producer = val.producer;
+                        }
+                        (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(val.atcCode).subscribe(atcCode => {
+                            unitOfImportWithCodeAmed.atcCode = atcCode[0];
+                        })));
+
+                        unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
+                        //=============================================================
+
+
+                        if (row.price) {
+                            this.userPrice = row.price;
+                            unitOfImportWithCodeAmed.price = row.price;
+                        }
+                        if (row.price && row.quantity) {
+                            this.userPrice = row.price;
+                            unitOfImportWithCodeAmed.summ = row.price * row.quantity;
+                        }
+
+                        //========================================
+                        this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+
+                    } else {
+                        // let el = document.getElementById("contractCurrency");
+                        // el.scrollIntoView();
+                    }
+
+            //=============================================================
+
+        })
+        this.loadingService.hide();
+
+    }
+
 
     async getMedicamentPrice(id: any) {
         let priceEntity = await this.medicamentService.getMedPrice(id).toPromise();

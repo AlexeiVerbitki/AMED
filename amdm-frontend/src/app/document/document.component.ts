@@ -273,10 +273,10 @@ export class DocumentComponent implements OnInit, OnDestroy, AfterViewInit {
         );
     }
 
+
     reset() {
         this.incarcaFisierVariable.nativeElement.value = '';
     }
-
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
     }

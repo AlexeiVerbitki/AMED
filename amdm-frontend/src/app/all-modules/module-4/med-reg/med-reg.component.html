@@ -658,21 +658,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <!--<button class="btn btn-danger waves-light btn-md" (click)="deleteImportTypeForm(i)">Sterge</button>-->
-                            <!--<button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addImportTypeForm()" (click)="getProducerAddress(i)">Adauga</button>-->
+	                    <div class="text-right">
 
-                            <!--<input type="file" id="file" class="btn btn-dark-green-color waves-light btn-md" mdbWavesEffect-->
-	                        <!--Parsare specificației (click)="parseSpecification($files)">-->
+		                    <input id="parseSpecification" #parseInput type="file" style="display:none;"
+		                           attr.disabled="this.disabled" (change)="parseSpecification($event.target.files)"
+		                           placeholder="Upload file" accept=".xlsx,.xls,.csv">
+		                    <button type="button" class="btn btn-mdb-color btn-sm" (click)="parseInput.click()">Parsare specificației</button>
 
-	                        <input type="file" style="display: inline-block;" (change)="parseSpecification($event.target.files)"
-	                               placeholder="Upload file" accept=".xlsx,.xls,.csv">
-	                        <button type="button" class="btn btn-info" (click)="parseSpecification()" >Parsare specificației</button>
-
-                        <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect
-                                    (click)="addUnitOfImport()">Adauga
-                            </button>
-                        </div>
+		                    <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect
+		                            (click)="addUnitOfImport()">Adauga
+		                    </button>
+	                    </div>
                         <!--</div>-->
                     </div>
 
