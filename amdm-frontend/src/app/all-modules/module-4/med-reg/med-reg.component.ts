@@ -711,15 +711,16 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
     }
 
-    parseRow(){
+    async parseRow() {
         this.loadingService.show();
-        this.validRows.forEach(row =>{
+        this.validRows.forEach(row => {
             console.log('row', row);
 
             let unitOfImportWithCodeAmed: any = {};
-            if(row.codeAmed) {
+            let val: any = {};
+            if (row.codeAmed) {
                 this.subscriptions.push(this.medicamentService.getMedicamentByNameWithPrice(row.codeAmed).subscribe(medicament => {
-                    let val = medicament[0];
+                    val = medicament[0];
                     console.log('val', medicament);
 
                     if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
@@ -729,10 +730,16 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     } else {
                         this.invalidCurrency = false;
                         unitOfImportWithCodeAmed.currency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+
+
                     }
 
                     if (this.invalidCurrency == false && val) {
                         unitOfImportWithCodeAmed.codeAmed = val.code;
+                        unitOfImportWithCodeAmed.approved = false;
+                        if(val){
+                            unitOfImportWithCodeAmed.medicament  = val;
+                        }
                         if (val.pharmaceuticalForm) {
                             unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
                         }
@@ -742,12 +749,17 @@ export class MedRegComponent implements OnInit, OnDestroy {
                         if (val.division) {
                             unitOfImportWithCodeAmed.unitsOfMeasurement = val.division;
                         }
-                        if (val.commercialName) {
-                            unitOfImportWithCodeAmed.name = val.commercialName;
+                        if (val.name) {
+                            unitOfImportWithCodeAmed.name = val.name;
+                        }else {
+                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');
                         }
                         if (val.commercialName) {
                             unitOfImportWithCodeAmed.commercialName = val.commercialName;
-                        } else {this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');}
+                        }
+                        if (val.internationalMedicamentName) {
+                            unitOfImportWithCodeAmed.internationalMedicamentName = val.internationalMedicamentName;
+                        }
                         if (val.registrationNumber) {
                             unitOfImportWithCodeAmed.registrationNumber = val.registrationNumber;
                         }
@@ -782,77 +794,76 @@ export class MedRegComponent implements OnInit, OnDestroy {
                             // console.log('registrationDate', val.registrationDate);
                             unitOfImportWithCodeAmed.registrationDate = val.registrationDate;
                         }
-
-
-
-
-                        // console.log('this.administrationService.getAllAtcCodesByCode( val.atcCode)', this.administrationService.getAllAtcCodesByCode(val.atcCode));
-
-                        this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
-                            if (priceEntity) {
-                                this.medicamentPrice = priceEntity;
-                                const exchangeDate = new Date(priceEntity.orderApprovDate);
-                                this.loadExchangeRateForPeriod(exchangeDate);
-                                if (priceEntity.currency) {
-                                    this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
-                                    console.log('this.valutaList',this.valutaList);
-
-                                }
-                            }
-                        });
-
-                        // let newUnit: boolean = true;
-                        // this.unitOfImportTable.find(item => {
-                        //     if (item == unitOfImportWithCodeAmed){
-                        //         newUnit = false;
-                        //     }});
-                        // console.log('newUnit',newUnit);
-                        // if(newUnit) {
-                        //     this.unitOfImportTable.push(unitOfImportWithCodeAmed);
-                        // }
                         //=============================================================
 
 
-                            if (row.price) {
-                                this.userPrice = row.price;
-                                unitOfImportWithCodeAmed.summ= row.price * row.quantity;
+                        if (row.price) {
+                            this.userPrice = row.price;
+                            unitOfImportWithCodeAmed.summ = row.price * row.quantity;
 
+                        }
+
+                        //========================================
+
+                        if (row.price) {
+                            let contractCurrency: any;
+                            let priceInContractCurrency: any;
+                            unitOfImportWithCodeAmed.price = row.price;
+
+                            if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
+                                contractCurrency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
                             }
 
-                            //========================================
-                            if (row.price) {
-                                let contractCurrency: any;
-                                let priceInContractCurrency: any;
-
-                                if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
-                                    contractCurrency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
-                                }
-
-                                if (contractCurrency.shortDescription == 'MDL') {
-                                    priceInContractCurrency = this.medicamentPrice.priceMdl;
-                                } else {
-                                    const exchangeCurrency = this.exchangeCurrenciesForPeriod.find(x => x.currency.shortDescription == contractCurrency.shortDescription);
-                                    if (this.medicamentPrice && this.medicamentPrice.priceMdl && exchangeCurrency && exchangeCurrency.value) {
-                                        priceInContractCurrency = this.medicamentPrice.priceMdl / exchangeCurrency.value;
-                                    }
-                                }
+                            if (contractCurrency.shortDescription == 'MDL') {
+                                priceInContractCurrency = this.medicamentPrice.priceMdl;
 
                                 if (this.userPrice > priceInContractCurrency) {
-                                    this.invalidPrice = true;
+                                    // this.invalidPrice = true;
                                     console.log('price is higher than the contract price', priceInContractCurrency);
                                 } else {
                                     this.unitOfImportTable.push(unitOfImportWithCodeAmed);
-                                    console.log('unitOfImportWithCodeAmed',unitOfImportWithCodeAmed);
+                                    console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
                                 }
+                            } else {
 
-                            } else if (val) {
-                                this.invalidPrice = false;
-                                console.log('couldnt verify the price or the row doesnt contain the price');
+                                let medicamentPrice: any;
+
+                                this.subscriptions.push(this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
+                                    if (priceEntity) {
+                                        medicamentPrice = priceEntity;
+                                        const exchangeDate = new Date(priceEntity.orderApprovDate);
+
+                                        if (priceEntity.currency) {
+                                            this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
+                                            console.log('this.valutaList', this.valutaList);
+
+                                        }
+                                        this.pushToTableOrNot(exchangeDate, contractCurrency, priceInContractCurrency, medicamentPrice,unitOfImportWithCodeAmed);
+                                    }
+                                    // const exchangeCurrency = this.exchangeCurrenciesForPeriod.find(x => x.currency.shortDescription == contractCurrency.shortDescription);
+                                    // if (medicamentPrice && medicamentPrice.priceMdl && exchangeCurrency && exchangeCurrency.value) {
+                                    //     priceInContractCurrency = medicamentPrice.priceMdl / exchangeCurrency.value;
+                                    // }
+                                    // if (this.userPrice > priceInContractCurrency) {
+                                    //     // this.invalidPrice = true;
+                                    //     console.log(val.name + ' price is higher than the contract price', priceInContractCurrency);
+                                    // } else {
+                                    //     this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                                    //     console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
+                                    // }
+
+                                }            ));
+
+
                             }
 
-                        //=============================================================
 
-                        this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                        } else if (val) {
+                            // this.invalidPrice = false;
+                            console.log('couldnt verify the price or the row doesnt contain the price');
+                        }
+
+
                     } else {
                         // let el = document.getElementById("contractCurrency");
                         // el.scrollIntoView();
@@ -860,10 +871,27 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
                 }));
             }
+            //=============================================================
+
         })
         this.loadingService.hide();
     }
 
+    async getMedicamentPrice(id: any) {
+        let priceEntity = await this.medicamentService.getMedPrice(id).toPromise();
+        if (priceEntity) {
+            this.medicamentPrice = priceEntity;
+            const exchangeDate = new Date(priceEntity.orderApprovDate);
+            this.loadExchangeRateForPeriod(exchangeDate);
+            if (priceEntity.currency) {
+                this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
+                console.log('this.valutaList', this.valutaList);
+
+            }
+        }
+        return priceEntity;
+
+    }
     pushToUnitOfImportTable2(unitOfImport: any) {
         this.unitOfImportTable.push(unitOfImport);
         console.log('this.unitOfImportTable',this.unitOfImportTable);
@@ -1047,6 +1075,28 @@ export class MedRegComponent implements OnInit, OnDestroy {
             this.exchangeCurrenciesForPeriod = data;
             // console.log('Exchange rate for ' + date + '\n' + JSON.stringify(this.exchangeCurrenciesForPeriod));
             // console.log('Exchange rate for 1' + this.exchangeCurrenciesForPeriod.toString());
+        }));
+
+    }
+
+    pushToTableOrNot(date: any, contractCurrency: any, priceInContractCurrency: any, medicamentPrice: any, unitOfImportWithCodeAmed: any) {
+        this.subscriptions.push(this.administrationService.getCurrencyByPeriod(date).subscribe(data => {
+            this.exchangeCurrenciesForPeriod = data;
+            // console.log('Exchange rate for ' + date + '\n' + JSON.stringify(this.exchangeCurrenciesForPeriod));
+            // console.log('Exchange rate for 1' + this.exchangeCurrenciesForPeriod.toString());
+
+            const exchangeCurrency = this.exchangeCurrenciesForPeriod.find(x => x.currency.shortDescription == contractCurrency.shortDescription);
+            if (medicamentPrice && medicamentPrice.priceMdl && exchangeCurrency && exchangeCurrency.value) {
+                priceInContractCurrency = medicamentPrice.priceMdl / exchangeCurrency.value;
+            }
+            if (this.userPrice > priceInContractCurrency) {
+                // this.invalidPrice = true;
+                console.log(unitOfImportWithCodeAmed.name + ' price is higher than the contract price', priceInContractCurrency);
+            } else {
+                this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
+            }
+
         }));
 
     }
