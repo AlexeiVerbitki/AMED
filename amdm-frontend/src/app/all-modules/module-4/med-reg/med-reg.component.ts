@@ -13,12 +13,13 @@ import {Subject} from 'rxjs/index';
 import {LoaderService} from '../../../shared/service/loader.service';
 import {AuthService} from '../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
-import {ImportMedDialogComponent} from '../dialog/import-med-dialog.component';
 import {PriceService} from '../../../shared/service/prices.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
 import * as XLSX from 'xlsx';
+import {ImportMedEditDialogComponent} from "./edit dialog/import-med-edit-dialog.component";
+import {ImportMedDialogComponent} from "../dialog/import-med-dialog.component";
 
 export interface PeriodicElement {
     name: string;
@@ -1209,7 +1210,7 @@ console.log('this.unitOfImportTable', this.unitOfImportTable)
     }
 
 
-    showunitOfImport(unitOfImport: any) {
+    showunitOfImport(i:any, unitOfImport: any) {
         const dialogConfig2 = new MatDialogConfig();
 
         dialogConfig2.disableClose = false;
@@ -1222,22 +1223,33 @@ console.log('this.unitOfImportTable', this.unitOfImportTable)
         dialogConfig2.data = unitOfImport;
         dialogConfig2.data.medtType = this.importData.importAuthorizationEntity.medType;
 
-        const dialogRef = this.dialog.open(ImportMedDialogComponent, dialogConfig2);
+        let dialogRef: any;
+
+        if (this.importData.importAuthorizationEntity.medType == 1) {
+
+            dialogRef = this.dialog.open(ImportMedDialogComponent, dialogConfig2);
+        } else {
+            dialogRef = this.dialog.open(ImportMedEditDialogComponent, dialogConfig2);
+        }
 
         dialogRef.afterClosed().subscribe(result => {
             // console.log('result', result);
             if (result == null || result == undefined || result.success === false) {
+                console.log('result', result)
                 return;
             }
 
-            // let medInst = this.addMediacalInstitutionForm.get('medicalInstitution').value;
-            // medInst.investigators = result.investigators;
-            // console.log('result.investigators', result.investigators);
-            // this.mediacalInstitutionsList.push(medInst);
-            // let intdexToDelete = this.allMediacalInstitutionsList.indexOf(this.addMediacalInstitutionForm.get('medicalInstitution').value);
-            // this.allMediacalInstitutionsList.splice(intdexToDelete, 1);
-            // this.allMediacalInstitutionsList = this.allMediacalInstitutionsList.splice(0);
-            // this.addMediacalInstitutionForm.get('medicalInstitution').setValue('');
+                         this.unitOfImportTable[i].atcCode = result[1].importAuthorizationEntity.unitOfImportTable.atcCode;
+                         this.unitOfImportTable[i].customsCode = result[1].importAuthorizationEntity.unitOfImportTable.customsCode;
+                         this.unitOfImportTable[i].dose = result[1].importAuthorizationEntity.unitOfImportTable.dose;
+                         this.unitOfImportTable[i].expirationDate = result[1].importAuthorizationEntity.unitOfImportTable.expirationDate;
+                         this.unitOfImportTable[i].internationalMedicamentName = result[1].importAuthorizationEntity.unitOfImportTable.internationalMedicamentName;
+                         this.unitOfImportTable[i].name = result[1].importAuthorizationEntity.unitOfImportTable.name;
+                         this.unitOfImportTable[i].pharmaceuticalForm = result[1].importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm;
+                         this.unitOfImportTable[i].price = result[1].importAuthorizationEntity.unitOfImportTable.price;
+                         this.unitOfImportTable[i].producer = result[1].importAuthorizationEntity.unitOfImportTable.producer;
+                         this.unitOfImportTable[i].quantity = result[1].importAuthorizationEntity.unitOfImportTable.quantity;
+                         this.unitOfImportTable[i].unitsOfMeasurement = result[1].importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement;
         });
     }
 
