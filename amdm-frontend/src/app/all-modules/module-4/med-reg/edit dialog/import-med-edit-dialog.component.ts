@@ -7,7 +7,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AdministrationService} from '../../../../shared/service/administration.service';
 import {debounceTime, distinctUntilChanged, filter, flatMap, tap} from 'rxjs/operators';
 import {ConfirmationDialogComponent} from '../../../../dialog/confirmation-dialog.component';
-import {saveAs} from 'file-saver';
 import {Document} from '../../../../models/document';
 import {RequestService} from '../../../../shared/service/request.service';
 import {Subject} from 'rxjs/index';
@@ -66,6 +65,7 @@ export class ImportMedEditDialogComponent implements OnInit, OnDestroy {
     medType: any;
     protected companyInputs = new Subject<string>();
     private subscriptions: Subscription[] = [];
+    importSources: any[] = [];
 
     constructor(private fb: FormBuilder,
                 @Inject(MAT_DIALOG_DATA) public dialogData: any,
@@ -98,7 +98,7 @@ export class ImportMedEditDialogComponent implements OnInit, OnDestroy {
         this.addMedicamentClicked = false;
         this.loadEconomicAgents();
         this.loadManufacturersRfPr();
-
+        this.loadImportSources();
         this.loadCurrenciesShort();
         this.loadCustomsCodes();
         this.loadATCCodes();
@@ -126,7 +126,8 @@ export class ImportMedEditDialogComponent implements OnInit, OnDestroy {
                     registrationRmNumber: [{value: null, disabled: true}, Validators.required],
                     unitsOfMeasurement: [{value: null, disabled: false}, Validators.required],
                     registrationRmDate: [{value: null, disabled: true}, Validators.required],
-                    internationalMedicamentName: [{value: null, disabled: false}, Validators.required]
+                    internationalMedicamentName: [{value: null, disabled: false}, Validators.required],
+                    importSources: [null, Validators.required]
                 }),
             }),
         });
@@ -211,6 +212,7 @@ export class ImportMedEditDialogComponent implements OnInit, OnDestroy {
                 this.producerAddress = this.dialogData.medicament.manufactures[0].manufacture.address + ', '
                     + this.dialogData.medicament.manufactures[0].manufacture.country.description;
             }
+
             this.unitSumm = this.dialogData.summ;
 
         } else {
@@ -229,6 +231,7 @@ export class ImportMedEditDialogComponent implements OnInit, OnDestroy {
             const internationalMedicamentNameValid = this.dialogData.internationalMedicamentName;
             const atcCodeValid = this.dialogData.atcCode;
             const registrationNumberValid = this.dialogData.registrationNumber;
+            const importSources = this.dialogData.importSources;
             const producerAddressValid =
                 this.producerAddress =
                     this.dialogData.producer && this.dialogData.producer.address && this.dialogData.producer.country && this.dialogData.producer.country.description;
@@ -282,8 +285,17 @@ export class ImportMedEditDialogComponent implements OnInit, OnDestroy {
             if (producerAddressValid) {
                 this.producerAddress = this.dialogData.producer.address + ', ' + this.dialogData.producer.country.description;
             }
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
-            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
+            if (importSources) {
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').setValue(this.dialogData.importSources);
+            }
+            if (this.dialogData.registrationDate) {
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.registrationRmDate').setValue(new Date(this.dialogData.registrationDate));
+            }
+            if (this.dialogData.expirationDate) {
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setValue(new Date(this.dialogData.expirationDate));
+            } else{
+                this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.expirationDate').setErrors(null);
+            }
             this.unitSumm = this.dialogData.summ;
         }
         console.log('this.dialogData.producer', this.dialogData.producer);
@@ -390,7 +402,17 @@ export class ImportMedEditDialogComponent implements OnInit, OnDestroy {
         console.log('this.unitOfImportTable', this.unitOfImportTable);
     }
 
+    loadImportSources() {
+        this.subscriptions.push(
+            this.administrationService.getImportSources().subscribe(data => {
+                    this.importSources = data;
+                    console.log('importSources', data);
 
+                },
+                error => console.log(error)
+            )
+        );
+    }
     loadATCCodes() {
         this.customsCodes =
             this.customsCodesInputs.pipe(

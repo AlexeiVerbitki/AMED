@@ -285,6 +285,21 @@
                     <!--</div>-->
                 </div>
 
+                <div class="col-4" *ngIf="medType==2">
+                    <div class="md-form-modified" id="importSources">
+                        <ng-select [items]="importSources"
+                                   bindLabel="name"
+                                   placeholder="Sursa importului"
+                                   formControlName="importSources"
+                                   required="true">
+                        </ng-select>
+                        <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').invalid">
+                            <small class="text-muted"><strong class="text-danger">Sursa importului trebuie
+                                selectată</strong></small>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <!--<div class="text-right">-->
             <!--<button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect (click)="addUnitOfImport()">Adauga</button>-->

@@ -1239,18 +1239,43 @@ console.log('this.unitOfImportTable', this.unitOfImportTable)
                 return;
             }
 
-                         this.unitOfImportTable[i].atcCode = result[1].importAuthorizationEntity.unitOfImportTable.atcCode;
-                         this.unitOfImportTable[i].customsCode = result[1].importAuthorizationEntity.unitOfImportTable.customsCode;
-                         this.unitOfImportTable[i].dose = result[1].importAuthorizationEntity.unitOfImportTable.dose;
-                         this.unitOfImportTable[i].expirationDate = result[1].importAuthorizationEntity.unitOfImportTable.expirationDate;
-                         this.unitOfImportTable[i].internationalMedicamentName = result[1].importAuthorizationEntity.unitOfImportTable.internationalMedicamentName;
-                         this.unitOfImportTable[i].name = result[1].importAuthorizationEntity.unitOfImportTable.name;
-                         this.unitOfImportTable[i].pharmaceuticalForm = result[1].importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm;
-                         this.unitOfImportTable[i].producer = result[1].importAuthorizationEntity.unitOfImportTable.producer;
-                         this.unitOfImportTable[i].price = result[1].importAuthorizationEntity.unitOfImportTable.price;
-                         this.unitOfImportTable[i].quantity = result[1].importAuthorizationEntity.unitOfImportTable.quantity;
-                         this.unitOfImportTable[i].summ = result[1].importAuthorizationEntity.unitOfImportTable.price * result[1].importAuthorizationEntity.unitOfImportTable.quantity;
-                         this.unitOfImportTable[i].unitsOfMeasurement = result[1].importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement;
+            if (result[1].importAuthorizationEntity.unitOfImportTable.atcCode) {
+                this.unitOfImportTable[i].atcCode = result[1].importAuthorizationEntity.unitOfImportTable.atcCode;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.customsCode) {
+                this.unitOfImportTable[i].customsCode = result[1].importAuthorizationEntity.unitOfImportTable.customsCode;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.dose) {
+                this.unitOfImportTable[i].dose = result[1].importAuthorizationEntity.unitOfImportTable.dose;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.expirationDate) {
+                this.unitOfImportTable[i].expirationDate = new Date(result[1].importAuthorizationEntity.unitOfImportTable.expirationDate);
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.internationalMedicamentName) {
+                this.unitOfImportTable[i].internationalMedicamentName = result[1].importAuthorizationEntity.unitOfImportTable.internationalMedicamentName;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.name) {
+                this.unitOfImportTable[i].name = result[1].importAuthorizationEntity.unitOfImportTable.name;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm) {
+                this.unitOfImportTable[i].pharmaceuticalForm = result[1].importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.producer) {
+                this.unitOfImportTable[i].producer = result[1].importAuthorizationEntity.unitOfImportTable.producer;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.price) {
+                this.unitOfImportTable[i].price = result[1].importAuthorizationEntity.unitOfImportTable.price;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.quantity) {
+                this.unitOfImportTable[i].quantity = result[1].importAuthorizationEntity.unitOfImportTable.quantity;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.price * result[1].importAuthorizationEntity.unitOfImportTable.quantity) {
+                this.unitOfImportTable[i].summ = result[1].importAuthorizationEntity.unitOfImportTable.price * result[1].importAuthorizationEntity.unitOfImportTable.quantity;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement) {
+                this.unitOfImportTable[i].unitsOfMeasurement = result[1].importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement;
+            }
+            if (result[1].importAuthorizationEntity.unitOfImportTable.importSources){this.unitOfImportTable[i].importSources = result[1].importAuthorizationEntity.unitOfImportTable.importSources;}
         });
     }
 
