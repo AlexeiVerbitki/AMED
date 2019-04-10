@@ -20,15 +20,6 @@
                     </mat-form-field>
                 </div>
             </div>
-            <!--<div class="col-md-4">-->
-            <!--<div class="md-form-modified">-->
-            <!--<mat-form-field class="w-100">-->
-            <!--<mat-select id="solicitantCompany" placeholder="Compania solicitant" formControlName="company">-->
-            <!--<mat-option *ngFor="let solicitantCompany of solicitantCompanyList" [value]="solicitantCompany">{{ solicitantCompany.name }}</mat-option>-->
-            <!--</mat-select>-->
-            <!--</mat-form-field>-->
-            <!--</div>-->
-            <!--</div>-->
 
             <div class="col-md-3">
                 <div class="md-form-modified">
@@ -56,7 +47,7 @@
                 <div class="md-form">
                     <input id="persResDepCereriiFirstname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedFirstname">
-                    <label for="persResDepCereriiFirstname">Nume persoana responsabilă <span
+                    <label for="persResDepCereriiFirstname">Nume persoana depunătoare <span
                             class="text-danger">*</span></label>
                     <div *ngIf="formSubmitted && !rForm.get('mandatedFirstname').valid">
                         <small class="text-muted"><strong class="text-danger">Prenumele persoanei de contact trebuie
@@ -69,7 +60,7 @@
                 <div class="md-form">
                     <input id="persResDepCereriiLastname" mdbInputDirective type="text" class="form-control"
                            formControlName="mandatedLastname">
-                    <label for="persResDepCereriiLastname">Prenume persoana responsabilă <span
+                    <label for="persResDepCereriiLastname">Prenume persoana depunătoare <span
                             class="text-danger">*</span></label>
                     <div *ngIf="formSubmitted && !rForm.get('mandatedLastname').valid">
                         <small class="text-muted"><strong class="text-danger">Numele persoanei de contact trebuie
@@ -82,9 +73,9 @@
                 <div class="md-form">
                     <input id="idnp" mdbInputDirective type="text" class="form-control" maxlength="13"
                            formControlName="idnp">
-                    <label for="idnp">IDNP <span class="text-danger">*</span></label>
+                    <label for="idnp">Act de identitate <span class="text-danger">*</span></label>
                     <div *ngIf="formSubmitted && !rForm.get('idnp').valid">
-                        <small class="text-muted"><strong class="text-danger">IDNP-ul trebuie introdus</strong>
+                        <small class="text-muted"><strong class="text-danger">Actul de identitate trebuie introdus</strong>
                         </small>
                     </div>
                 </div>

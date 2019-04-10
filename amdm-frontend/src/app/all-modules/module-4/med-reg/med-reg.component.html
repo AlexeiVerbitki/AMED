@@ -660,10 +660,10 @@
                         </div>
 	                    <div class="text-right">
 
-		                    <input id="parseSpecification" #parseInput type="file" style="display:none;"
-		                           attr.disabled="this.disabled" (click)="reset()" (change)="parseSpecification($event.target.files)"
-		                           placeholder="Upload file" accept=".xlsx,.xls,.csv">
-		                    <button type="button" class="btn btn-mdb-color btn-sm" (click)="parseInput.click()">Parsare specificației</button>
+                            <input id="parseSpecification" #parseInput type="file" style="display:none;"
+                                   attr.disabled="this.disabled" (click)="reset()" (change)="parseSpecification($event.target.files)"
+                                   placeholder="Upload file" accept=".xlsx,.xls,.csv">
+                            <button type="button" class="btn btn-mdb-color btn-sm" (click)="parseInput.click()">Parsare specificației</button>
 
 		                    <button type="submit" class="btn btn-indigo waves-light btn-md" mdbWavesEffect
 		                            (click)="addUnitOfImport()">Adauga
