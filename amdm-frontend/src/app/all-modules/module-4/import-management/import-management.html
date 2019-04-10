@@ -433,11 +433,12 @@
                         </tr>
                         </tbody>
                     </table>
-                    <!--<div *ngIf="formSubmitted && unitOfImportTable.length===0">-->
-                    <!--<small class="text-muted"><strong class="text-danger">Nici o unitate de import nu a fost adaugata</strong></small>-->
-                    <!--</div>-->
 
-                    <!--<button class="btn btn-default btn-sm waves-light" mdbWavesEffect (click)="viewDoc()">Autorizatie</button>-->
+                    <input id="parseSpecification" #parseInput type="file" style="display:none;"
+                           attr.disabled="this.disabled" (click)="reset()" (change)="parseSpecification($event.target.files)"
+                           placeholder="Upload file" accept=".xlsx,.xls,.csv">
+                    <button type="button" class="btn btn-mdb-color btn-sm" (click)="parseInput.click()">Parsare specificației</button>
+
                     <button id="adauga" class="btn btn-primary waves-light btn-sm waves-light pull-right" (click)="showunitOfImport()" mdbWavesEffect>Adaugă unitate de import</button>
                     <div *ngIf="formSubmitted && invoiceDetails.length == 0 ">
                         <small class="text-muted"><strong class="text-danger">Nici o poziție nu a fost adaugată</strong></small>

@@ -1,5 +1,5 @@
 import {Cerere} from './../../../models/cerere';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -14,8 +14,8 @@ import {AuthService} from '../../../shared/service/authetication.service';
 import {MedicamentService} from '../../../shared/service/medicament.service';
 import {ImportManagementDialog} from './import-management-dialog/import-management-dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {errorHandler} from '@angular/platform-browser/src/browser';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
+import * as XLSX from "xlsx";
 
 export interface PeriodicElement {
     name: string;
@@ -57,7 +57,7 @@ export class ImportManagement implements OnInit, OnDestroy {
     solicitantCompanyList: Observable<any[]>;
     unitSumm: any;
     formModel: any;
-    valutaList: Observable<any[]>;
+    valutaList: any[];
     // customsPointsList: Observable<any[]>;
     customsPointsList: any[] = [];
     generatedDocNrSeq: number;
@@ -92,6 +92,17 @@ export class ImportManagement implements OnInit, OnDestroy {
     requestData: any;
     maxDate = new Date();
     private subscriptions: Subscription[] = [];
+    validRows: any[] = [];
+    @ViewChild('parseInput')
+    incarcaFisierVariable: ElementRef;
+    invalidCurrency = false;
+    userPrice: any;
+    medicamentPrice: any;
+    exchangeCurrenciesForPeriod: any[] = [];
+    addedUnits: number ;
+    remainingUnits: number ;
+    importedUnits: number ;
+    approvedQuantity: any;
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -103,6 +114,7 @@ export class ImportManagement implements OnInit, OnDestroy {
                 public dialogConfirmation: MatDialog,
                 public medicamentService: MedicamentService,
                 private successOrErrorHandlerService: SuccessOrErrorHandlerService,
+                private errorHandlerService: SuccessOrErrorHandlerService,
                 private administrationService: AdministrationService) {
     }
 
@@ -200,6 +212,7 @@ export class ImportManagement implements OnInit, OnDestroy {
         this.subscriptions.push(this.activatedRoute.params.subscribe(params2 => {
             this.subscriptions.push(this.requestService.getImportRequest(params2.id).subscribe(requestData => {
                     this.requestData = requestData;
+                    console.log('this.requestData', this.requestData);
                     this.subscriptions.push(this.requestService.getInvoiceItems('', this.requestData.invoiceEntity.id, 'false').subscribe(data => {
                         this.invoiceDetails = data;
                         console.log('this.invoiceDetails', this.invoiceDetails);
@@ -392,7 +405,466 @@ export class ImportManagement implements OnInit, OnDestroy {
         this.loadMedicaments();
         this.loadInternationalMedicamentName();
         this.expirationDatePicker = '';
+        this.addedUnits = 0;
+        this.remainingUnits = 0;
+        this.importedUnits = 0;
         // this.loadCustomsPoints();
+    }
+
+    parseSpecification(files: FileList){
+
+        this.loadingService.show();
+
+        var documents: FileList = files;
+        let cellsWithErrors = [];
+
+        let cellExists: boolean;
+        console.log('documents', documents);
+
+        var nn = this;
+
+
+        if (!files || files.length == 0) return;
+        var file = files[0];
+
+
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+
+
+        let excelSheet: any;
+
+        reader.onload = function (e) {
+            var data = new Uint8Array(reader.result);
+            excelSheet = XLSX.read(data, {type: 'array'});
+
+            if (excelSheet.Sheets && excelSheet.Sheets["Medicamente Rom_RUS"] && (excelSheet.Sheets["Medicamente Rom_RUS"].D13)){
+                cellExists = true;
+            } else{
+                cellExists = false;
+                nn.errorHandlerService.showError("Documentul nu contine date valide");
+                nn.loadingService.hide();
+                return;
+            }
+            console.log('excelSheet', excelSheet);
+
+            //=====================
+            /* loop through every cell manually */
+
+            let columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R"];
+            let sheet = excelSheet.Sheets["Medicamente Rom_RUS"];
+            var range = XLSX.utils.decode_range(sheet['!ref']); // get the range
+            for ( let R: number  = range.s.r+12; R <= range.e.r; R++) {
+                // for (var C = range.s.c; C <= range.e.c; ++C) {
+                let rowToBeParsed: any ={};
+
+                //Go through cells in a  row
+                for (let C = 1; C < columns.length; C++) {
+                    /* find the cell object */
+                    // console.log('Row : ' + R);
+                    // console.log('Column : ' + C);
+                    var cellref = XLSX.utils.encode_cell({c: C, r: R}); // construct A1 reference for cell
+                    if (!sheet[cellref]) {
+                        let cellNumber: number = R+1;
+                        cellsWithErrors.push(cellref);
+                        // console.log(columns[C] + cellNumber + ": empty cell")
+                        // break; // if cell doesn't exist, move on
+                    } else {
+
+                        var cell = sheet[cellref];
+                        let cellNumber: number = R+1;
+                        console.log(columns[C] + cellNumber +": " +cell.v);
+
+                        switch (C) {
+                            case  1: { cell.v ? rowToBeParsed.codeAmed =  cell.v : rowToBeParsed.codeAmed= null; /*if(!rowToBeParsed.codeAmed || rowToBeParsed.codeAmed == undefined)                {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  2: {rowToBeParsed.customsCode =                 cell.v; /*if(!rowToBeParsed.customsCode || rowToBeParsed.customsCode == undefined)                                 {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  3: {rowToBeParsed.name =                        cell.v; /*if(!rowToBeParsed.name || rowToBeParsed.name == undefined)                                               {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  4: {rowToBeParsed.pharmaceuticalForm =          cell.v; /*if(!rowToBeParsed.pharmaceuticalForm || rowToBeParsed.pharmaceuticalForm == undefined)                   {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  5: {rowToBeParsed.dose =                        cell.v; /*if(!rowToBeParsed.dose || rowToBeParsed.dose == undefined)                                               {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  6: {rowToBeParsed.unitsOfMeasurement =          cell.v; /*if(!rowToBeParsed.unitsOfMeasurement || rowToBeParsed.unitsOfMeasurement == undefined)                   {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  7: {rowToBeParsed.quantity =                    cell.v; /*if(!rowToBeParsed.quantity || rowToBeParsed.quantity == undefined)                                       {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  8: {rowToBeParsed.price =                       cell.v; /*if(!rowToBeParsed.price || rowToBeParsed.price == undefined)                                             {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case  9: {rowToBeParsed.summ =                        cell.v; /*if(!rowToBeParsed.summ || rowToBeParsed.summ == undefined)                                               {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 11: {rowToBeParsed.producer =                    cell.v; /*if(!rowToBeParsed.producer || rowToBeParsed.producer == undefined)                                       {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 12: {rowToBeParsed.authorizationsNumber =        cell.v; /*if(!rowToBeParsed.registrationNumber || rowToBeParsed.registrationNumber == undefined)                   {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 13: {rowToBeParsed.customsDeclarationNumber =    cell.v; /*if(!rowToBeParsed.registrationDate || rowToBeParsed.registrationDate == undefined)                       {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 14: {rowToBeParsed.serie =                       cell.v; /*if(!rowToBeParsed.atcCode || rowToBeParsed.atcCode == undefined)                                         {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 15: {rowToBeParsed.expirationDate =              cell.v; break;}
+                            case 16: {rowToBeParsed.receivedAmount =              cell.v; /*if(!rowToBeParsed.internationalMedicamentName || rowToBeParsed.internationalMedicamentName == undefined) {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            case 17: {rowToBeParsed.returnedAmount =              cell.v; /*if(!rowToBeParsed.internationalMedicamentName || rowToBeParsed.internationalMedicamentName == undefined) {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
+                            // case  :  {rowToBeParsed.currency =                    cell.v; break;}
+
+                        }
+                    }
+                };
+                let unitOfImportForPush: any ={};
+
+//===================================================================================================
+                if( rowToBeParsed.name &&
+                    rowToBeParsed.quantity &&
+                    rowToBeParsed.price &&
+                    rowToBeParsed.authorizationsNumber == nn.requestData.importAuthorizationEntity.authorizationsNumber
+                    // && rowToBeParsed.codeAmed &&
+                    // rowToBeParsed.customsCode &&
+                    // rowToBeParsed.pharmaceuticalForm &&
+                    // rowToBeParsed.dose &&
+                    // rowToBeParsed.unitsOfMeasurement &&
+                    // rowToBeParsed.summ &&
+                    // rowToBeParsed.producer &&
+                    // rowToBeParsed.registrationNumber &&
+                    // rowToBeParsed.registrationDate &&
+                    // rowToBeParsed.atcCode &&
+                    // rowToBeParsed.internationalMedicamentName
+                ){
+                    nn.validRows.push(rowToBeParsed);
+                }
+            }
+
+            console.log('validRows',nn.validRows)
+            if(nn.validRows.length<=0){
+                nn.errorHandlerService.showError("Documentul nu contine date valide");
+            }
+
+                nn.parseRowWithAmed();
+            // if(nn.importData.importAuthorizationEntity.medType === 2){
+            //     nn.parseRowNoAmed();
+            // }
+        };
+
+    }
+
+
+    async parseRowWithAmed() {
+
+        this.validRows.forEach(row => {
+            console.log('row', row);
+
+            let unitOfImportWithCodeAmed: any = {};
+            let val: any = {};
+            if (row.codeAmed) {
+                // this.subscriptions.push(this.medicamentService.getMedicamentByNameWithPrice(row.codeAmed).subscribe(medicament => {
+                // this.subscriptions.push(this.requestService.getInvoiceQuota(row.name, row.authorizationsNumber, "true").subscribe(position => {
+                this.subscriptions.push(this.requestService.getAuthorizationDetailsByNameOrCode(row.name, String(this.requestData.importAuthorizationEntity.id)).subscribe(position => {
+
+                    val = position[0];
+                    console.log('val', position);
+
+                    if(val) {
+
+                        this.subscriptions.push(this.requestService.getInvoiceQuota(val.name, this.importData.authorizationsNumber, "true").subscribe(data => {
+                            console.log('getInvoiceQuota()', data);
+                            this.importedUnits = data;
+                            // this.remainingUnits = val.approvedQuantity - this.importedUnits - this.addedUnits;
+
+                            // row = this.row;
+
+                            if (row.quantity) {
+
+                                if (this.invoiceDetails.find(x => (x.codeAmed && x.codeAmed == row.codeAmed))) {
+                                    this.addedUnits = this.invoiceDetails.filter(x => x.codeAmed == val.codeAmed).map(x => x.quantity).reduce((a, b) => a + b);
+                                    this.remainingUnits = val.approvedQuantity - this.addedUnits - this.importedUnits;
+                                    console.log('remainingUnits:', this.addedUnits);
+                                    const invoiceDetails: any = {};
+
+                                    if (row.quantity <= this.remainingUnits && row.price <= val.price) {
+                                        const invoiceDetails: any = {};
+
+                                        invoiceDetails.quantity = row.quantity;
+
+                                        invoiceDetails.price = row.price;
+
+                                        invoiceDetails.sum = row.quantity * row.price;
+
+                                        if (val.medicament && val.medicament.id) {
+                                            invoiceDetails.medicament = row.val.medicament.id;
+                                        }
+
+                                        invoiceDetails.name = row.name;
+
+
+
+                                        invoiceDetails.authorizationsNumber = row.authorizationsNumber;
+                                        this.invoiceDetails.push(invoiceDetails);
+                                    }
+
+                                } else if (this.invoiceDetails.find(x => x.name == row.name)) {
+                                    this.addedUnits = this.invoiceDetails.filter(x => x.name == val.name).map(x => x.quantity).reduce((a, b) => a + b);
+                                    this.remainingUnits = val.approvedQuantity - this.addedUnits - this.importedUnits;
+                                    console.log('remainingUnits:', this.addedUnits);
+
+                                    if (row.quantity <= this.remainingUnits && row.price <= val.price) {
+                                        const invoiceDetails: any = {};
+
+                                        invoiceDetails.quantity = row.quantity;
+
+                                        invoiceDetails.price = row.price;
+
+                                        invoiceDetails.sum = row.quantity * row.price;
+
+                                        if (val.medicament && val.medicament.id) {
+                                            invoiceDetails.medicament = row.val.medicament.id;
+                                        }
+
+                                        invoiceDetails.name = row.name;
+
+
+                                        invoiceDetails.authorizationsNumber = row.authorizationsNumber;
+                                        this.invoiceDetails.push(invoiceDetails);
+                                    }
+
+                                } else {
+                                    this.remainingUnits = val.approvedQuantity - this.importedUnits;
+                                    console.log('remainingUnits:', this.remainingUnits);
+
+                                    if (row.quantity <= this.remainingUnits && row.price <= val.price) {
+                                        const invoiceDetails: any = {};
+
+                                        invoiceDetails.quantity = row.quantity;
+
+                                        invoiceDetails.price = row.price;
+
+                                        invoiceDetails.sum = row.quantity * row.price;
+
+                                        if (val.medicament && val.medicament.id) {
+                                            invoiceDetails.medicament = row.val.medicament.id;
+                                        }
+
+                                        invoiceDetails.name = row.name;
+
+
+                                        invoiceDetails.authorizationsNumber = row.authorizationsNumber;
+                                        this.invoiceDetails.push(invoiceDetails);
+                                    }
+                                }
+
+
+                            }
+
+
+                        }));
+
+
+                        //========================================
+
+                        // if (row.price) {
+                        //     let contractCurrency: any;
+                        //     let priceInContractCurrency: any;
+                        //     unitOfImportWithCodeAmed.price = row.price;
+                        //
+                        //     if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value) {
+                        //         contractCurrency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+                        //     }
+                        //
+                        //     if (contractCurrency.shortDescription == 'MDL') {
+                        //         priceInContractCurrency = this.medicamentPrice.priceMdl;
+                        //
+                        //         if (this.userPrice > priceInContractCurrency) {
+                        //             // this.invalidPrice = true;
+                        //             console.log('price is higher than the contract price', priceInContractCurrency);
+                        //         } else {
+                        //             this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                        //             console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
+                        //         }
+                        //     } else {
+                        //
+                        //         let medicamentPrice: any;
+                        //
+                        //         this.subscriptions.push(this.medicamentService.getMedPrice(val.id).subscribe(priceEntity => {
+                        //             if (priceEntity) {
+                        //                 medicamentPrice = priceEntity;
+                        //                 const exchangeDate = new Date(priceEntity.orderApprovDate);
+                        //
+                        //                 if (priceEntity.currency) {
+                        //                     this.valutaList = [/*this.valutaList.find(i=> i.shortDescription === "MDL"), */ priceEntity.currency];
+                        //                     console.log('this.valutaList', this.valutaList);
+                        //
+                        //                 }
+                        //                 this.pushToTableOrNot(exchangeDate, contractCurrency, priceInContractCurrency, medicamentPrice,unitOfImportWithCodeAmed);
+                        //             }
+                        //         }            ));
+                        //     }
+                        //
+                        //
+                        // } else if (val) {
+                        //     // this.invalidPrice = false;
+                        //     console.log('couldnt verify the price or the row doesnt contain the price');
+                        // }
+
+
+                        // } else {
+                        //     // let el = document.getElementById("contractCurrency");
+                        //     // el.scrollIntoView();
+                        // }
+
+                    }}));
+            }
+            //=============================================================
+
+        })
+        this.loadingService.hide();
+
+    }
+
+    async parseRowNoAmed() {
+
+        if (this.validRows.length <= 0) {
+            this.loadingService.hide();
+            this.errorHandlerService.showError("Documentul contine medicamente cu greseli");
+            return;
+        }
+        this.validRows.forEach(row => {
+            console.log('row', row);
+
+            let unitOfImportWithCodeAmed: any = {};
+            let rowValues: any = {};
+
+            rowValues = row;
+            // console.log('rowValues', row);
+
+            if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
+                this.invalidCurrency = true;
+                this.loadingService.hide();
+                this.errorHandlerService.showError("Valuta specificatiei trebuie selectată");
+            } else {
+                this.invalidCurrency = false;
+                unitOfImportWithCodeAmed.currency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+
+
+            }
+
+            if (this.invalidCurrency == false && rowValues) {
+                unitOfImportWithCodeAmed.approved = false;
+                // if(rowValues){
+                //     unitOfImportWithCodeAmed.medicament  = rowValues;
+                // }
+
+                if (rowValues.dose) {
+                    unitOfImportWithCodeAmed.dose = rowValues.dose;
+                }
+                if (rowValues.unitsOfMeasurement) {
+                    unitOfImportWithCodeAmed.unitsOfMeasurement = rowValues.unitsOfMeasurement;
+                }
+                if (rowValues.name) {
+                    unitOfImportWithCodeAmed.name = rowValues.name;
+                } else {
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');
+                }
+                if (rowValues.commercialName) {
+                    unitOfImportWithCodeAmed.commercialName = rowValues.name;
+                }
+                if (row.price) {
+                    this.userPrice = row.price;
+                    unitOfImportWithCodeAmed.price = row.price;
+                }
+                if (row.price && row.quantity) {
+                    this.userPrice = row.price;
+                    unitOfImportWithCodeAmed.summ = row.price * row.quantity;
+                }
+                if (row.quantity) {
+                    unitOfImportWithCodeAmed.quantity = row.quantity;
+                }
+                if (rowValues.customsCode) {
+                    unitOfImportWithCodeAmed.customsCode = rowValues.customsCode;
+                }
+
+                unitOfImportWithCodeAmed.registrationDate = new Date(rowValues.registrationDate);
+
+                // unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
+
+
+                if (rowValues.pharmaceuticalForm) {
+                    // unitOfImportWithCodeAmed.pharmaceuticalForm = rowValues.pharmaceuticalForm;
+                    if (rowValues.pharmaceuticalForm) {
+                        this.subscriptions.push(this.administrationService.getAllPharamceuticalFormsByName(rowValues.pharmaceuticalForm).subscribe(val => {
+                            console.log('pharmaceuticalForm', val[0]);
+                            unitOfImportWithCodeAmed.pharmaceuticalForm = val[0];
+//=============================================================
+                            if (rowValues.internationalMedicamentName) {
+                                // unitOfImportWithCodeAmed.internationalMedicamentName = rowValues.internationalMedicamentName;
+                                let nameNoPlus = rowValues.internationalMedicamentName.replace('+', '%2B');
+                                this.subscriptions.push(this.administrationService.getAllInternationalNamesByName(nameNoPlus).subscribe(val => {
+                                    console.log('rowValues.internationalMedicamentName', val[0]);
+                                    unitOfImportWithCodeAmed.internationalMedicamentName = val[0];
+//=============================================================
+                                    if (rowValues.producer) {
+                                        // unitOfImportWithCodeAmed.producer = rowValues.producer;
+                                        this.subscriptions.push(this.administrationService.getManufacturersByName(rowValues.producer).subscribe(val => {
+                                            unitOfImportWithCodeAmed.producer = val[0];
+                                            console.log('rowValues.producer', val[0]);
+//=============================================================
+                                            if (rowValues.atcCode) {
+                                                (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(rowValues.atcCode).subscribe(atcCode => {
+                                                    unitOfImportWithCodeAmed.atcCode = atcCode[0];
+                                                    console.log('rowValues.atcCode', atcCode[0]);
+//=============================================================
+                                                    this.administrationService.getAllCustomsCodesByDescription(rowValues.customsCode).subscribe(customsCode =>{
+                                                        unitOfImportWithCodeAmed.customsCode = customsCode[0];
+                                                        console.log('rowValues.customsCode', customsCode[0]);
+                                                    })
+//=============================================================
+                                                    this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                                                    console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
+                                                    this.loadingService.hide();
+                                                })));
+                                            }
+                                        }));
+
+                                    }
+                                }));
+
+                            }
+                        }))
+                    }
+                }
+
+                // if (rowValues.registrationNumber) {
+                //     unitOfImportWithCodeAmed.registrationNumber = rowValues.registrationNumber;
+                // }
+                // if (rowValues.registrationDate) {
+                //     unitOfImportWithCodeAmed.registrationDate = new Date(rowValues.registrationDate);
+                // }
+                // if (rowValues.expirationDate) {
+                //     unitOfImportWithCodeAmed.expirationDate = new Date(rowValues.expirationDate);
+                // }
+
+
+
+                // console.log('rowValues.manufactures', rowValues.manufactures);
+                // if (rowValues.producer) {
+                //     // unitOfImportWithCodeAmed.producer = rowValues.producer;
+                //     this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(rowValues.producer).subscribe(val => {
+                //         unitOfImportWithCodeAmed.producer = val;
+                //     }));
+                //
+                // }
+
+                // if (rowValues.atcCode) {
+                //     (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(rowValues.atcCode).subscribe(atcCode => {
+                //         unitOfImportWithCodeAmed.atcCode = atcCode[0];
+                //     })));
+                // }
+
+
+
+                //========================================
+                // this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+
+            } else {
+                this.loadingService.hide();
+                // let el = document.getElementById("contractCurrency");
+                // el.scrollIntoView();
+            }
+
+            //=============================================================
+
+        });
+        console.log('this.unitOfImportTable', this.unitOfImportTable)
+
+    }
+
+    reset() {
+        this.incarcaFisierVariable.nativeElement.value = '';
+        this.validRows = [];
     }
 
     loadInvoiceDetails(name, auth, saved){
@@ -401,6 +873,29 @@ export class ImportManagement implements OnInit, OnDestroy {
             this.invoiceDetails = data;
         }));
     }
+
+    pushToTableOrNot(date: any, contractCurrency: any, priceInContractCurrency: any, medicamentPrice: any, unitOfImportWithCodeAmed: any) {
+        this.subscriptions.push(this.administrationService.getCurrencyByPeriod(date).subscribe(data => {
+            this.exchangeCurrenciesForPeriod = data;
+            // console.log('Exchange rate for ' + date + '\n' + JSON.stringify(this.exchangeCurrenciesForPeriod));
+            // console.log('Exchange rate for 1' + this.exchangeCurrenciesForPeriod.toString());
+
+            const exchangeCurrency = this.exchangeCurrenciesForPeriod.find(x => x.currency.shortDescription == contractCurrency.shortDescription);
+            if (medicamentPrice && medicamentPrice.priceMdl && exchangeCurrency && exchangeCurrency.value) {
+                priceInContractCurrency = medicamentPrice.priceMdl / exchangeCurrency.value;
+            }
+            if (this.userPrice > priceInContractCurrency) {
+                // this.invalidPrice = true;
+                console.log(unitOfImportWithCodeAmed.name + ' price is higher than the contract price', priceInContractCurrency);
+            } else {
+                this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
+            }
+
+        }));
+
+    }
+
 
 
     viewDoc(document: any) {

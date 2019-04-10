@@ -621,7 +621,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
             var data = new Uint8Array(reader.result);
             excelSheet = XLSX.read(data, {type: 'array'});
 
-            if (excelSheet.Sheets && excelSheet.Sheets.Medicamente_Rom_Engl && (excelSheet.Sheets.Medicamente_Rom_Engl.B10 || excelSheet.Sheets.Medicamente_Rom_Engl.P10)){
+            // if (excelSheet.Sheets && excelSheet.Sheets.Medicamente_Rom_Engl && (excelSheet.Sheets.Medicamente_Rom_Engl.B10 || excelSheet.Sheets.Medicamente_Rom_Engl.P10)){
+            if (excelSheet.Sheets && excelSheet.Sheets["Medicamente Rom_Engl"] && (excelSheet.Sheets["Medicamente Rom_Engl"].B10 || excelSheet.Sheets["Medicamente Rom_Engl"].P10)){
                 cellExists = true;
             } else{
                 cellExists = false;
@@ -635,7 +636,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
             /* loop through every cell manually */
 
             let columns = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P"];
-            let sheet = excelSheet.Sheets.Medicamente_Rom_Engl;
+            let sheet = excelSheet.Sheets["Medicamente Rom_Engl"];
             var range = XLSX.utils.decode_range(sheet['!ref']); // get the range
             for ( let R: number  = range.s.r+8; R <= range.e.r; R++) {
                 // for (var C = range.s.c; C <= range.e.c; ++C) {
@@ -816,7 +817,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                             unitOfImportWithCodeAmed.atcCode = atcCode[0];
                         })));
 
-                        unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
+                        // unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
                         //=============================================================
 
 
@@ -951,7 +952,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
                 unitOfImportWithCodeAmed.registrationDate = new Date(rowValues.registrationDate);
 
-                unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
+                // unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
 
 
                 if (rowValues.pharmaceuticalForm) {
