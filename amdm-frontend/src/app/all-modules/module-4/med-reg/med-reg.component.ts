@@ -888,10 +888,10 @@ export class MedRegComponent implements OnInit, OnDestroy {
             console.log('row', row);
 
             let unitOfImportWithCodeAmed: any = {};
-            let val: any = {};
+            let rowValues: any = {};
 
-            val = row;
-            // console.log('val', row);
+            rowValues = row;
+            // console.log('rowValues', row);
 
             if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
                 this.invalidCurrency = true;
@@ -904,78 +904,26 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
             }
 
-            if (this.invalidCurrency == false && val) {
+            if (this.invalidCurrency == false && rowValues) {
                 unitOfImportWithCodeAmed.approved = false;
-                // if(val){
-                //     unitOfImportWithCodeAmed.medicament  = val;
+                // if(rowValues){
+                //     unitOfImportWithCodeAmed.medicament  = rowValues;
                 // }
-                if (val.pharmaceuticalForm) {
-                    unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
-                    if (val.pharmaceuticalForm) {
-                        this.subscriptions.push(this.administrationService.getAllPharamceuticalFormsByName(val.pharmaceuticalForm).subscribe(val => {
-                            console.log('pharmaceuticalForm', val);
-                        }))
-                    }
+
+                if (rowValues.dose) {
+                    unitOfImportWithCodeAmed.dose = rowValues.dose;
                 }
-                if (val.dose) {
-                    unitOfImportWithCodeAmed.dose = val.dose;
+                if (rowValues.unitsOfMeasurement) {
+                    unitOfImportWithCodeAmed.unitsOfMeasurement = rowValues.unitsOfMeasurement;
                 }
-                if (val.unitsOfMeasurement) {
-                    unitOfImportWithCodeAmed.unitsOfMeasurement = val.unitsOfMeasurement;
-                }
-                if (val.name) {
-                    unitOfImportWithCodeAmed.name = val.commercialName;
+                if (rowValues.name) {
+                    unitOfImportWithCodeAmed.name = rowValues.commercialName;
                 } else {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');
                 }
-                if (val.commercialName) {
-                    unitOfImportWithCodeAmed.commercialName = val.commercialName;
+                if (rowValues.commercialName) {
+                    unitOfImportWithCodeAmed.commercialName = rowValues.commercialName;
                 }
-                if (val.internationalMedicamentName) {
-                    unitOfImportWithCodeAmed.internationalMedicamentName = val.internationalMedicamentName;
-                    this.subscriptions.push(this.administrationService.getAllInternationalNamesByName(val.internationalMedicamentName).subscribe(val => {
-                        console.log('val.internationalMedicamentName', val);
-                    }));
-
-                }
-                // if (val.registrationNumber) {
-                //     unitOfImportWithCodeAmed.registrationNumber = val.registrationNumber;
-                // }
-                // if (val.registrationDate) {
-                //     unitOfImportWithCodeAmed.registrationDate = new Date(val.registrationDate);
-                // }
-                // if (val.expirationDate) {
-                //     unitOfImportWithCodeAmed.expirationDate = new Date(val.expirationDate);
-                // }
-
-                if (row.quantity) {
-                    unitOfImportWithCodeAmed.quantity = row.quantity;
-                }
-
-
-                if (val.customsCode) {
-                    unitOfImportWithCodeAmed.customsCode = val.customsCode;
-                }
-
-                // console.log('val.manufactures', val.manufactures);
-                if (val.producer) {
-                    // unitOfImportWithCodeAmed.producer = val.producer;
-                    this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(val.producer).subscribe(val => {
-                        unitOfImportWithCodeAmed.producer = val;
-                    }));
-
-                }
-
-                if (val.atcCode) {
-                    (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(val.atcCode).subscribe(atcCode => {
-                        unitOfImportWithCodeAmed.atcCode = atcCode[0];
-                    })));
-                }
-
-                unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
-                //=============================================================
-
-
                 if (row.price) {
                     this.userPrice = row.price;
                     unitOfImportWithCodeAmed.price = row.price;
@@ -984,9 +932,85 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     this.userPrice = row.price;
                     unitOfImportWithCodeAmed.summ = row.price * row.quantity;
                 }
+                if (row.quantity) {
+                    unitOfImportWithCodeAmed.quantity = row.quantity;
+                }
+                if (rowValues.customsCode) {
+                    unitOfImportWithCodeAmed.customsCode = rowValues.customsCode;
+                }
+
+                unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
+
+
+                if (rowValues.pharmaceuticalForm) {
+                    // unitOfImportWithCodeAmed.pharmaceuticalForm = rowValues.pharmaceuticalForm;
+                    if (rowValues.pharmaceuticalForm) {
+                        this.subscriptions.push(this.administrationService.getAllPharamceuticalFormsByName(rowValues.pharmaceuticalForm).subscribe(val => {
+                            console.log('pharmaceuticalForm', val);
+                            unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
+//=============================================================
+                            if (rowValues.internationalMedicamentName) {
+                                // unitOfImportWithCodeAmed.internationalMedicamentName = rowValues.internationalMedicamentName;
+                                this.subscriptions.push(this.administrationService.getAllInternationalNamesByName(rowValues.internationalMedicamentName).subscribe(val => {
+                                    console.log('rowValues.internationalMedicamentName', val);
+                                    unitOfImportWithCodeAmed.internationalMedicamentName = val.internationalMedicamentName;
+//=============================================================
+                                    if (rowValues.producer) {
+                                        // unitOfImportWithCodeAmed.producer = rowValues.producer;
+                                        this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(rowValues.producer).subscribe(val => {
+                                            unitOfImportWithCodeAmed.producer = val;
+                                            console.log('rowValues.producer', val);
+//=============================================================
+                                            if (rowValues.atcCode) {
+                                                (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(rowValues.atcCode).subscribe(atcCode => {
+                                                    unitOfImportWithCodeAmed.atcCode = atcCode[0];
+
+//=============================================================
+                                                    this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                                                    this.loadingService.hide();
+                                                })));
+                                            }
+                                        }));
+
+                                    }
+                                }));
+
+                            }
+                        }))
+                    }
+                }
+
+                // if (rowValues.registrationNumber) {
+                //     unitOfImportWithCodeAmed.registrationNumber = rowValues.registrationNumber;
+                // }
+                // if (rowValues.registrationDate) {
+                //     unitOfImportWithCodeAmed.registrationDate = new Date(rowValues.registrationDate);
+                // }
+                // if (rowValues.expirationDate) {
+                //     unitOfImportWithCodeAmed.expirationDate = new Date(rowValues.expirationDate);
+                // }
+
+
+
+                // console.log('rowValues.manufactures', rowValues.manufactures);
+                // if (rowValues.producer) {
+                //     // unitOfImportWithCodeAmed.producer = rowValues.producer;
+                //     this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(rowValues.producer).subscribe(val => {
+                //         unitOfImportWithCodeAmed.producer = val;
+                //     }));
+                //
+                // }
+
+                // if (rowValues.atcCode) {
+                //     (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(rowValues.atcCode).subscribe(atcCode => {
+                //         unitOfImportWithCodeAmed.atcCode = atcCode[0];
+                //     })));
+                // }
+
+
 
                 //========================================
-                this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                // this.unitOfImportTable.push(unitOfImportWithCodeAmed);
 
             } else {
                 // let el = document.getElementById("contractCurrency");
@@ -996,7 +1020,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
             //=============================================================
 
         });
-        this.loadingService.hide();
+
 
     }
 
