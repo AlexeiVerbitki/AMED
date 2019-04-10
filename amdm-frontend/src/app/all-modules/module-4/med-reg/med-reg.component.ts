@@ -946,8 +946,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     // unitOfImportWithCodeAmed.pharmaceuticalForm = rowValues.pharmaceuticalForm;
                     if (rowValues.pharmaceuticalForm) {
                         this.subscriptions.push(this.administrationService.getAllPharamceuticalFormsByName(rowValues.pharmaceuticalForm).subscribe(val => {
-                            console.log('pharmaceuticalForm', val);
-                            unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
+                            console.log('pharmaceuticalForm', val[0]);
+                            unitOfImportWithCodeAmed.pharmaceuticalForm = val[0];
 //=============================================================
                             if (rowValues.internationalMedicamentName) {
                                 // unitOfImportWithCodeAmed.internationalMedicamentName = rowValues.internationalMedicamentName;
@@ -964,9 +964,11 @@ export class MedRegComponent implements OnInit, OnDestroy {
                                             if (rowValues.atcCode) {
                                                 (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(rowValues.atcCode).subscribe(atcCode => {
                                                     unitOfImportWithCodeAmed.atcCode = atcCode[0];
+                                                    console.log('rowValues.atcCode', atcCode[0]);
 
 //=============================================================
                                                     this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                                                    console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
                                                     this.loadingService.hide();
                                                 })));
                                             }

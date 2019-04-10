@@ -1,0 +1,39 @@
+<div>
+  <form [formGroup]='dForm'>
+    <h3 class="text-center my-3 font-weight-bold">Editare variatie</h3>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="code" mdbInputDirective type="text" [attr.disabled]="true"  formControlName="code" class="form-control">
+          <label for="code">Cod</label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="value" mdbInputDirective type="text" [attr.disabled]="true" formControlName="value" class="form-control">
+          <label for="value">Valoare</label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="quantity" mdbInputDirective min="1" step="1" type="number" class="form-control" formControlName="quantity">
+          <label for="quantity">Cantitate<span class="text-danger">*</span></label>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="md-form">
+          <input id="comment" mdbInputDirective type="text" formControlName="comment" class="form-control">
+          <label for="comment">Comentariu</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="text-center">
+  <div mat-dialog-actions>
+    <div class="w-100">
+      <button class="btn btn-danger btn-sm waves-light" (click)="cancel()">Anulare</button>
+      <button class="btn btn-dark-green-color btn-sm waves-light" (click)="save()">Salvare</button>
+    </div>
+  </div>
+</div>
