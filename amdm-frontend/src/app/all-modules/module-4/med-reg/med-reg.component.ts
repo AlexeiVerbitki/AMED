@@ -722,6 +722,9 @@ export class MedRegComponent implements OnInit, OnDestroy {
             }
 
             console.log('validRows',nn.validRows)
+            if(nn.validRows.length<=0){
+                nn.errorHandlerService.showError("Documentul nu contine date valide");
+            }
 
             if(nn.importData.importAuthorizationEntity.medType === 1){
                 nn.parseRowWithAmed();
