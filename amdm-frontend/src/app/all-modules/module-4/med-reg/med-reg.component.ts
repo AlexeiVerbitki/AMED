@@ -917,12 +917,12 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     unitOfImportWithCodeAmed.unitsOfMeasurement = rowValues.unitsOfMeasurement;
                 }
                 if (rowValues.name) {
-                    unitOfImportWithCodeAmed.name = rowValues.commercialName;
+                    unitOfImportWithCodeAmed.name = rowValues.name;
                 } else {
                     this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');
                 }
                 if (rowValues.commercialName) {
-                    unitOfImportWithCodeAmed.commercialName = rowValues.commercialName;
+                    unitOfImportWithCodeAmed.commercialName = rowValues.name;
                 }
                 if (row.price) {
                     this.userPrice = row.price;
@@ -938,6 +938,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 if (rowValues.customsCode) {
                     unitOfImportWithCodeAmed.customsCode = rowValues.customsCode;
                 }
+
+                unitOfImportWithCodeAmed.registrationDate = new Date(rowValues.registrationDate);
 
                 unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
 
@@ -957,15 +959,19 @@ export class MedRegComponent implements OnInit, OnDestroy {
 //=============================================================
                                     if (rowValues.producer) {
                                         // unitOfImportWithCodeAmed.producer = rowValues.producer;
-                                        this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(rowValues.producer).subscribe(val => {
-                                            unitOfImportWithCodeAmed.producer = val;
-                                            console.log('rowValues.producer', val);
+                                        this.subscriptions.push(this.administrationService.getManufacturersByName(rowValues.producer).subscribe(val => {
+                                            unitOfImportWithCodeAmed.producer = val[0];
+                                            console.log('rowValues.producer', val[0]);
 //=============================================================
                                             if (rowValues.atcCode) {
                                                 (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(rowValues.atcCode).subscribe(atcCode => {
                                                     unitOfImportWithCodeAmed.atcCode = atcCode[0];
                                                     console.log('rowValues.atcCode', atcCode[0]);
-
+//=============================================================
+                                                    this.administrationService.getAllCustomsCodesByDescription(rowValues.customsCode).subscribe(customsCode =>{
+                                                        unitOfImportWithCodeAmed.customsCode = customsCode[0];
+                                                        console.log('rowValues.customsCode', customsCode[0]);
+                                                    })
 //=============================================================
                                                     this.unitOfImportTable.push(unitOfImportWithCodeAmed);
                                                     console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
@@ -1022,7 +1028,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
             //=============================================================
 
         });
-
+console.log('this.unitOfImportTable', this.unitOfImportTable)
 
     }
 

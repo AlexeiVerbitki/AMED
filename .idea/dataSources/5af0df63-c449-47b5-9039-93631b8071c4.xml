@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="amed DB">
-  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.7">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.15">
     <root id="1">
       <DefaultCasing>lower/lower</DefaultCasing>
     </root>
@@ -3150,7 +3150,7 @@
     </column>
     <column id="747" parent="247" name="register_type">
       <Position>4</Position>
-      <Comment>shared/enum/ReportRegisterMode {ONEWINDOW=3, EMAIL=2, CURRIER=1} </Comment>
+      <Comment>shared/enum/ReportRegisterMode {ONEWINDOW=3, EMAIL=2, CURRIER=1}</Comment>
       <DataType>tinyint(1)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
@@ -3244,7 +3244,7 @@
     </column>
     <column id="766" parent="248" name="register_type">
       <Position>4</Position>
-      <Comment>shared/enum/ReportRegisterMode {ONEWINDOW=3, EMAIL=2, CURRIER=1} </Comment>
+      <Comment>shared/enum/ReportRegisterMode {ONEWINDOW=3, EMAIL=2, CURRIER=1}</Comment>
       <DataType>tinyint(1)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
@@ -3489,7 +3489,7 @@
     </column>
     <column id="815" parent="249" name="register_type">
       <Position>4</Position>
-      <Comment>shared/enum/ReportRegisterMode {ONEWINDOW=3, EMAIL=2, CURRIER=1} </Comment>
+      <Comment>shared/enum/ReportRegisterMode {ONEWINDOW=3, EMAIL=2, CURRIER=1}</Comment>
       <DataType>tinyint(1)|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
