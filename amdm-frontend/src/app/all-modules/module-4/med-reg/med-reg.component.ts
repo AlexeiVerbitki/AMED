@@ -890,104 +890,112 @@ export class MedRegComponent implements OnInit, OnDestroy {
             let unitOfImportWithCodeAmed: any = {};
             let val: any = {};
 
-                    val = row;
-                    // console.log('val', row);
+            val = row;
+            // console.log('val', row);
 
-                    if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
-                        this.invalidCurrency = true;
-                        this.loadingService.hide();
-                        this.errorHandlerService.showError("Valuta specificatiei trebuie selectată");
-                    } else {
-                        this.invalidCurrency = false;
-                        unitOfImportWithCodeAmed.currency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
+            if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
+                this.invalidCurrency = true;
+                this.loadingService.hide();
+                this.errorHandlerService.showError("Valuta specificatiei trebuie selectată");
+            } else {
+                this.invalidCurrency = false;
+                unitOfImportWithCodeAmed.currency = this.evaluateImportForm.get('importAuthorizationEntity.currency').value;
 
 
+            }
+
+            if (this.invalidCurrency == false && val) {
+                unitOfImportWithCodeAmed.approved = false;
+                // if(val){
+                //     unitOfImportWithCodeAmed.medicament  = val;
+                // }
+                if (val.pharmaceuticalForm) {
+                    unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
+                    if (val.pharmaceuticalForm) {
+                        this.subscriptions.push(this.administrationService.getAllPharamceuticalFormsByName(val.pharmaceuticalForm).subscribe(val => {
+                            console.log('pharmaceuticalForm', val);
+                        }))
                     }
+                }
+                if (val.dose) {
+                    unitOfImportWithCodeAmed.dose = val.dose;
+                }
+                if (val.unitsOfMeasurement) {
+                    unitOfImportWithCodeAmed.unitsOfMeasurement = val.unitsOfMeasurement;
+                }
+                if (val.name) {
+                    unitOfImportWithCodeAmed.name = val.commercialName;
+                } else {
+                    this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');
+                }
+                if (val.commercialName) {
+                    unitOfImportWithCodeAmed.commercialName = val.commercialName;
+                }
+                if (val.internationalMedicamentName) {
+                    unitOfImportWithCodeAmed.internationalMedicamentName = val.internationalMedicamentName;
+                    this.subscriptions.push(this.administrationService.getAllInternationalNamesByName(val.internationalMedicamentName).subscribe(val => {
+                        console.log('val.internationalMedicamentName', val);
+                    }));
 
-                    if (this.invalidCurrency == false && val) {
-                        unitOfImportWithCodeAmed.approved = false;
-                        // if(val){
-                        //     unitOfImportWithCodeAmed.medicament  = val;
-                        // }
-                        if (val.pharmaceuticalForm) {
-                            unitOfImportWithCodeAmed.pharmaceuticalForm = val.pharmaceuticalForm;
-                            if (val.pharmaceuticalForm) {
-                                this.subscriptions.push(this.administrationService.getAllPharamceuticalFormsByName(val.pharmaceuticalForm).subscribe(val => {
-                                    console.log('pharmaceuticalForm', val);
-                                }))
-                        }
-                        if (val.dose) {
-                            unitOfImportWithCodeAmed.dose = val.dose;
-                        }
-                        if (val.unitsOfMeasurement) {
-                            unitOfImportWithCodeAmed.unitsOfMeasurement = val.unitsOfMeasurement;
-                        }
-                        if (val.name) {
-                            unitOfImportWithCodeAmed.name = val.commercialName;
-                        }else {
-                            this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.name').setValue('');
-                        }
-                        if (val.commercialName) {
-                            unitOfImportWithCodeAmed.commercialName = val.commercialName;
-                        }
-                        if (val.internationalMedicamentName) {
-                            unitOfImportWithCodeAmed.internationalMedicamentName = val.internationalMedicamentName;
-                        }
-                        // if (val.registrationNumber) {
-                        //     unitOfImportWithCodeAmed.registrationNumber = val.registrationNumber;
-                        // }
-                        // if (val.registrationDate) {
-                        //     unitOfImportWithCodeAmed.registrationDate = new Date(val.registrationDate);
-                        // }
-                        // if (val.expirationDate) {
-                        //     unitOfImportWithCodeAmed.expirationDate = new Date(val.expirationDate);
-                        // }
+                }
+                // if (val.registrationNumber) {
+                //     unitOfImportWithCodeAmed.registrationNumber = val.registrationNumber;
+                // }
+                // if (val.registrationDate) {
+                //     unitOfImportWithCodeAmed.registrationDate = new Date(val.registrationDate);
+                // }
+                // if (val.expirationDate) {
+                //     unitOfImportWithCodeAmed.expirationDate = new Date(val.expirationDate);
+                // }
 
-                        if (row.quantity) {
-                            unitOfImportWithCodeAmed.quantity = row.quantity;
-                        }
+                if (row.quantity) {
+                    unitOfImportWithCodeAmed.quantity = row.quantity;
+                }
 
 
-                        if (val.customsCode) {
-                            unitOfImportWithCodeAmed.customsCode = val.customsCode;
-                        }
+                if (val.customsCode) {
+                    unitOfImportWithCodeAmed.customsCode = val.customsCode;
+                }
 
-                        // console.log('val.manufactures', val.manufactures);
-                            if (val.producer) {
-                                unitOfImportWithCodeAmed.producer = val.producer;
-                                this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(val.producer).subscribe(val => {
-                                }));
+                // console.log('val.manufactures', val.manufactures);
+                if (val.producer) {
+                    // unitOfImportWithCodeAmed.producer = val.producer;
+                    this.subscriptions.push(this.administrationService.getCompanyNamesAndIdnoList(val.producer).subscribe(val => {
+                        unitOfImportWithCodeAmed.producer = val;
+                    }));
 
-                            }
+                }
 
-                        (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(val.atcCode).subscribe(atcCode => {
-                            unitOfImportWithCodeAmed.atcCode = atcCode[0];
-                        })));
+                if (val.atcCode) {
+                    (this.subscriptions.push(this.administrationService.getAllAtcCodesByCode(val.atcCode).subscribe(atcCode => {
+                        unitOfImportWithCodeAmed.atcCode = atcCode[0];
+                    })));
+                }
 
-                        unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
-                        //=============================================================
+                unitOfImportWithCodeAmed.importSources = this.evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.importSources').value;
+                //=============================================================
 
 
-                        if (row.price) {
-                            this.userPrice = row.price;
-                            unitOfImportWithCodeAmed.price = row.price;
-                        }
-                        if (row.price && row.quantity) {
-                            this.userPrice = row.price;
-                            unitOfImportWithCodeAmed.summ = row.price * row.quantity;
-                        }
+                if (row.price) {
+                    this.userPrice = row.price;
+                    unitOfImportWithCodeAmed.price = row.price;
+                }
+                if (row.price && row.quantity) {
+                    this.userPrice = row.price;
+                    unitOfImportWithCodeAmed.summ = row.price * row.quantity;
+                }
 
-                        //========================================
-                        this.unitOfImportTable.push(unitOfImportWithCodeAmed);
+                //========================================
+                this.unitOfImportTable.push(unitOfImportWithCodeAmed);
 
-                    } else {
-                        // let el = document.getElementById("contractCurrency");
-                        // el.scrollIntoView();
-                    }
+            } else {
+                // let el = document.getElementById("contractCurrency");
+                // el.scrollIntoView();
+            }
 
             //=============================================================
 
-        })
+        });
         this.loadingService.hide();
 
     }
