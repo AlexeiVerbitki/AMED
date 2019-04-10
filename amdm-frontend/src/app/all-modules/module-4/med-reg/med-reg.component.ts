@@ -1246,9 +1246,10 @@ console.log('this.unitOfImportTable', this.unitOfImportTable)
                          this.unitOfImportTable[i].internationalMedicamentName = result[1].importAuthorizationEntity.unitOfImportTable.internationalMedicamentName;
                          this.unitOfImportTable[i].name = result[1].importAuthorizationEntity.unitOfImportTable.name;
                          this.unitOfImportTable[i].pharmaceuticalForm = result[1].importAuthorizationEntity.unitOfImportTable.pharmaceuticalForm;
-                         this.unitOfImportTable[i].price = result[1].importAuthorizationEntity.unitOfImportTable.price;
                          this.unitOfImportTable[i].producer = result[1].importAuthorizationEntity.unitOfImportTable.producer;
+                         this.unitOfImportTable[i].price = result[1].importAuthorizationEntity.unitOfImportTable.price;
                          this.unitOfImportTable[i].quantity = result[1].importAuthorizationEntity.unitOfImportTable.quantity;
+                         this.unitOfImportTable[i].summ = result[1].importAuthorizationEntity.unitOfImportTable.price * result[1].importAuthorizationEntity.unitOfImportTable.quantity;
                          this.unitOfImportTable[i].unitsOfMeasurement = result[1].importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement;
         });
     }

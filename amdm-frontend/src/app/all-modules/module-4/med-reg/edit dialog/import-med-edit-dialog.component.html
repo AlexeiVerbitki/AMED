@@ -65,8 +65,8 @@
                 <div class="col-4" >
                     <div class="md-form">
                         <input id="quantity" mdbInputDirective type="number" min="0" onkeypress="return event.charCode >= 48"  class="form-control"
-                               [attr.disabled]="true"
                                formControlName="quantity">
+<!--                               [attr.disabled]="true"-->
                         <label for="quantity">Cantitatea solicitată</label>
                     </div>
                     <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.quantity').invalid">-->
@@ -163,8 +163,8 @@
                 <div class="col-4" *ngIf="medType === 1 || medType === 2">
                     <div class="md-form">
                         <input id="dose" mdbInputDirective type="text" class="form-control"
-                               [attr.disabled]="true"
                                formControlName="dose">
+<!--                               [attr.disabled]="true"-->
                         <label for="dose">Doza</label>
                     </div>
                     <div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.dose').invalid">
@@ -176,8 +176,8 @@
                 <!--<div class="col-4" *ngIf="importData?.medType !== 4">-->
                     <div class="md-form">
                         <input id="unitsOfMeasurement" mdbInputDirective type="text" class="form-control"
-                               [attr.disabled]="true"
                                formControlName="unitsOfMeasurement">
+<!--                               [attr.disabled]="true"-->
                         <label for="dose">Divizare (Unitatea  de măsură)</label>
                     </div>
                     <!--<div *ngIf="addMedicamentClicked && evaluateImportForm.get('importAuthorizationEntity.unitOfImportTable.unitsOfMeasurement').invalid">-->
