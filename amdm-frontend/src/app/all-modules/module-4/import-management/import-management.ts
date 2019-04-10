@@ -576,7 +576,7 @@ export class ImportManagement implements OnInit, OnDestroy {
                                         invoiceDetails.sum = row.quantity * row.price;
 
                                         if (val.medicament && val.medicament.id) {
-                                            invoiceDetails.medicament = row.val.medicament.id;
+                                            invoiceDetails.medicament = val.medicament;
                                         }
 
                                         invoiceDetails.name = row.name;
@@ -602,7 +602,7 @@ export class ImportManagement implements OnInit, OnDestroy {
                                         invoiceDetails.sum = row.quantity * row.price;
 
                                         if (val.medicament && val.medicament.id) {
-                                            invoiceDetails.medicament = row.val.medicament.id;
+                                            invoiceDetails.medicament = val.medicament;
                                         }
 
                                         invoiceDetails.name = row.name;
@@ -626,7 +626,7 @@ export class ImportManagement implements OnInit, OnDestroy {
                                         invoiceDetails.sum = row.quantity * row.price;
 
                                         if (val.medicament && val.medicament.id) {
-                                            invoiceDetails.medicament = row.val.medicament.id;
+                                            invoiceDetails.medicament = val.medicament;
                                         }
 
                                         invoiceDetails.name = row.name;
