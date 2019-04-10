@@ -18,7 +18,6 @@ import {PriceService} from '../../../shared/service/prices.service';
 import {NavbarTitleService} from '../../../shared/service/navbar-title.service';
 import {SuccessOrErrorHandlerService} from '../../../shared/service/success-or-error-handler.service';
 import {UploadFileService} from "../../../shared/service/upload/upload-file.service";
-import {HttpEvent} from "@angular/common/http";
 import * as XLSX from 'xlsx';
 
 export interface PeriodicElement {
@@ -884,6 +883,11 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
     async parseRowNoAmed() {
 
+        if (this.validRows.length <= 0) {
+            this.loadingService.hide();
+            this.errorHandlerService.showError("Documentul contine medicamente cu greseli");
+            return;
+        }
         this.validRows.forEach(row => {
             console.log('row', row);
 
@@ -1021,6 +1025,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 // this.unitOfImportTable.push(unitOfImportWithCodeAmed);
 
             } else {
+                this.loadingService.hide();
                 // let el = document.getElementById("contractCurrency");
                 // el.scrollIntoView();
             }
