@@ -282,6 +282,7 @@ export class AdministrationService {
         let Params = new HttpParams();
         Params = Params.set('partialName', partialName);
         console.log('partialName: ', partialName);
+        console.log('Params: ', Params);
 
         return this.http.get<any[]>('/api/administration/all-international-names-by-name', {params: Params});
     }

@@ -13,8 +13,10 @@ import com.bass.amed.service.GenerateReceiptNumberService;
 import com.bass.amed.service.LdapUserDetailsSynchronizationService;
 import com.bass.amed.utils.AdministrationUtils;
 import com.bass.amed.utils.ReceiptsQueryUtils;
+import jdk.nashorn.internal.runtime.URIUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.apache.tomcat.util.buf.UriUtil;
 import org.hibernate.JDBCException;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -287,6 +290,7 @@ public class AdministrationController {
 
     @RequestMapping("/all-international-names-by-name")
     public ResponseEntity<List<NmInternationalMedicamentNameEntity>> retrieveAllInternationalNamesByName(String partialName) {
+        partialName= UriUtils.decode(partialName, "UTF-8");
         LOGGER.debug("Retrieve International names by name: " + partialName);
         return new ResponseEntity<>(internationalMedicamentNameRepository.findInternationalMedicamentNameByName(partialName), HttpStatus.OK);
     }

@@ -661,7 +661,7 @@
 	                    <div class="text-right">
 
 		                    <input id="parseSpecification" #parseInput type="file" style="display:none;"
-		                           attr.disabled="this.disabled" (change)="parseSpecification($event.target.files)"
+		                           attr.disabled="this.disabled" (click)="reset()" (change)="parseSpecification($event.target.files)"
 		                           placeholder="Upload file" accept=".xlsx,.xls,.csv">
 		                    <button type="button" class="btn btn-mdb-color btn-sm" (click)="parseInput.click()">Parsare specificației</button>
 

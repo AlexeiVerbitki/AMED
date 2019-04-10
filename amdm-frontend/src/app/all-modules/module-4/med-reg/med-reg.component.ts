@@ -1,6 +1,6 @@
 import {Cerere} from './../../../models/cerere';
 import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -100,6 +100,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
     maxDate = new Date();
     importSources: any[] = [];
     validRows: any[] = [];
+    @ViewChild('parseInput')
+    incarcaFisierVariable: ElementRef;
     // excelSheet: any;
     private subscriptions: Subscription[] = [];
 
@@ -957,9 +959,10 @@ export class MedRegComponent implements OnInit, OnDestroy {
 //=============================================================
                             if (rowValues.internationalMedicamentName) {
                                 // unitOfImportWithCodeAmed.internationalMedicamentName = rowValues.internationalMedicamentName;
-                                this.subscriptions.push(this.administrationService.getAllInternationalNamesByName(rowValues.internationalMedicamentName).subscribe(val => {
-                                    console.log('rowValues.internationalMedicamentName', val);
-                                    unitOfImportWithCodeAmed.internationalMedicamentName = val.internationalMedicamentName;
+                                let nameNoPlus = rowValues.internationalMedicamentName.replace('+', '%2B');
+                                this.subscriptions.push(this.administrationService.getAllInternationalNamesByName(nameNoPlus).subscribe(val => {
+                                    console.log('rowValues.internationalMedicamentName', val[0]);
+                                    unitOfImportWithCodeAmed.internationalMedicamentName = val[0];
 //=============================================================
                                     if (rowValues.producer) {
                                         // unitOfImportWithCodeAmed.producer = rowValues.producer;
@@ -1037,6 +1040,10 @@ console.log('this.unitOfImportTable', this.unitOfImportTable)
 
     }
 
+    reset() {
+        this.incarcaFisierVariable.nativeElement.value = '';
+        this.validRows = [];
+    }
 
     async getMedicamentPrice(id: any) {
         let priceEntity = await this.medicamentService.getMedPrice(id).toPromise();
