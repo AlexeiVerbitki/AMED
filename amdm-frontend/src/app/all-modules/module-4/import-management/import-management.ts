@@ -489,7 +489,8 @@ export class ImportManagement implements OnInit, OnDestroy {
                             case 12: {rowToBeParsed.authorizationsNumber =        cell.v.toString(); /*if(!rowToBeParsed.registrationNumber || rowToBeParsed.registrationNumber == undefined)                   {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
                             case 13: {rowToBeParsed.customsDeclarationNumber =    cell.v.toString(); /*if(!rowToBeParsed.registrationDate || rowToBeParsed.registrationDate == undefined)                       {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
                             case 14: {rowToBeParsed.serie =                       cell.v.toString(); /*if(!rowToBeParsed.atcCode || rowToBeParsed.atcCode == undefined)                                         {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
-                            case 15: {rowToBeParsed.expirationDate =              cell.v; break;}
+                            case 15: {rowToBeParsed.expirationDate =
+                                cell.v; break;}
                             case 16: {rowToBeParsed.receivedAmount =              Number(cell.v); /*if(!rowToBeParsed.internationalMedicamentName || rowToBeParsed.internationalMedicamentName == undefined) {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
                             case 17: {rowToBeParsed.returnedAmount =              Number(cell.v); /*if(!rowToBeParsed.internationalMedicamentName || rowToBeParsed.internationalMedicamentName == undefined) {console.log(columns[C] + cellNumber +": contine greseli")}*/; break;}
                             // case  :  {rowToBeParsed.currency =                    cell.v; break;}

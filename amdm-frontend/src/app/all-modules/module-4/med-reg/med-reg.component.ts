@@ -105,6 +105,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
     incarcaFisierVariable: ElementRef;
     // excelSheet: any;
     private subscriptions: Subscription[] = [];
+    cellsWithErrors = [];
+    parseError: any;
 
     constructor(private fb: FormBuilder,
                 private requestService: RequestService,
@@ -599,7 +601,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
         this.loadingService.show();
 
         var documents: FileList = files;
-        let cellsWithErrors = [];
+
 
         let cellExists: boolean;
         console.log('documents', documents);
@@ -650,7 +652,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     var cellref = XLSX.utils.encode_cell({c: C, r: R}); // construct A1 reference for cell
                     if (!sheet[cellref]) {
                         let cellNumber: number = R+1;
-                        cellsWithErrors.push(cellref);
+
                         // console.log(columns[C] + cellNumber + ": empty cell")
                         // break; // if cell doesn't exist, move on
                     } else {
@@ -700,7 +702,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                    rowToBeParsed.internationalMedicamentName
                    ){
                     nn.validRows.push(rowToBeParsed);
-                }
+                } else
 
                 if(nn.importData.importAuthorizationEntity.medType === 2 &&
                     rowToBeParsed.customsCode &&
@@ -718,6 +720,9 @@ export class MedRegComponent implements OnInit, OnDestroy {
                     rowToBeParsed.internationalMedicamentName
                 ){
                     nn.validRows.push(rowToBeParsed);
+                }else{
+                    // if (R <= range.s.r+8+1 + nn.validRows.length){nn.cellsWithErrors.push(R+1);}
+                    nn.parseError = 'Nu toate pozitiile au fost importate din cauze greselelor in fisier';
                 }
 
 
@@ -740,6 +745,8 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
     async parseRowWithAmed() {
 
+        let numberOfMedicaments = 0;
+        let rowNumber = 0;
         this.validRows.forEach(row => {
             console.log('row', row);
 
@@ -749,6 +756,7 @@ export class MedRegComponent implements OnInit, OnDestroy {
                 this.subscriptions.push(this.medicamentService.getMedicamentByNameWithPrice(row.codeAmed).subscribe(medicament => {
                     val = medicament[0];
                     console.log('val', medicament);
+                    if (val){numberOfMedicaments = numberOfMedicaments + 1;}
 
                     if (this.evaluateImportForm.get('importAuthorizationEntity.currency').value == undefined) {
                         this.invalidCurrency = true;
@@ -863,6 +871,13 @@ export class MedRegComponent implements OnInit, OnDestroy {
 
                                         }
                                         this.pushToTableOrNot(exchangeDate, contractCurrency, priceInContractCurrency, medicamentPrice,unitOfImportWithCodeAmed);
+
+                                        rowNumber = rowNumber +1;
+                                        if(rowNumber == numberOfMedicaments && this.parseError) {
+                                            // this.errorHandlerService.showError("Randurile urmatoare contin greseli: \n" + this.cellsWithErrors);
+                                            this.errorHandlerService.showError(this.parseError);
+                                            this.cellsWithErrors = [];
+                                        }
                                     }
                                 }            ));
                             }
@@ -886,9 +901,13 @@ export class MedRegComponent implements OnInit, OnDestroy {
         })
         this.loadingService.hide();
 
+
     }
 
     async parseRowNoAmed() {
+
+        let numberOfMedicaments = 0;
+        let rowNumber = 0;
 
         if (this.validRows.length <= 0) {
             this.loadingService.hide();
@@ -988,6 +1007,15 @@ export class MedRegComponent implements OnInit, OnDestroy {
                                                     this.unitOfImportTable.push(unitOfImportWithCodeAmed);
                                                     console.log('unitOfImportWithCodeAmed', unitOfImportWithCodeAmed);
                                                     this.loadingService.hide();
+
+                                                    rowNumber = rowNumber +1;
+                                                    if(rowNumber == this.validRows.length && this.parseError) {
+                                                        // this.errorHandlerService.showError("Randurile urmatoare contin greseli: \n" + this.cellsWithErrors);
+                                                        this.errorHandlerService.showError(this.parseError);
+                                                        this.cellsWithErrors = [];
+                                                    }
+
+
                                                 })));
                                             }
                                         }));
